@@ -157,3 +157,14 @@ If a built-in solution exists, use it. If not, surface the dependency request ex
 - Flag when something is a hack vs. the right way, so I can choose knowingly.
 
 ---
+
+## Git Workflow (mandatory)
+
+I switch between desktop and laptop frequently — **the working tree must never carry uncommitted work between sessions.** When asked to commit:
+
+- **Always `git add .`** — stage everything in the working tree, never selective adds. The `.gitignore` is the source of truth for what gets excluded; if something shouldn't be tracked, fix the `.gitignore`, don't skip files at the staging step.
+- **Always push to `main`** immediately after committing — no local-only commits, no feature branches without explicit instruction.
+- **Detailed commit messages** — multi-line, written so reading the log on the other machine is enough to catch up. Lead with a one-line summary, then a body that lists what changed and why. Don't be terse just to save keystrokes.
+- **Never `--no-verify`, never `--force`, never amend pushed commits.**
+
+---
