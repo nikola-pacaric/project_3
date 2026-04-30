@@ -41,11 +41,11 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 **Goal:** clean Unity project that compiles to WebGL and runs in a browser.
 
 **Build**
-- [ ] Install Unity 6.3 LTS, create project from URP 2D template
-- [ ] Git repo with Unity `.gitignore`, first commit
-- [ ] Game view set to 1920×1080 reference resolution
-- [ ] Build target: WebGL
-- [ ] Drop a sprite into a test scene, run a WebGL build, confirm it loads in the browser
+- [x] Install Unity 6.3 LTS, create project from URP 2D template
+- [x] Git repo with Unity `.gitignore`, first commit
+- [x] Game view set to 1920×1080 reference resolution
+- [x] Build target: WebGL
+- [x] Drop a sprite into a test scene, run a WebGL build, confirm it loads in the browser
 
 **Cut / Defer:** folder structure, namespaces, asmdefs, extra packages.
 
