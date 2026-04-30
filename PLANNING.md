@@ -19,7 +19,7 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## Current Milestone
 
-**M0 — It Builds** *(not started)*
+**M3 — It's a Game** *(not started)*
 
 ---
 
@@ -58,12 +58,12 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 **Goal:** prove the core feel. If shooting doesn't feel right with squares, it won't feel right with art.
 
 **Build**
-- [ ] Player sprite (placeholder), bottom of screen
-- [ ] Horizontal movement with arrow keys (legacy `Input.GetAxis` is fine — refactored in M2)
-- [ ] Hard left/right `Mathf.Clamp` boundaries
-- [ ] Bullet prefab, Ctrl to fire, single-press = single shot
-- [ ] Bullets self-destruct off-screen
-- [ ] Hardcoded values everywhere
+- [x] Player sprite (placeholder), bottom of screen
+- [x] Horizontal movement with arrow keys (legacy `Input.GetAxis` is fine — refactored in M2)
+- [x] Hard left/right `Mathf.Clamp` boundaries
+- [x] Bullet prefab, Ctrl to fire, single-press = single shot
+- [x] Bullets self-destruct off-screen
+- [x] Hardcoded values everywhere
 
 **Cut / Defer:** pooling, SOs, New Input System, event channels, GameManager, audio, folder structure, namespaces.
 
@@ -76,18 +76,18 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 **Goal:** an actual fight loop. Enemies attack, you can die, you can restart.
 
 **Build**
-- [ ] One enemy type: flies in along a path, sits in formation, occasionally dives, returns
-- [ ] Enemy bullets + firing logic
-- [ ] Layer setup: Player, PlayerBullet, Enemy, EnemyBullet (collision matrix configured)
-- [ ] Player damage, lives counter, death + respawn
-- [ ] Game Over screen with Restart
-- [ ] Score counter on enemy kill
-- [ ] Replace `Input.GetAxis` with **New Input System** — Input Actions asset, `InputReader` SO
-- [ ] Folder structure under `Assets/Scripts/` per `CLAUDE.md`
+- [x] One enemy type: flies in along a path, sits in formation, occasionally dives, returns
+- [x] Enemy bullets + firing logic
+- [x] Layer setup: Player, PlayerBullet, Enemy, EnemyBullet (collision matrix configured)
+- [x] Player damage, lives counter, death + respawn
+- [x] Game Over screen with Restart
+- [x] Score counter on enemy kill
+- [x] Replace `Input.GetAxis` with **New Input System** — Input Actions asset, `InputReader` SO
+- [x] Folder structure under `Assets/Scripts/` per `CLAUDE.md`
 
 **Refactor**
-- [ ] **Object pooling for bullets** — both player and enemy bullets use `UnityEngine.Pool.ObjectPool<T>`
-- [ ] Move magic numbers into `[SerializeField]` fields (still no SOs)
+- [x] **Object pooling for bullets** — both player and enemy bullets use `UnityEngine.Pool.ObjectPool<T>`
+- [x] Move magic numbers into `[SerializeField]` fields (still no SOs)
 
 **Cut / Defer:** multiple enemy types, fancy Bezier paths, SOs, event channels, formations of many enemies, audio.
 

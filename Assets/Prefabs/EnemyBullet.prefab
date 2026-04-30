@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1272030104596985274}
   - component: {fileID: 7909210673094272449}
   - component: {fileID: 8940227645539820913}
-  m_Layer: 8
-  m_Name: Bullet
+  m_Layer: 9
+  m_Name: EnemyBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.94945174, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -106,8 +106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527c0223ad901f641af4c830272369cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  _speed: 10
-  _despawnY: 6
+  _speed: 7
+  _direction: {x: 0, y: -1}
+  _maxLifetimeDistance: 12
   _damage: 1
 --- !u!70 &7909210673094272449
 CapsuleCollider2D:

@@ -150,7 +150,7 @@ If a built-in solution exists, use it. If not, surface the dependency request ex
 
 ## Working Style with Claude
 
-- I'm **intermediate** with Unity/C# — comfortable but still learning. Skip the "what is a MonoBehaviour" basics, but don't skip the "why" behind a pattern choice.
+- I'm **intermediate** with Unity/C# — comfortable but still learning. Skip the "what is a MonoBehaviour" basics, but don't skip the "why" behind a pattern choice. Slow down and give step by step explanations what to do in editor.
 - **Explain the reasoning** behind suggestions — pattern choices, performance tradeoffs, why one approach beats another for this project. The learning is part of the goal.
 - Code samples should be production-ready for this project's conventions, not generic Unity tutorial code.
 - When I ask "how do I do X," default to showing the approach that fits this architecture, even if it's slightly more setup than a quick hack.
