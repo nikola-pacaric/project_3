@@ -14,6 +14,15 @@ namespace Warblade.Entities
         [SerializeField] private int _contactDamage = 1;
         [SerializeField] private float _entrySpeed = 3f;
         [SerializeField] private Vector2 _formationPosition;
+        [Tooltip("Offset added to the midpoint of (start -> formation) to form the Bezier control point. Zero = straight line.")]
+        [SerializeField] private Vector2 _entryControlOffset = Vector2.zero;
+        [Header("Behavior")]
+        [Tooltip("If false, enemy dives immediately on reaching formation slot (kamikaze).")]
+        [SerializeField] private bool _sitsInFormation = true;
+        [Tooltip("If true, enemy despawns at the bottom of its dive instead of returning (kamikaze).")]
+        [SerializeField] private bool _diesAtDiveBottom = false;
+        [Tooltip("If false, enemy never fires bullets while in formation.")]
+        [SerializeField] private bool _canFire = true;
         [SerializeField] private float _diveSpeed = 6f;
         [SerializeField] private float _diveBottomY = -6f;
         [SerializeField] private float _diveCooldownMin = 2f;
@@ -37,11 +46,17 @@ namespace Warblade.Entities
         private float _lingerEndTime;
         private bool _isPassThroughDive;
         private IObjectPool<Bullet> _bulletPool;
+        private IObjectPool<Enemy> _enemyPool;
+
+        private Vector2 _entryStart;
+        private Vector2 _entryControlPoint;
+        private float _entryDistanceTraveled;
+        private float _entryPathLength;
+
+        public Vector2 EntryControlOffset => _entryControlOffset;
 
         private void Awake()
         {
-            _currentHealth = _maxHealth;
-
             if (_enemyBulletPrefab != null)
             {
                 _bulletPool = new ObjectPool<Bullet>(
@@ -53,6 +68,31 @@ namespace Warblade.Entities
                     defaultCapacity: _bulletPoolDefaultCapacity,
                     maxSize: _bulletPoolMaxSize);
             }
+        }
+
+        public void SetPool(IObjectPool<Enemy> pool)
+        {
+            _enemyPool = pool;
+        }
+
+        public void Spawn(Vector2 startPosition, Vector2 formationPosition, Transform playerTransform)
+        {
+            transform.position = startPosition;
+            _formationPosition = formationPosition;
+            _playerTransform = playerTransform;
+            _currentHealth = _maxHealth;
+            BeginEntry();
+        }
+
+        private void BeginEntry()
+        {
+            _entryStart = transform.position;
+            Vector2 midpoint = (_entryStart + _formationPosition) * 0.5f;
+            _entryControlPoint = midpoint + _entryControlOffset;
+            _entryPathLength = BezierPath.ApproximateQuadraticLength(
+                _entryStart, _entryControlPoint, _formationPosition);
+            _entryDistanceTraveled = 0f;
+            _state = State.Entering;
         }
 
         private Bullet CreateBullet()
@@ -68,15 +108,23 @@ namespace Warblade.Entities
             switch (_state)
             {
                 case State.Entering:
-                    MoveToward(_formationPosition, _entrySpeed);
-                    if (Reached(_formationPosition))
+                    if (_entryPathLength <= Mathf.Epsilon)
+                    {
+                        EnterFormation();
+                        break;
+                    }
+                    _entryDistanceTraveled += _entrySpeed * Time.deltaTime;
+                    float t = Mathf.Clamp01(_entryDistanceTraveled / _entryPathLength);
+                    transform.position = BezierPath.EvaluateQuadratic(
+                        _entryStart, _entryControlPoint, _formationPosition, t);
+                    if (t >= 1f)
                     {
                         EnterFormation();
                     }
                     break;
 
                 case State.InFormation:
-                    if (Time.time >= _nextFireTime)
+                    if (_canFire && Time.time >= _nextFireTime)
                     {
                         FireBullet();
                     }
@@ -140,6 +188,11 @@ namespace Warblade.Entities
 
         private void EnterFormation()
         {
+            if (!_sitsInFormation)
+            {
+                StartDive();
+                return;
+            }
             _state = State.InFormation;
             _nextDiveTime = Time.time + Random.Range(_diveCooldownMin, _diveCooldownMax);
             _nextFireTime = Time.time + Random.Range(_fireCooldownMin, _fireCooldownMax);
@@ -185,6 +238,11 @@ namespace Warblade.Entities
 
         private void StartLinger()
         {
+            if (_diesAtDiveBottom)
+            {
+                Despawn();
+                return;
+            }
             _lingerEndTime = Time.time + Random.Range(_lingerDurationMin, _lingerDurationMax);
             _state = State.Lingering;
         }
@@ -194,7 +252,7 @@ namespace Warblade.Entities
             if (_isPassThroughDive)
             {
                 transform.position = new Vector2(_formationPosition.x, _respawnTopY);
-                _state = State.Entering;
+                BeginEntry();
             }
             else
             {
@@ -208,7 +266,62 @@ namespace Warblade.Entities
             {
                 ScoreManager.Instance.AddScore(_scoreValue);
             }
-            Destroy(gameObject);
+            Despawn();
+        }
+
+        private void Despawn()
+        {
+            if (_enemyPool != null)
+            {
+                _enemyPool.Release(this);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Vector2 start;
+            Vector2 control;
+            Vector2 end;
+
+            if (Application.isPlaying && _entryPathLength > 0f)
+            {
+                start = _entryStart;
+                control = _entryControlPoint;
+                end = _formationPosition;
+            }
+            else
+            {
+                start = transform.position;
+                Vector2 midpoint = (start + _formationPosition) * 0.5f;
+                control = midpoint + _entryControlOffset;
+                end = _formationPosition;
+            }
+
+            Gizmos.color = Color.cyan;
+            Vector2 prev = start;
+            const int samples = 24;
+            for (int i = 1; i <= samples; i++)
+            {
+                float t = i / (float)samples;
+                Vector2 point = BezierPath.EvaluateQuadratic(start, control, end, t);
+                Gizmos.DrawLine(prev, point);
+                prev = point;
+            }
+
+            Gizmos.color = new Color(1f, 1f, 0f, 0.35f);
+            Gizmos.DrawLine(start, control);
+            Gizmos.DrawLine(control, end);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(start, 0.15f);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(control, 0.12f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(end, 0.15f);
         }
     }
 }
