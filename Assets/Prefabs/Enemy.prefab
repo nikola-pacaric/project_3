@@ -151,23 +151,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d7e4c638284e148a03f1af68a6e325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Enemy
-  _maxHealth: 1
-  _scoreValue: 100
+  _data: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+  _spriteRenderer: {fileID: 0}
   _contactDamage: 1
-  _entrySpeed: 3
   _formationPosition: {x: 3, y: 3}
   _entryControlOffset: {x: 4, y: 0}
-  _diveSpeed: 6
-  _diveBottomY: -6
-  _diveCooldownMin: 2
-  _diveCooldownMax: 5
-  _lingerDurationMin: 0.5
-  _lingerDurationMax: 1.5
-  _passThroughChance: 0.5
-  _respawnTopY: 6
   _playerTransform: {fileID: 0}
   _enemyBulletPrefab: {fileID: 924634902285088487, guid: becb08ed0d59d9647a14de74504b9385, type: 3}
-  _fireCooldownMin: 1.5
-  _fireCooldownMax: 3
   _bulletPoolDefaultCapacity: 5
   _bulletPoolMaxSize: 20

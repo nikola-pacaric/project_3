@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75d973290e0c80d4b884c4fbb2b7ac11, type: 3}
+  m_Name: FormationData_V
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.FormationData
+  _slots:
+  - LocalPosition: {x: -7, y: 4}
+    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+    EntryControlOffset: {x: -4, y: 0}
+  - LocalPosition: {x: -5, y: 4}
+    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+    EntryControlOffset: {x: -3, y: 0}
+  - LocalPosition: {x: -3, y: 4}
+    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+    EntryControlOffset: {x: -2, y: 0}
+  - LocalPosition: {x: 0, y: 4}
+    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: 3, y: 4}
+    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+    EntryControlOffset: {x: 2, y: 0}
+  _breatheAmplitude: 0.5
+  _breatheSpeed: 1

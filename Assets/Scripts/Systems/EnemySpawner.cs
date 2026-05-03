@@ -2,28 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using Warblade.Data;
 using Warblade.Entities;
 
 namespace Warblade.Systems
 {
     /// <summary>
-    /// Pools and spawns Enemy instances. M3 Phase 2 scaffolding — drives test spawns
-    /// from a serialized list. Will be replaced/wrapped by WaveRunner + LevelManager
-    /// in later phases, but the per-prefab pool dictionary stays.
+    /// Spawns enemies from formation data and pools instances per enemy prefab.
+    /// Phase 7+: data-driven path only.
     /// </summary>
     public class EnemySpawner : MonoBehaviour
     {
         [System.Serializable]
-        public struct TestSpawn
+        public struct TestFormationSpawn
         {
-            public Enemy Prefab;
-            public Vector2 StartPosition;
-            public Vector2 FormationPosition;
+            public Formation Formation;
+            public Vector2 EntryStartCenter;
+            [Min(0f)] public float EntryStartSpacingX;
             [Min(0f)] public float Delay;
+            [Min(0f)] public float PerSlotDelay;
         }
 
         [SerializeField] private Transform _playerTransform;
-        [SerializeField] private TestSpawn[] _testSpawns;
+        [SerializeField] private Enemy[] _enemyPrefabs;
+        [SerializeField] private TestFormationSpawn[] _testFormationSpawns;
+        [SerializeField, Min(0)] private int _debugFormationIndex;
         [SerializeField] private int _defaultCapacity = 10;
         [SerializeField] private int _maxSize = 50;
         [SerializeField] private bool _drawGizmos = true;
@@ -33,26 +36,145 @@ namespace Warblade.Systems
 
         private void Start()
         {
-            if (_testSpawns == null) return;
-            for (int i = 0; i < _testSpawns.Length; i++)
-            {
-                StartCoroutine(SpawnAfterDelay(_testSpawns[i]));
-            }
-        }
+            if (_testFormationSpawns == null) return;
 
-        private IEnumerator SpawnAfterDelay(TestSpawn s)
-        {
-            if (s.Delay > 0f) yield return new WaitForSeconds(s.Delay);
-            Spawn(s.Prefab, s.StartPosition, s.FormationPosition);
+            for (int i = 0; i < _testFormationSpawns.Length; i++)
+            {
+                StartCoroutine(SpawnFormationAfterDelay(_testFormationSpawns[i]));
+            }
         }
 
         public Enemy Spawn(Enemy prefab, Vector2 startPosition, Vector2 formationPosition)
         {
+            return Spawn(prefab, startPosition, formationPosition, null, -1, prefab != null ? prefab.EntryControlOffset : Vector2.zero);
+        }
+
+        public Enemy Spawn(
+            Enemy prefab,
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Formation formation,
+            int formationSlotIndex)
+        {
+            return Spawn(
+                prefab,
+                startPosition,
+                formationPosition,
+                formation,
+                formationSlotIndex,
+                prefab != null ? prefab.EntryControlOffset : Vector2.zero);
+        }
+
+        public Enemy Spawn(
+            Enemy prefab,
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset)
+        {
             if (prefab == null) return null;
+
             IObjectPool<Enemy> pool = GetOrCreatePool(prefab);
             Enemy enemy = pool.Get();
-            enemy.Spawn(startPosition, formationPosition, _playerTransform);
+            enemy.Spawn(
+                startPosition,
+                formationPosition,
+                _playerTransform,
+                formation,
+                formationSlotIndex,
+                entryControlOffset);
             return enemy;
+        }
+
+        [ContextMenu("Spawn Debug Formation")]
+        public void SpawnDebugFormation()
+        {
+            if (_testFormationSpawns == null || _testFormationSpawns.Length == 0)
+            {
+                Debug.LogWarning($"[{nameof(EnemySpawner)}] No formation test spawns configured.");
+                return;
+            }
+
+            int clampedIndex = Mathf.Clamp(_debugFormationIndex, 0, _testFormationSpawns.Length - 1);
+            TestFormationSpawn debugSpawn = _testFormationSpawns[clampedIndex];
+            StartCoroutine(SpawnFormationRoutine(
+                debugSpawn.Formation,
+                debugSpawn.EntryStartCenter,
+                debugSpawn.EntryStartSpacingX,
+                debugSpawn.PerSlotDelay));
+        }
+
+        private IEnumerator SpawnFormationAfterDelay(TestFormationSpawn spawn)
+        {
+            if (spawn.Delay > 0f) yield return new WaitForSeconds(spawn.Delay);
+            yield return SpawnFormationRoutine(
+                spawn.Formation,
+                spawn.EntryStartCenter,
+                spawn.EntryStartSpacingX,
+                spawn.PerSlotDelay);
+        }
+
+        private IEnumerator SpawnFormationRoutine(
+            Formation formation,
+            Vector2 entryStartCenter,
+            float entryStartSpacingX,
+            float perSlotDelay)
+        {
+            if (formation == null) yield break;
+            if (formation.SlotCount <= 0)
+            {
+                Debug.LogWarning($"[{nameof(EnemySpawner)}] Formation '{formation.name}' has no slots.");
+                yield break;
+            }
+
+            float halfSpan = (formation.SlotCount - 1) * 0.5f;
+            for (int slotIndex = 0; slotIndex < formation.SlotCount; slotIndex++)
+            {
+                EnemyData enemyData = formation.GetSlotEnemyData(slotIndex);
+                if (enemyData == null)
+                {
+                    Debug.LogError(
+                        $"[{nameof(EnemySpawner)}] Slot {slotIndex} in formation '{formation.name}' has no EnemyData.");
+                    if (perSlotDelay > 0f) yield return new WaitForSeconds(perSlotDelay);
+                    continue;
+                }
+
+                Enemy prefab = FindPrefabForData(enemyData);
+                if (prefab == null)
+                {
+                    Debug.LogError(
+                        $"[{nameof(EnemySpawner)}] No prefab found for EnemyData '{enemyData.name}'. " +
+                        "Assign matching prefabs in _enemyPrefabs.");
+                    if (perSlotDelay > 0f) yield return new WaitForSeconds(perSlotDelay);
+                    continue;
+                }
+
+                Vector2 startPosition = entryStartCenter + Vector2.right * ((slotIndex - halfSpan) * entryStartSpacingX);
+                Vector2 formationPosition = formation.GetSlotWorldPosition(slotIndex);
+                Vector2 entryControlOffset = formation.GetSlotEntryControlOffset(slotIndex);
+
+                Spawn(prefab, startPosition, formationPosition, formation, slotIndex, entryControlOffset);
+
+                if (perSlotDelay > 0f)
+                {
+                    yield return new WaitForSeconds(perSlotDelay);
+                }
+            }
+        }
+
+        private Enemy FindPrefabForData(EnemyData enemyData)
+        {
+            if (enemyData == null || _enemyPrefabs == null) return null;
+
+            for (int i = 0; i < _enemyPrefabs.Length; i++)
+            {
+                Enemy prefab = _enemyPrefabs[i];
+                if (prefab == null) continue;
+                if (prefab.Data == enemyData) return prefab;
+            }
+
+            return null;
         }
 
         private IObjectPool<Enemy> GetOrCreatePool(Enemy prefab)
@@ -81,41 +203,34 @@ namespace Warblade.Systems
 
         private void OnDrawGizmos()
         {
-            if (!_drawGizmos || _testSpawns == null) return;
+            if (!_drawGizmos || _testFormationSpawns == null) return;
 
-            for (int i = 0; i < _testSpawns.Length; i++)
+            for (int i = 0; i < _testFormationSpawns.Length; i++)
             {
-                TestSpawn s = _testSpawns[i];
-                if (s.Prefab == null) continue;
+                TestFormationSpawn formationSpawn = _testFormationSpawns[i];
+                Formation formation = formationSpawn.Formation;
+                if (formation == null || formation.SlotCount <= 0) continue;
 
-                Vector2 start = s.StartPosition;
-                Vector2 end = s.FormationPosition;
-                Vector2 midpoint = (start + end) * 0.5f;
-                Vector2 control = midpoint + s.Prefab.EntryControlOffset;
-
-                Color hue = Color.HSVToRGB((i * 0.137f) % 1f, 0.6f, 1f);
-                Gizmos.color = hue;
-
-                Vector2 prev = start;
-                const int samples = 24;
-                for (int k = 1; k <= samples; k++)
+                float halfSpan = (formation.SlotCount - 1) * 0.5f;
+                for (int slotIndex = 0; slotIndex < formation.SlotCount; slotIndex++)
                 {
-                    float t = k / (float)samples;
-                    Vector2 point = BezierPath.EvaluateQuadratic(start, control, end, t);
-                    Gizmos.DrawLine(prev, point);
-                    prev = point;
+                    Vector2 start = formationSpawn.EntryStartCenter + Vector2.right * ((slotIndex - halfSpan) * formationSpawn.EntryStartSpacingX);
+                    Vector2 end = formation.GetSlotWorldPosition(slotIndex);
+                    Vector2 control = ((start + end) * 0.5f) + formation.GetSlotEntryControlOffset(slotIndex);
+
+                    Color hue = Color.HSVToRGB(((i + slotIndex * 0.31f) * 0.137f) % 1f, 0.6f, 1f);
+                    Gizmos.color = hue;
+
+                    Vector2 prev = start;
+                    const int samples = 24;
+                    for (int k = 1; k <= samples; k++)
+                    {
+                        float t = k / (float)samples;
+                        Vector2 point = BezierPath.EvaluateQuadratic(start, control, end, t);
+                        Gizmos.DrawLine(prev, point);
+                        prev = point;
+                    }
                 }
-
-                Gizmos.color = new Color(hue.r, hue.g, hue.b, 0.35f);
-                Gizmos.DrawLine(start, control);
-                Gizmos.DrawLine(control, end);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(start, 0.15f);
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere(control, 0.12f);
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(end, 0.15f);
             }
         }
     }
