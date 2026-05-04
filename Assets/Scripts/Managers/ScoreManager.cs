@@ -39,6 +39,12 @@ namespace Warblade.Managers
             UpdateText();
         }
 
+        public void ResetScore()
+        {
+            _score = 0;
+            UpdateText();
+        }
+
         private void UpdateText()
         {
             if (_scoreText != null)

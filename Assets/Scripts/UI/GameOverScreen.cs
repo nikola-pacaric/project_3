@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Warblade.Managers;
 
 namespace Warblade.UI
 {
@@ -26,6 +27,11 @@ namespace Warblade.UI
 
         public void Restart()
         {
+            if (ScoreManager.Instance != null)
+            {
+                ScoreManager.Instance.ResetScore();
+            }
+
             Time.timeScale = 1f;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }

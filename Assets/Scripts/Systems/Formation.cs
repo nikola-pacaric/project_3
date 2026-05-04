@@ -11,6 +11,16 @@ namespace Warblade.Systems
 
         public int SlotCount => _data == null ? 0 : _data.SlotCount;
 
+        /// <summary>
+        /// Assigns runtime formation data and anchor position for waves.
+        /// </summary>
+        public void Configure(Warblade.Data.FormationData data, Vector2 anchorPosition)
+        {
+            _data = data;
+            _anchorPosition = anchorPosition;
+            transform.position = anchorPosition;
+        }
+
         private void Start()
         {
             _anchorPosition = transform.position;
@@ -18,6 +28,8 @@ namespace Warblade.Systems
 
         private void OnValidate()
         {
+            if (Application.isPlaying) return;
+
             if (_data == null)
             {
                 Debug.LogWarning($"[{nameof(Formation)}] Assign FormationData on '{name}'.");

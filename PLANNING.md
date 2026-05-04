@@ -72,6 +72,9 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
     **Editor:** author four `FormationData` assets — V, line sweep, snake, dual flank. Hand-place slot positions in inspector.
     **Acceptance:** spawn each of the four formations one at a time via temporary debug button. They look distinct, breathe correctly, enemies enter along defined Bezier paths.
 
+
+
+
     ### Phase 8 — Wave system
     **Code:** `Data/WaveData.cs` SO — references a `FormationData` + spawn delay (seconds after previous wave) + entry side (left/right/top). `Systems/WaveRunner.cs` MonoBehaviour takes a `List<WaveData>` and coroutine-spawns them in order.
     **Editor:** wire a temporary test list of 3 waves into `WaveRunner` in the scene. Press Play — watch the level fill with enemies wave by wave.

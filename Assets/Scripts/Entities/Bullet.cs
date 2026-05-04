@@ -13,6 +13,7 @@ namespace Warblade.Entities
 
         private Vector3 _spawnPosition;
         private IObjectPool<Bullet> _pool;
+        private bool _isActive;
 
         public void SetPool(IObjectPool<Bullet> pool)
         {
@@ -23,10 +24,13 @@ namespace Warblade.Entities
         {
             transform.position = position;
             _spawnPosition = position;
+            _isActive = true;
         }
 
         private void Update()
         {
+            if (!_isActive) return;
+
             transform.Translate(_direction * (_speed * Time.deltaTime));
 
             if (Vector3.Distance(transform.position, _spawnPosition) > _maxLifetimeDistance)
@@ -37,6 +41,8 @@ namespace Warblade.Entities
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (!_isActive) return;
+
             if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
                 damageable.TakeDamage(_damage);
@@ -46,6 +52,9 @@ namespace Warblade.Entities
 
         private void ReturnToPool()
         {
+            if (!_isActive) return;
+            _isActive = false;
+
             if (_pool != null)
             {
                 _pool.Release(this);

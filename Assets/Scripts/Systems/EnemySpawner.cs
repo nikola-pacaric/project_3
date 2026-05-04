@@ -33,6 +33,9 @@ namespace Warblade.Systems
 
         private readonly Dictionary<Enemy, IObjectPool<Enemy>> _pools =
             new Dictionary<Enemy, IObjectPool<Enemy>>();
+        private int _activeEnemyCount;
+
+        public int ActiveEnemyCount => _activeEnemyCount;
 
         private void Start()
         {
@@ -87,6 +90,24 @@ namespace Warblade.Systems
             return enemy;
         }
 
+        /// <summary>
+        /// Spawns a full formation using a start center and a per-slot spacing step vector.
+        /// </summary>
+        public Coroutine SpawnFormation(
+            Formation formation,
+            Vector2 entryStartCenter,
+            Vector2 entryStartSpacingStep,
+            float perSlotDelay,
+            float delay = 0f)
+        {
+            return StartCoroutine(SpawnFormationAfterDelay(
+                formation,
+                entryStartCenter,
+                entryStartSpacingStep,
+                perSlotDelay,
+                delay));
+        }
+
         [ContextMenu("Spawn Debug Formation")]
         public void SpawnDebugFormation()
         {
@@ -101,7 +122,7 @@ namespace Warblade.Systems
             StartCoroutine(SpawnFormationRoutine(
                 debugSpawn.Formation,
                 debugSpawn.EntryStartCenter,
-                debugSpawn.EntryStartSpacingX,
+                Vector2.right * debugSpawn.EntryStartSpacingX,
                 debugSpawn.PerSlotDelay));
         }
 
@@ -111,14 +132,29 @@ namespace Warblade.Systems
             yield return SpawnFormationRoutine(
                 spawn.Formation,
                 spawn.EntryStartCenter,
-                spawn.EntryStartSpacingX,
+                Vector2.right * spawn.EntryStartSpacingX,
                 spawn.PerSlotDelay);
+        }
+
+        private IEnumerator SpawnFormationAfterDelay(
+            Formation formation,
+            Vector2 entryStartCenter,
+            Vector2 entryStartSpacingStep,
+            float perSlotDelay,
+            float delay)
+        {
+            if (delay > 0f) yield return new WaitForSeconds(delay);
+            yield return SpawnFormationRoutine(
+                formation,
+                entryStartCenter,
+                entryStartSpacingStep,
+                perSlotDelay);
         }
 
         private IEnumerator SpawnFormationRoutine(
             Formation formation,
             Vector2 entryStartCenter,
-            float entryStartSpacingX,
+            Vector2 entryStartSpacingStep,
             float perSlotDelay)
         {
             if (formation == null) yield break;
@@ -150,7 +186,7 @@ namespace Warblade.Systems
                     continue;
                 }
 
-                Vector2 startPosition = entryStartCenter + Vector2.right * ((slotIndex - halfSpan) * entryStartSpacingX);
+                Vector2 startPosition = entryStartCenter + entryStartSpacingStep * (slotIndex - halfSpan);
                 Vector2 formationPosition = formation.GetSlotWorldPosition(slotIndex);
                 Vector2 entryControlOffset = formation.GetSlotEntryControlOffset(slotIndex);
 
@@ -190,8 +226,16 @@ namespace Warblade.Systems
                     enemy.SetPool(pool);
                     return enemy;
                 },
-                actionOnGet: e => e.gameObject.SetActive(true),
-                actionOnRelease: e => e.gameObject.SetActive(false),
+                actionOnGet: e =>
+                {
+                    _activeEnemyCount++;
+                    e.gameObject.SetActive(true);
+                },
+                actionOnRelease: e =>
+                {
+                    _activeEnemyCount = Mathf.Max(0, _activeEnemyCount - 1);
+                    e.gameObject.SetActive(false);
+                },
                 actionOnDestroy: e => Destroy(e.gameObject),
                 collectionCheck: true,
                 defaultCapacity: _defaultCapacity,
