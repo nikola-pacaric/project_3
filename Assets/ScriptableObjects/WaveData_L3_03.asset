@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8a2f3f5f9d24ac89f6f3b19a2d7c4e1, type: 3}
-  m_Name: WaveData_01_V
+  m_Name: WaveData_L3_03
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
-  _formationData: {fileID: 11400000, guid: 8e6f42ae535166b45bfaa44ec0236613, type: 2}
-  _formationAnchorPosition: {x: 0, y: 0}
+  _formationData: {fileID: 11400000, guid: 279c9a3d2e6ad42488bcfeb1653dfda6, type: 2}
+  _formationAnchorPosition: {x: 1, y: -1}
   _spawnDelay: 0
-  _entrySide: 0
-  _entryDistance: 8
-  _entrySpacing: 1.6
-  _perSlotDelay: 0.08
+  _entrySide: 2
+  _entryDistance: 11
+  _entrySpacing: 0
+  _perSlotDelay: 0.3

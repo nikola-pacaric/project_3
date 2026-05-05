@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b2c2ad11297438f8a75d94ac5f690fd, type: 3}
-  m_Name: LevelData_01
+  m_Name: LevelData_02
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.LevelData
-  _levelNumber: 1
+  _levelNumber: 2
   _waves:
-  - {fileID: 11400000, guid: 3f8546f551c64fe4857d11bfb9db3107, type: 2}
-  - {fileID: 11400000, guid: 54e0f0f77fe84ef8849a98d70dbf2f15, type: 2}
-  - {fileID: 11400000, guid: e7bd1cb2a4c1b9d4f85c6b56bc6debba, type: 2}
+  - {fileID: 11400000, guid: 45b8b52645e87c94da1b3c5d8112b96d, type: 2}
+  - {fileID: 11400000, guid: a950ed744f1379a45a3479e87ea768e9, type: 2}

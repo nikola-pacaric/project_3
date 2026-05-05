@@ -181,20 +181,20 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 **Goal:** waves, levels, multiple enemy types. The shape of a real game emerges.
 
 **Build**
-- [ ] 2 more enemy types (3 total) — distinct sprites and movement
-- [ ] Bezier path utility for entries and dives
-- [ ] Sin/Cos formation breathing
-- [ ] At least 4 reusable formations (V, line sweep, snake, dual flank)
-- [ ] Wave system — a level is a sequence of formations spawning over time
-- [ ] 5 hand-tuned levels with progression
-- [ ] "Level Complete" → next level transition
-- [ ] Score persists across levels; game over → level 1
-- [ ] Level number on HUD
+- [x] 2 more enemy types (3 total) — distinct sprites and movement
+- [x] Bezier path utility for entries and dives
+- [x] Sin/Cos formation breathing
+- [x] At least 4 reusable formations (V, line sweep, snake, dual flank)
+- [x] Wave system — a level is a sequence of formations spawning over time
+- [x] 5 hand-tuned levels with progression
+- [x] "Level Complete" → next level transition
+- [x] Score persists across levels; game over → level 1
+- [x] Level number on HUD
 
 **Refactor**
-- [ ] **Extract data into ScriptableObjects:** `EnemyData`, `FormationData`, `LevelData`
-- [ ] Promote ad-hoc spawning into a real `LevelManager` singleton
-- [ ] Pooling extended to enemies
+- [x] **Extract data into ScriptableObjects:** `EnemyData`, `FormationData`, `LevelData`
+- [x] Promote ad-hoc spawning into a real `LevelManager` singleton
+- [x] Pooling extended to enemies
 
 **Cut / Defer:** all 100 levels, boss/modulo logic, cycle scaling, loot, shop, event channels.
 
@@ -251,7 +251,7 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## M6 — Content Fill
 
-**Goal:** scale from 5 levels to 100 + infinite. Authoring, not engineering.
+**Goal:** scale from 5 levels to 100 + infinite. Mostly authoring, after the content model is made scalable.
 
 **Build**
 - [ ] `LevelManager` modulo logic: `level % 25 == 0` → boss, `level / 3` → enemy set rotation
@@ -262,6 +262,11 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 - [ ] Mini-game trigger logic in `LevelManager`
 - [ ] Mini-game scene flow (enter → play → reward → return)
 - [ ] Dev tool: level skip / cash grant / kill-all (you'll need this; build it now)
+
+**Refactor**
+- [ ] **Split formation shape from enemy composition before authoring all 100 levels.** Current M3 `FormationData` stores both slot layout/path data and `EnemyData` per slot, which makes reusable shapes unsafe: changing a V formation for Level 31 would also change Level 1. Refactor so reusable formation data owns the shape only — slot positions, entry control offsets, breathing — while each wave or a separate loadout/composition asset owns the enemy types for those slots.
+- [ ] **Separate final formation placement from entry spawn placement if needed for Warblade-style paths.** Current `WaveData` anchor affects both final slot positions and entry start center. For hand-authored side dives, the designer should be able to place "where enemies start" and "where they settle" independently instead of compensating with local slot offsets.
+- [ ] Add validation/editor safeguards for scalable level authoring: warn on missing enemy data, slot/loadout count mismatches, empty wave lists, missing boss levels, and duplicate/missing `LevelData` numbers.
 
 **Cut / Defer:** final balance pass (M9), real art (M8).
 
