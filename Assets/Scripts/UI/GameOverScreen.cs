@@ -27,6 +27,12 @@ namespace Warblade.UI
 
         public void Restart()
         {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.RestartCurrentScene();
+                return;
+            }
+
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.ResetScore();

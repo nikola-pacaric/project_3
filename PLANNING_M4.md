@@ -24,46 +24,24 @@
   - Drop tables: per enemy type.
   ———
 
-  ## Phase 1 — Run State + Game State Foundation
-  Code
-  - Add a GameManager singleton with states: Playing, Paused, Shop, GameOver.
-  - Add a RunStatsManager singleton for current-run state:
-      - cash
-      - lives
-      - armour count, max 2
-      - weapon tier: Single, Double, Triple, Quad
-      - Speed level
-      - Bullets level
-      - Time level
-      - temporary current-level stat debuffs from suckers
-  - Starting defaults:
-      - lives: 3
-      - weapon: Single
-      - max bullets on screen: 5 + BulletsLevel - temporaryBulletDebuff
-      - movement speed: current M3 feel as baseline, then stat-adjusted
-      - timed buff duration: base duration plus Time-level bonus
-  - Add methods for:
-      - AddCash, TrySpendCash
-      - AddLife
-      - AddArmour
-      - SetWeaponTier, UpgradeWeaponTier, DowngradeWeaponTier
-      - IncreaseSpeed, IncreaseBullets, IncreaseTime
-      - ApplySuckerPenalty
-      - ClearCurrentLevelDebuffs
-      - ResetRun
+  ## Phase 1 — Run State + Game State Foundation — Done
+  Implemented the M4 state foundation without changing visible M3 gameplay.
 
-  Refactor
-  - Move “run reset on game over” responsibility out of scattered UI/level code and into RunStatsManager.ResetRun.
-  - Keep ScoreManager separate for now, but stop duplicating score reset logic where practical.
+  Done:
+  - Added GameManager with Playing, Paused, Shop, and GameOver states.
+  - Added RunStatsManager for run-only cash, lives, armour, weapon tier, S/B/T levels, and temporary sucker debuffs.
+  - Added GameState, WeaponTier, and RunStatType enums.
+  - Refactored PlayerHealth so hits now use RunStatsManager when present: armour absorbs first, unprotected hits downgrade weapon and remove a life, and game over routes through GameManager.
+  - Refactored GameOverScreen restart to use GameManager when present.
+  - LevelManager now clears current-level sucker debuffs when a new level starts.
 
-  Editor
-  - Add GameManager and RunStatsManager objects to SampleScene.
-  - Wire starting values in inspector so they are easy to tune.
+  Verified:
+  - Local C# compile check passes.
+  - Unity Play Mode smoke test confirmed the game still plays like M3.
 
-  Acceptance
-  - Press Play and current M3 gameplay still works.
-  - Game over resets cash/upgrades/lives/weapon state.
-  - No shop or pickups yet.
+  Deferred:
+  - B/S/T values are stored only; gameplay formulas arrive in later shooting, movement, and buff phases.
+  - Shop, pickups, drop tables, timed buffs, and event channels remain later M4 phases.
   ———
 
   ## Phase 2 — Event Channels Before More UI Wiring

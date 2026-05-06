@@ -132,6 +132,7 @@ namespace Warblade.Managers
                 }
 
                 _onLevelStarted?.Invoke(CurrentLevel);
+                RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
                 _waveRunner.PlayWaves(levelData.Waves);
                 yield return WaitForLevelClearRoutine();
 
