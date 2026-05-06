@@ -37,6 +37,9 @@ namespace Warblade.Managers
         [SerializeField] private IntEventChannel _effectiveTimeLevelChanged;
         [SerializeField] private VoidEventChannel _runReset;
 
+        [Header("Debug")]
+        [SerializeField] private bool _debugShieldActive;
+
         private int _cash;
         private int _lives;
         private int _armour;
@@ -47,6 +50,7 @@ namespace Warblade.Managers
         private int _temporarySpeedDebuff;
         private int _temporaryBulletsDebuff;
         private int _temporaryTimeDebuff;
+        private bool _shieldActive;
 
         public int Cash => _cash;
         public int Lives => _lives;
@@ -62,6 +66,7 @@ namespace Warblade.Managers
         public int EffectiveSpeedLevel => Mathf.Max(0, _speedLevel - _temporarySpeedDebuff);
         public int EffectiveBulletsLevel => Mathf.Max(0, _bulletsLevel - _temporaryBulletsDebuff);
         public int EffectiveTimeLevel => Mathf.Max(0, _timeLevel - _temporaryTimeDebuff);
+        public bool IsShieldActive => _shieldActive || _debugShieldActive;
 
         private void Awake()
         {
@@ -255,6 +260,14 @@ namespace Warblade.Managers
         }
 
         /// <summary>
+        /// Sets whether the timed shield buff should currently block player damage.
+        /// </summary>
+        public void SetShieldActive(bool isActive)
+        {
+            _shieldActive = isActive;
+        }
+
+        /// <summary>
         /// Applies one temporary current-level debuff to a specific stat.
         /// </summary>
         public void ApplyTemporaryDebuff(RunStatType statType, int amount = 1)
@@ -314,6 +327,7 @@ namespace Warblade.Managers
             _speedLevel = Mathf.Clamp(_startingSpeedLevel, 0, _maxSpeedLevel);
             _bulletsLevel = Mathf.Clamp(_startingBulletsLevel, 0, _maxBulletsLevel);
             _timeLevel = Mathf.Clamp(_startingTimeLevel, 0, _maxTimeLevel);
+            _shieldActive = false;
             ClearCurrentLevelDebuffs();
             RaiseAllChanged();
             _runReset?.Raise();

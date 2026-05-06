@@ -10,49 +10,44 @@ namespace Warblade.Entities
     {
         public static event Action GameOverRaised;
 
-        [SerializeField, Min(1)] private int _fallbackMaxLives = 3;
         [SerializeField] private UnityEvent _onGameOver;
 
-        private int _fallbackCurrentLives;
         private bool _isDead;
-
-        private void Awake()
-        {
-            _fallbackCurrentLives = _fallbackMaxLives;
-        }
 
         public void TakeDamage(int amount)
         {
             if (_isDead) return;
-            LoseLife();
+            if (amount <= 0) return;
+
+            ResolveHit();
         }
 
-        private void LoseLife()
+        private void ResolveHit()
         {
-            if (RunStatsManager.Instance != null)
+            RunStatsManager runStats = RunStatsManager.Instance;
+            if (runStats == null)
             {
-                if (RunStatsManager.Instance.TryConsumeArmour())
-                {
-                    Debug.Log($"Player hit. Armour remaining: {RunStatsManager.Instance.Armour}");
-                    return;
-                }
-
-                RunStatsManager.Instance.DowngradeWeaponTier();
-                bool outOfLives = RunStatsManager.Instance.LoseLife();
-                Debug.Log($"Player hit. Lives remaining: {RunStatsManager.Instance.Lives}");
-
-                if (outOfLives)
-                {
-                    RaiseGameOver();
-                }
-
+                Debug.LogError($"[{nameof(PlayerHealth)}] Cannot resolve player damage without a {nameof(RunStatsManager)}.");
                 return;
             }
 
-            _fallbackCurrentLives--;
-            Debug.Log($"Player hit. Lives remaining: {_fallbackCurrentLives}");
+            if (runStats.IsShieldActive)
+            {
+                Debug.Log("Player hit blocked by shield.");
+                return;
+            }
 
-            if (_fallbackCurrentLives <= 0)
+            if (runStats.TryConsumeArmour())
+            {
+                Debug.Log($"Player hit. Armour remaining: {runStats.Armour}");
+                return;
+            }
+
+            runStats.DowngradeWeaponTier();
+            bool outOfLives = runStats.LoseLife();
+            Debug.Log($"Player hit. Lives remaining: {runStats.Lives}");
+
+            if (outOfLives)
             {
                 RaiseGameOver();
             }

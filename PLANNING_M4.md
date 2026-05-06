@@ -89,28 +89,20 @@
   - Unity Play Mode smoke test confirmed single/double/triple/quad, bullet cap, angled visuals, debug autofire/rapid-fire, and restart/gameplay still work.
   ———
 
-  ## Phase 4 — Stat-Driven Movement, Damage, Armour, and Shield Hooks
-  Code
-  - Refactor PlayerMovement to read effective movement speed from RunStatsManager.
-  - Refactor PlayerHealth so hit resolution order is:
-      1. If timed shield is active, ignore hit.
-      2. Else if armour > 0, consume one armour and ignore life loss.
-      3. Else lose one life and downgrade weapon tier by one.
-      4. If lives reach zero, raise game over and reset run through GameManager.
-  - Add current-level stat debuff clearing when a new level starts.
+  ## Phase 4 — Stat-Driven Movement, Damage, Armour, and Shield Hooks — Done
+  Connected movement, damage, armour, shield blocking, and run-stat HUD placeholders to the M4 run-stat foundation.
 
-  Refactor
-  - PlayerHealth should no longer own an isolated _currentLives that UI cannot share.
-  - Keep IDamageable unchanged.
+  Done:
+  - PlayerMovement now reads effective Speed level from RunStatsManager.
+  - PlayerHealth now resolves hits through shared run stats: shield blocks first, armour absorbs next, unprotected hits downgrade weapon and remove one life, and zero lives routes through GameManager game over.
+  - Removed PlayerHealth's isolated fallback lives state so lives are owned by RunStatsManager.
+  - Added a shield-active hook on RunStatsManager for the later timed shield buff, plus a temporary debug shield toggle for Play Mode testing.
+  - Added a reusable RunStatHud for lives, armour, cash, and S/B/T placeholder text.
+  - Current-level sucker debuffs already clear on level start through LevelManager.
 
-  Editor
-  - Add armour/lives HUD placeholders if not already present.
-
-  Acceptance
-  - Armour absorbs hits before lives.
-  - Shield blocks hits while active.
-  - Losing a life downgrades weapon one tier.
-  - Sucker-style temporary debuffs clear at next level start.
+  Verified:
+  - Local C# compile check passes.
+  - Unity Play Mode smoke test confirmed movement scaling, shield blocking, armour-first damage, life loss, and weapon downgrade behavior.
   ———
 
   ## Phase 5 — Pickup Data, Pickup Entity, and Pickup Pooling
