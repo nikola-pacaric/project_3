@@ -32,6 +32,7 @@ namespace Warblade.Entities
         private IObjectPool<Enemy> _enemyPool;
         private Formation _formation;
         private int _formationSlotIndex = -1;
+        private bool _hasDespawned;
 
         private Vector2 _entryStart;
         private Vector2 _entryControlPoint;
@@ -112,6 +113,8 @@ namespace Warblade.Entities
             int formationSlotIndex,
             Vector2 entryControlOffset)
         {
+            _hasDespawned = false;
+
             if (_data == null)
             {
                 Debug.LogError($"[{nameof(Enemy)}] Cannot spawn '{name}' without {nameof(EnemyData)}.");
@@ -238,6 +241,8 @@ namespace Warblade.Entities
 
         public void TakeDamage(int amount)
         {
+            if (_hasDespawned) return;
+
             _currentHealth -= amount;
             if (_currentHealth <= 0)
             {
@@ -247,6 +252,8 @@ namespace Warblade.Entities
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (_hasDespawned) return;
+
             if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
                 damageable.TakeDamage(_contactDamage);
@@ -342,6 +349,8 @@ namespace Warblade.Entities
 
         private void Die()
         {
+            if (_hasDespawned) return;
+
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.AddScore(_data.ScoreValue);
@@ -351,6 +360,9 @@ namespace Warblade.Entities
 
         private void Despawn()
         {
+            if (_hasDespawned) return;
+            _hasDespawned = true;
+
             if (_enemyPool != null)
             {
                 _enemyPool.Release(this);

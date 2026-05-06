@@ -16,6 +16,7 @@
   - Boss/bonus-wave pattern: cadence only in M4; real bosses stay M5, mini-games stay M6.
   - Starting stats: Warblade-like prototype values.
   - Weapon loss: hit without protection loses one life and downgrades weapon one tier, never below single.
+  - Weapon upgrades: advancing to a higher weapon tier also grants +1 Bullets once, matching Warblade weapon pickups.
   - Buffs: independent timers; picking the same buff refreshes that buff only.
   - Shield: timed invulnerability pickup.
   - Armour: separate max-2 hit buffer, bought/dropped.
@@ -65,39 +66,27 @@
 
   ———
 
-  ## Phase 3 — Stat-Driven Player Shooting
-  Code
-  - Refactor PlayerShooting so all firing goes through one TryFire() path.
-  - Add max active player bullet counting.
+  ## Phase 3 — Stat-Driven Player Shooting — Done
+  Refactored player shooting so weapon tier, bullet cap, cooldown, and future autofire/rapid-fire all share one firing path.
+
+  Done:
+  - PlayerShooting now fires through TryFire().
+  - Weapon tier comes from RunStatsManager.
   - Bullet cap counts individual projectile instances, not trigger pulls.
-  - Weapon patterns:
-      - Single: 1 center bullet
-      - Double: 2 bullets, slight left/right offset
-      - Triple: 3 bullets, left/center/right
-      - Quad: 4 bullets, two inner and two outer offsets
-  - Fire only if there is enough bullet capacity for the full volley.
-  - Add base fire cooldown.
-  - Manual fire:
-      - one key press attempts one volley.
-      - holding does not repeat unless autofire is active.
-  - Autofire-active fire:
-      - holding fire repeatedly calls the same TryFire() path when cooldown allows.
-  - Rapid-fire-active:
-      - reduces fire cooldown, still respecting bullet cap.
+  - Full volleys are required: no partial double/triple/quad shots when there is not enough bullet capacity.
+  - Base bullet cap stays Warblade-like at 5; weapon upgrade pickups/shop purchases later grant +1 Bullets when advancing tier.
+  - Added base cooldown, debug autofire, and debug rapid-fire hooks.
+  - Added patterns:
+      - Single: one straight bullet
+      - Double: two separated straight bullets
+      - Triple: center straight bullet plus angled side bullets
+      - Quad: four separated bullets with slight outward angle on the outer bullets
+  - Bullet.Spawn now accepts a direction and rotates the bullet visual to match travel direction.
+  - Added an Enemy despawn guard so multi-shot volleys cannot double-release the same pooled enemy.
 
-  Refactor
-  - Keep InputReader as-is: it already exposes FireHeld, which is correct for tap and autofire.
-  - Player bullet pooling remains in PlayerShooting.
-
-  Editor
-  - Tune bullet offsets and cooldown in inspector.
-  - Confirm existing bullet prefab still works.
-
-  Acceptance
-  - Single-shot tap behavior remains faithful.
-  - Double/triple/quad visibly change projectile count.
-  - Bullet cap prevents infinite bullet spam.
-  - Autofire and rapid fire can be enabled via inspector/debug and work together.
+  Verified:
+  - Local C# compile check passes.
+  - Unity Play Mode smoke test confirmed single/double/triple/quad, bullet cap, angled visuals, debug autofire/rapid-fire, and restart/gameplay still work.
   ———
 
   ## Phase 4 — Stat-Driven Movement, Damage, Armour, and Shield Hooks
@@ -140,6 +129,9 @@
       - Armour
       - ExtraLife
       - Sucker
+  - WeaponUpgrade rule:
+      - advances weapon tier by one step when possible
+      - grants +1 Bullets only when the weapon tier actually increases
   - Add pooled Pickup MonoBehaviour:
       - falls downward
       - despawns below play area
@@ -262,6 +254,9 @@
       - Armour
       - Extra Life
       - Weapon upgrade
+  - Weapon upgrade purchases follow the same rule as pickups:
+      - advancing to a higher weapon tier grants +1 Bullets once
+      - buying a tier the player already has or exceeds must not farm extra Bullets
   - Prototype economy:
       - cash drops: $10 and $50
       - shop prices tuned so the player can usually buy 1-2 useful items at each shop

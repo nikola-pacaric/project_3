@@ -106,8 +106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527c0223ad901f641af4c830272369cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  _speed: 10
-  _despawnY: 6
+  _speed: 8
+  _direction: {x: 0, y: 1}
+  _maxLifetimeDistance: 12
   _damage: 1
 --- !u!70 &7909210673094272449
 CapsuleCollider2D:

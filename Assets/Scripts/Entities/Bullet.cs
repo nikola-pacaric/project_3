@@ -22,7 +22,16 @@ namespace Warblade.Entities
 
         public void Spawn(Vector3 position)
         {
+            Spawn(position, _direction);
+        }
+
+        public void Spawn(Vector3 position, Vector2 direction)
+        {
             transform.position = position;
+            _direction = direction.sqrMagnitude > Mathf.Epsilon
+                ? direction.normalized
+                : Vector2.up;
+            transform.up = _direction;
             _spawnPosition = position;
             _isActive = true;
         }
@@ -31,7 +40,7 @@ namespace Warblade.Entities
         {
             if (!_isActive) return;
 
-            transform.Translate(_direction * (_speed * Time.deltaTime));
+            transform.Translate(_direction * (_speed * Time.deltaTime), Space.World);
 
             if (Vector3.Distance(transform.position, _spawnPosition) > _maxLifetimeDistance)
             {

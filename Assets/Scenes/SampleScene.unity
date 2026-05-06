@@ -380,7 +380,7 @@ MonoBehaviour:
   _startingCash: 0
   _startingLives: 3
   _startingArmour: 0
-  _startingWeaponTier: 1
+  _startingWeaponTier: 4
   _startingSpeedLevel: 0
   _startingBulletsLevel: 0
   _startingTimeLevel: 0
@@ -1365,8 +1365,19 @@ MonoBehaviour:
   _input: {fileID: 11400000, guid: ef77f6ca453fef740a2e405193c5768b, type: 2}
   _bulletPrefab: {fileID: 924634902285088487, guid: e9520bef03ea7a54c903b098cfcee6ce, type: 3}
   _spawnYOffset: 0.5
+  _baseMaxActiveBullets: 5
+  _baseFireCooldown: 0.2
+  _rapidFireCooldownMultiplier: 0.5
+  _doubleShotOffset: {x: 0.18, y: 0}
+  _tripleShotSideOffset: {x: 0.24, y: 0}
+  _tripleShotSideAngle: 15
+  _quadShotInnerOffset: {x: 0.16, y: 0}
+  _quadShotOuterOffset: {x: 0.34, y: 0}
+  _quadShotOuterAngle: 6
   _poolDefaultCapacity: 10
   _poolMaxSize: 50
+  _debugAutofireActive: 0
+  _debugRapidFireActive: 0
 --- !u!61 &1517309662
 BoxCollider2D:
   m_ObjectHideFlags: 0
