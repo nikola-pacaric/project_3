@@ -1,19 +1,16 @@
 # M4 — Risk and Reward Phase Plan
 
   ## Summary
-
   M4 turns the M3 five-level shooter into a run-based loot/economy loop: enemies drop pickups, the player collects cash and upgrades, timed buffs change
   combat feel, suckers create risk, and a shop opens after every 4th level. This follows the Warblade reference: shop every 4th level, S/B/T bars for Speed/
   Bullets/Bonus Time, armour as hit protection, and timed shield/autofire-style bonuses.
 
   References used:
-
   - Warblade manual/shop cadence and S/B/T bars: https://warblade.fandom.com/wiki/Game_Manual
   - Warblade bonuses/stat modifiers: https://warblade.fandom.com/wiki/Bonuses
   - Warblade weapons/suckers/life-loss behavior: https://warblade.fandom.com/wiki/Weapons
 
   Key decisions locked:
-
   - Shop cadence: after every 4th level.
   - M4 shop form: in-scene overlay/state, not a separate scene, for smoother WebGL and less persistence complexity.
   - Boss/bonus-wave pattern: cadence only in M4; real bosses stay M5, mini-games stay M6.
@@ -26,8 +23,8 @@
   - Shop upgrades: run-only, reset on game over.
   - Drop tables: per enemy type.
   ———
-  ## Phase 1 — Run State + Game State Foundation
 
+  ## Phase 1 — Run State + Game State Foundation
   Code
   - Add a GameManager singleton with states: Playing, Paused, Shop, GameOver.
   - Add a RunStatsManager singleton for current-run state:
@@ -70,7 +67,6 @@
   ———
 
   ## Phase 2 — Event Channels Before More UI Wiring
-
   Code
   - Add ScriptableObject event channels under Assets/Scripts/Systems/ or Assets/Scripts/Data/Events/:
       - void event channel
@@ -101,7 +97,6 @@
   ———
 
   ## Phase 3 — Stat-Driven Player Shooting
-
   Code
   - Refactor PlayerShooting so all firing goes through one TryFire() path.
   - Add max active player bullet counting.
@@ -137,7 +132,6 @@
   ———
 
   ## Phase 4 — Stat-Driven Movement, Damage, Armour, and Shield Hooks
-
   Code
   - Refactor PlayerMovement to read effective movement speed from RunStatsManager.
   - Refactor PlayerHealth so hit resolution order is:
@@ -162,7 +156,6 @@
   ———
 
   ## Phase 5 — Pickup Data, Pickup Entity, and Pickup Pooling
-
   Code
   - Add PickupData ScriptableObject.
   - Add pickup effect types:
@@ -199,7 +192,6 @@
   ———
 
   ## Phase 6 — BuffManager and Timed Buff UI
-
   Code
   - Add BuffManager singleton.
   - Timed buffs:
@@ -236,7 +228,6 @@
   ———
 
   ## Phase 7 — Drop Tables on Enemy Death
-
   Code
   - Add DropTable ScriptableObject with weighted entries referencing PickupData.
   - Add drop chance and weighted selection logic.
@@ -265,7 +256,6 @@
   ———
 
   ## Phase 8 — Cash HUD, Stat Bars, Lives, Armour, and Weapon HUD
-
   Code
   - Add HUD views for:
       - cash
@@ -294,7 +284,6 @@
   ———
 
   ## Phase 9 — Shop Items and Shop Overlay
-
   Code
   - Add ShopItem ScriptableObject.
   - Shop item types:
@@ -338,7 +327,6 @@
   ———
 
   ## Phase 10 — Four-Level Shop Cadence
-
   Code
   - Add serialized shop interval to LevelManager, default 4.
   - After level completion:
@@ -365,7 +353,6 @@
   ———
 
   ## Phase 11 — M4 Content Pass
-
   Code
   - No new systems unless a bug appears during tuning.
 
@@ -390,7 +377,6 @@
   ———
 
   ## Phase 12 — M4 Gate Build and Cleanup
-
   Code
   - Remove temporary debug logs that are not useful.
   - Keep context-menu/debug force-shop if helpful for development.
@@ -417,7 +403,6 @@
   ———
 
   ## Cut / Defer From M4
-
   - True boss fights stay in M5.
   - Meteor Storm and Memory Match stay in M6.
   - UGS, leaderboard, Cloud Save, and Analytics stay out of M4.
@@ -425,5 +410,3 @@
   - Real art/audio polish stays in M8.
   - Permanent profile saving is out of scope; all M4 upgrades are run-only.
   - Full 100-level enemy-set rotation is deferred, but M4 establishes the every-4th-level shop cadence.
-
----
