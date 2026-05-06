@@ -1,5 +1,6 @@
 using UnityEngine;
 using Warblade.Data;
+using Warblade.Data.Events;
 
 namespace Warblade.Managers
 {
@@ -25,6 +26,16 @@ namespace Warblade.Managers
         [SerializeField, Min(0)] private int _maxSpeedLevel = 5;
         [SerializeField, Min(0)] private int _maxBulletsLevel = 5;
         [SerializeField, Min(0)] private int _maxTimeLevel = 5;
+
+        [Header("Event Channels")]
+        [SerializeField] private IntEventChannel _cashChanged;
+        [SerializeField] private IntEventChannel _livesChanged;
+        [SerializeField] private IntEventChannel _armourChanged;
+        [SerializeField] private WeaponTierEventChannel _weaponTierChanged;
+        [SerializeField] private IntEventChannel _effectiveSpeedLevelChanged;
+        [SerializeField] private IntEventChannel _effectiveBulletsLevelChanged;
+        [SerializeField] private IntEventChannel _effectiveTimeLevelChanged;
+        [SerializeField] private VoidEventChannel _runReset;
 
         private int _cash;
         private int _lives;
@@ -88,6 +99,7 @@ namespace Warblade.Managers
         {
             if (amount <= 0) return;
             _cash += amount;
+            RaiseCashChanged();
         }
 
         /// <summary>
@@ -107,6 +119,7 @@ namespace Warblade.Managers
             }
 
             _cash -= amount;
+            RaiseCashChanged();
             return true;
         }
 
@@ -117,6 +130,7 @@ namespace Warblade.Managers
         {
             if (amount <= 0) return;
             _lives += amount;
+            RaiseLivesChanged();
         }
 
         /// <summary>
@@ -127,6 +141,7 @@ namespace Warblade.Managers
             if (amount <= 0) return _lives <= 0;
 
             _lives = Mathf.Max(0, _lives - amount);
+            RaiseLivesChanged();
             return _lives <= 0;
         }
 
@@ -136,7 +151,11 @@ namespace Warblade.Managers
         public void AddArmour(int amount = 1)
         {
             if (amount <= 0) return;
-            _armour = Mathf.Min(_maxArmour, _armour + amount);
+            int newArmour = Mathf.Min(_maxArmour, _armour + amount);
+            if (_armour == newArmour) return;
+
+            _armour = newArmour;
+            RaiseArmourChanged();
         }
 
         /// <summary>
@@ -150,6 +169,7 @@ namespace Warblade.Managers
             }
 
             _armour--;
+            RaiseArmourChanged();
             return true;
         }
 
@@ -158,7 +178,11 @@ namespace Warblade.Managers
         /// </summary>
         public void SetWeaponTier(WeaponTier weaponTier)
         {
-            _weaponTier = ClampWeaponTier(weaponTier);
+            WeaponTier clampedTier = ClampWeaponTier(weaponTier);
+            if (_weaponTier == clampedTier) return;
+
+            _weaponTier = clampedTier;
+            RaiseWeaponTierChanged();
         }
 
         /// <summary>
@@ -183,7 +207,12 @@ namespace Warblade.Managers
         public void IncreaseSpeed(int amount = 1)
         {
             if (amount <= 0) return;
-            _speedLevel = Mathf.Min(_maxSpeedLevel, _speedLevel + amount);
+            int previousEffectiveLevel = EffectiveSpeedLevel;
+            int newLevel = Mathf.Min(_maxSpeedLevel, _speedLevel + amount);
+            if (_speedLevel == newLevel) return;
+
+            _speedLevel = newLevel;
+            RaiseEffectiveSpeedLevelChangedIfNeeded(previousEffectiveLevel);
         }
 
         /// <summary>
@@ -192,7 +221,12 @@ namespace Warblade.Managers
         public void IncreaseBullets(int amount = 1)
         {
             if (amount <= 0) return;
-            _bulletsLevel = Mathf.Min(_maxBulletsLevel, _bulletsLevel + amount);
+            int previousEffectiveLevel = EffectiveBulletsLevel;
+            int newLevel = Mathf.Min(_maxBulletsLevel, _bulletsLevel + amount);
+            if (_bulletsLevel == newLevel) return;
+
+            _bulletsLevel = newLevel;
+            RaiseEffectiveBulletsLevelChangedIfNeeded(previousEffectiveLevel);
         }
 
         /// <summary>
@@ -201,7 +235,12 @@ namespace Warblade.Managers
         public void IncreaseTime(int amount = 1)
         {
             if (amount <= 0) return;
-            _timeLevel = Mathf.Min(_maxTimeLevel, _timeLevel + amount);
+            int previousEffectiveLevel = EffectiveTimeLevel;
+            int newLevel = Mathf.Min(_maxTimeLevel, _timeLevel + amount);
+            if (_timeLevel == newLevel) return;
+
+            _timeLevel = newLevel;
+            RaiseEffectiveTimeLevelChangedIfNeeded(previousEffectiveLevel);
         }
 
         /// <summary>
@@ -225,13 +264,19 @@ namespace Warblade.Managers
             switch (statType)
             {
                 case RunStatType.Speed:
+                    int previousEffectiveSpeedLevel = EffectiveSpeedLevel;
                     _temporarySpeedDebuff += amount;
+                    RaiseEffectiveSpeedLevelChangedIfNeeded(previousEffectiveSpeedLevel);
                     break;
                 case RunStatType.Bullets:
+                    int previousEffectiveBulletsLevel = EffectiveBulletsLevel;
                     _temporaryBulletsDebuff += amount;
+                    RaiseEffectiveBulletsLevelChangedIfNeeded(previousEffectiveBulletsLevel);
                     break;
                 case RunStatType.Time:
+                    int previousEffectiveTimeLevel = EffectiveTimeLevel;
                     _temporaryTimeDebuff += amount;
+                    RaiseEffectiveTimeLevelChangedIfNeeded(previousEffectiveTimeLevel);
                     break;
                 default:
                     Debug.LogWarning($"[{nameof(RunStatsManager)}] Unknown run stat type: {statType}.");
@@ -244,9 +289,17 @@ namespace Warblade.Managers
         /// </summary>
         public void ClearCurrentLevelDebuffs()
         {
+            int previousEffectiveSpeedLevel = EffectiveSpeedLevel;
+            int previousEffectiveBulletsLevel = EffectiveBulletsLevel;
+            int previousEffectiveTimeLevel = EffectiveTimeLevel;
+
             _temporarySpeedDebuff = 0;
             _temporaryBulletsDebuff = 0;
             _temporaryTimeDebuff = 0;
+
+            RaiseEffectiveSpeedLevelChangedIfNeeded(previousEffectiveSpeedLevel);
+            RaiseEffectiveBulletsLevelChangedIfNeeded(previousEffectiveBulletsLevel);
+            RaiseEffectiveTimeLevelChangedIfNeeded(previousEffectiveTimeLevel);
         }
 
         /// <summary>
@@ -262,12 +315,63 @@ namespace Warblade.Managers
             _bulletsLevel = Mathf.Clamp(_startingBulletsLevel, 0, _maxBulletsLevel);
             _timeLevel = Mathf.Clamp(_startingTimeLevel, 0, _maxTimeLevel);
             ClearCurrentLevelDebuffs();
+            RaiseAllChanged();
+            _runReset?.Raise();
         }
 
         private WeaponTier ClampWeaponTier(WeaponTier weaponTier)
         {
             int tier = Mathf.Clamp((int)weaponTier, (int)WeaponTier.Single, (int)WeaponTier.Quad);
             return (WeaponTier)tier;
+        }
+
+        private void RaiseAllChanged()
+        {
+            RaiseCashChanged();
+            RaiseLivesChanged();
+            RaiseArmourChanged();
+            RaiseWeaponTierChanged();
+            RaiseEffectiveSpeedLevelChanged();
+            RaiseEffectiveBulletsLevelChanged();
+            RaiseEffectiveTimeLevelChanged();
+        }
+
+        private void RaiseCashChanged() => _cashChanged?.Raise(_cash);
+
+        private void RaiseLivesChanged() => _livesChanged?.Raise(_lives);
+
+        private void RaiseArmourChanged() => _armourChanged?.Raise(_armour);
+
+        private void RaiseWeaponTierChanged() => _weaponTierChanged?.Raise(_weaponTier);
+
+        private void RaiseEffectiveSpeedLevelChanged() => _effectiveSpeedLevelChanged?.Raise(EffectiveSpeedLevel);
+
+        private void RaiseEffectiveBulletsLevelChanged() => _effectiveBulletsLevelChanged?.Raise(EffectiveBulletsLevel);
+
+        private void RaiseEffectiveTimeLevelChanged() => _effectiveTimeLevelChanged?.Raise(EffectiveTimeLevel);
+
+        private void RaiseEffectiveSpeedLevelChangedIfNeeded(int previousEffectiveLevel)
+        {
+            if (EffectiveSpeedLevel != previousEffectiveLevel)
+            {
+                RaiseEffectiveSpeedLevelChanged();
+            }
+        }
+
+        private void RaiseEffectiveBulletsLevelChangedIfNeeded(int previousEffectiveLevel)
+        {
+            if (EffectiveBulletsLevel != previousEffectiveLevel)
+            {
+                RaiseEffectiveBulletsLevelChanged();
+            }
+        }
+
+        private void RaiseEffectiveTimeLevelChangedIfNeeded(int previousEffectiveLevel)
+        {
+            if (EffectiveTimeLevel != previousEffectiveLevel)
+            {
+                RaiseEffectiveTimeLevelChanged();
+            }
         }
     }
 }

@@ -44,33 +44,24 @@
   - Shop, pickups, drop tables, timed buffs, and event channels remain later M4 phases.
   ———
 
-  ## Phase 2 — Event Channels Before More UI Wiring
-  Code
-  - Add ScriptableObject event channels under Assets/Scripts/Systems/ or Assets/Scripts/Data/Events/:
-      - void event channel
-      - int event channel
-      - game-state event channel
-      - buff-state event channel if needed for HUD
-  - Use channels for:
-      - cash changed
-      - lives changed
-      - armour changed
-      - weapon tier changed
-      - Speed/Bullets/Time changed
-      - game state changed
-      - level started/completed
-  - Keep singletons for true global services, but UI should listen to events instead of polling singletons directly where reasonable.
+  ## Phase 2 — Event Channels Before More UI Wiring — Done
+  Added ScriptableObject event channels so M4 HUD, shop, pickup, and buff systems can react to state changes without polling managers.
 
-  Refactor
-  - Migrate LevelHud, score/cash/lives HUD additions, and future shop UI toward event-channel updates.
-  - Do not over-migrate enemy movement/spawning yet; keep M3 gameplay stable.
+  Done:
+  - Added void, int, game-state, and weapon-tier event channel ScriptableObjects.
+  - Added matching listener components for inspector-wired UnityEvent responses.
+  - GameManager now raises game-state changes.
+  - RunStatsManager now raises cash, lives, armour, weapon tier, effective S/B/T level, and run-reset events.
+  - LevelManager now raises level-started and level-completed channels while preserving its existing UnityEvents.
+  - LevelHud and LevelCompleteScreen can listen to event channels when assigned, with fallback to the existing LevelManager path.
 
-  Editor
-  - Create event channel assets in Assets/ScriptableObjects/EventChannels/.
+  Verified:
+  - Local C# compile check passes.
+  - Unity Play Mode smoke test confirmed level HUD, level-complete banner, gameplay, game over, and restart still work.
 
-  Acceptance
-  - Existing score and level HUD still update.
-  - Changing run stats raises events and can be observed with temporary debug logs or inspector-wired listeners.
+  Deferred:
+  - Score HUD stays on the current direct ScoreManager path until the broader HUD pass.
+  - Buff-specific event channels wait until BuffManager exists.
 
   ———
 

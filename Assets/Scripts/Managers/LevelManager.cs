@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Warblade.Data;
+using Warblade.Data.Events;
 using Warblade.Entities;
 using Warblade.Systems;
 
@@ -25,6 +26,9 @@ namespace Warblade.Managers
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
         [SerializeField] private LevelChangedEvent _onLevelStarted = new LevelChangedEvent();
         [SerializeField] private LevelChangedEvent _onLevelCompleted = new LevelChangedEvent();
+        [Header("Event Channels")]
+        [SerializeField] private IntEventChannel _levelStarted;
+        [SerializeField] private IntEventChannel _levelCompleted;
 
         private Coroutine _levelRoutine;
         private bool _isGameOver;
@@ -132,12 +136,14 @@ namespace Warblade.Managers
                 }
 
                 _onLevelStarted?.Invoke(CurrentLevel);
+                _levelStarted?.Raise(CurrentLevel);
                 RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
                 _waveRunner.PlayWaves(levelData.Waves);
                 yield return WaitForLevelClearRoutine();
 
                 if (_isGameOver) break;
                 _onLevelCompleted?.Invoke(CurrentLevel);
+                _levelCompleted?.Raise(CurrentLevel);
                 if (_levelTransitionDelay > 0f)
                 {
                     yield return new WaitForSeconds(_levelTransitionDelay);

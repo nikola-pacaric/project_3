@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using Warblade.Data.Events;
 using Warblade.Managers;
 
 namespace Warblade.UI
@@ -8,6 +9,7 @@ namespace Warblade.UI
     public class LevelCompleteScreen : MonoBehaviour
     {
         [SerializeField] private LevelManager _levelManager;
+        [SerializeField] private IntEventChannel _levelCompleted;
         [SerializeField] private GameObject _root;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private TMP_Text _messageText;
@@ -29,7 +31,11 @@ namespace Warblade.UI
                 _levelManager = LevelManager.Instance;
             }
 
-            if (_levelManager != null)
+            if (_levelCompleted != null)
+            {
+                _levelCompleted.OnEventRaised += HandleLevelCompleted;
+            }
+            else if (_levelManager != null)
             {
                 _levelManager.OnLevelCompleted.AddListener(HandleLevelCompleted);
             }
@@ -37,7 +43,11 @@ namespace Warblade.UI
 
         private void OnDisable()
         {
-            if (_levelManager != null)
+            if (_levelCompleted != null)
+            {
+                _levelCompleted.OnEventRaised -= HandleLevelCompleted;
+            }
+            else if (_levelManager != null)
             {
                 _levelManager.OnLevelCompleted.RemoveListener(HandleLevelCompleted);
             }

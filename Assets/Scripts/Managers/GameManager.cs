@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Warblade.Data;
+using Warblade.Data.Events;
 using Warblade.Systems;
 
 namespace Warblade.Managers
@@ -15,6 +16,8 @@ namespace Warblade.Managers
 
         [SerializeField] private InputReader _input;
         [SerializeField] private GameState _startingState = GameState.Playing;
+        [Header("Events")]
+        [SerializeField] private GameStateEventChannel _gameStateChanged;
 
         public GameState CurrentState { get; private set; }
         public bool IsPlaying => CurrentState == GameState.Playing;
@@ -129,6 +132,7 @@ namespace Warblade.Managers
             CurrentState = newState;
             Time.timeScale = newState == GameState.Playing ? 1f : 0f;
             StateChanged?.Invoke(CurrentState);
+            _gameStateChanged?.Raise(CurrentState);
         }
     }
 }

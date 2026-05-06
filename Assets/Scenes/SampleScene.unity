@@ -388,6 +388,14 @@ MonoBehaviour:
   _maxSpeedLevel: 10
   _maxBulletsLevel: 10
   _maxTimeLevel: 10
+  _cashChanged: {fileID: 11400000, guid: 9106b73d12e4663459295336aecb2a40, type: 2}
+  _livesChanged: {fileID: 11400000, guid: 6c2f4974fd450674ead6ee8406dfa9dd, type: 2}
+  _armourChanged: {fileID: 11400000, guid: 477fc8d75a5ae2b4badc78525ca9c1ec, type: 2}
+  _weaponTierChanged: {fileID: 11400000, guid: 78a17dfbcd9a0ee469d85d162a14cca9, type: 2}
+  _effectiveSpeedLevelChanged: {fileID: 11400000, guid: d6f055a36adf5d84fae5da7e3bcc5af3, type: 2}
+  _effectiveBulletsLevelChanged: {fileID: 11400000, guid: fb634bb8acab88f45bb2bf6ac37e1a1b, type: 2}
+  _effectiveTimeLevelChanged: {fileID: 11400000, guid: a13a1e31d666f544a82a010b041d44a7, type: 2}
+  _runReset: {fileID: 11400000, guid: 6cb2fb24afe42164b90ef7515debe08d, type: 2}
 --- !u!4 &586435084
 Transform:
   m_ObjectHideFlags: 0
@@ -538,6 +546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.UI.LevelHud
   _levelManager: {fileID: 1597565265}
+  _levelStarted: {fileID: 0}
   _levelText: {fileID: 884106590}
   _format: Level {0}
 --- !u!114 &884106590
@@ -695,6 +704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.UI.LevelCompleteScreen
   _levelManager: {fileID: 1597565265}
+  _levelCompleted: {fileID: 0}
   _root: {fileID: 894671796}
   _canvasGroup: {fileID: 894671799}
   _messageText: {fileID: 998931680}
@@ -1075,6 +1085,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Managers.GameManager
   _input: {fileID: 11400000, guid: ef77f6ca453fef740a2e405193c5768b, type: 2}
   _startingState: 0
+  _gameStateChanged: {fileID: 11400000, guid: 86b229937497d2f46a1acef70fc8c849, type: 2}
 --- !u!4 &1444049270
 Transform:
   m_ObjectHideFlags: 0
@@ -1636,6 +1647,8 @@ MonoBehaviour:
   _onLevelCompleted:
     m_PersistentCalls:
       m_Calls: []
+  _levelStarted: {fileID: 11400000, guid: 9a0d76faa390e2b4985b62794deeca02, type: 2}
+  _levelCompleted: {fileID: 11400000, guid: 0918f9b1a065670488a090ab84104ce5, type: 2}
 --- !u!4 &1597565266
 Transform:
   m_ObjectHideFlags: 0

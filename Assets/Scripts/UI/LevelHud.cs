@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Warblade.Data.Events;
 using Warblade.Managers;
 
 namespace Warblade.UI
@@ -7,6 +8,7 @@ namespace Warblade.UI
     public class LevelHud : MonoBehaviour
     {
         [SerializeField] private LevelManager _levelManager;
+        [SerializeField] private IntEventChannel _levelStarted;
         [SerializeField] private TMP_Text _levelText;
         [SerializeField] private string _format = "Level {0}";
 
@@ -27,7 +29,11 @@ namespace Warblade.UI
                 _levelManager = LevelManager.Instance;
             }
 
-            if (_levelManager != null)
+            if (_levelStarted != null)
+            {
+                _levelStarted.OnEventRaised += HandleLevelChanged;
+            }
+            else if (_levelManager != null)
             {
                 _levelManager.OnLevelStarted.AddListener(HandleLevelChanged);
             }
@@ -37,7 +43,11 @@ namespace Warblade.UI
 
         private void OnDisable()
         {
-            if (_levelManager != null)
+            if (_levelStarted != null)
+            {
+                _levelStarted.OnEventRaised -= HandleLevelChanged;
+            }
+            else if (_levelManager != null)
             {
                 _levelManager.OnLevelStarted.RemoveListener(HandleLevelChanged);
             }
