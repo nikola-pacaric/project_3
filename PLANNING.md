@@ -1,7 +1,7 @@
 # PLANNING.md
 
 Roadmap and progress tracker for the **Warblade-style** project.
-For project context (architecture, conventions, scope), see `CLAUDE.md`.
+For project context (architecture, conventions, scope), see `AGENTS.md`.
 
 ---
 
