@@ -191,11 +191,43 @@ namespace Warblade.Managers
         }
 
         /// <summary>
+        /// Equips an exact weapon tier from a pickup. Matching the current weapon grants one Bullets level.
+        /// </summary>
+        public void EquipWeaponTierFromPickup(WeaponTier weaponTier)
+        {
+            WeaponTier clampedTier = ClampWeaponTier(weaponTier);
+            if (_weaponTier == clampedTier)
+            {
+                IncreaseBullets();
+                return;
+            }
+
+            SetWeaponTier(clampedTier);
+        }
+
+        /// <summary>
         /// Upgrades the weapon by one tier, up to Quad.
         /// </summary>
         public void UpgradeWeaponTier()
         {
             SetWeaponTier((WeaponTier)((int)_weaponTier + 1));
+        }
+
+        /// <summary>
+        /// Upgrades the weapon by one tier and grants one Bullets level only when the tier actually increases.
+        /// </summary>
+        public bool TryUpgradeWeaponTierWithBulletBonus()
+        {
+            WeaponTier previousTier = _weaponTier;
+            UpgradeWeaponTier();
+
+            if (_weaponTier == previousTier)
+            {
+                return false;
+            }
+
+            IncreaseBullets();
+            return true;
         }
 
         /// <summary>
@@ -253,10 +285,18 @@ namespace Warblade.Managers
         /// </summary>
         public RunStatType ApplySuckerPenalty()
         {
-            DowngradeWeaponTier();
             RunStatType statType = (RunStatType)Random.Range(0, 3);
-            ApplyTemporaryDebuff(statType);
+            ApplySuckerPenalty(statType);
             return statType;
+        }
+
+        /// <summary>
+        /// Applies a specific current-level sucker penalty and downgrades the weapon tier.
+        /// </summary>
+        public void ApplySuckerPenalty(RunStatType statType)
+        {
+            DowngradeWeaponTier();
+            ApplyTemporaryDebuff(statType);
         }
 
         /// <summary>

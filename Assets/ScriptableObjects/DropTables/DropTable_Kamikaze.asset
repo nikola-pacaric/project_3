@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30ae2881fd24da4b693efcbde14af81, type: 3}
+  m_Name: DropTable_Kamikaze
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.DropTable
+  _dropChance: 0.77
+  _weightedPickups:
+  - _pickupData: {fileID: 11400000, guid: ee1bda829505c4a4b9171b2843a56ee9, type: 2}
+    _weight: 40
+  - _pickupData: {fileID: 11400000, guid: 14d71363295d5104bb1a5e726d91ed22, type: 2}
+    _weight: 20
+  - _pickupData: {fileID: 11400000, guid: 702ba575924328f48865f61fc94db6f1, type: 2}
+    _weight: 8
+  - _pickupData: {fileID: 11400000, guid: f150df3538e83944ba6fbd3e8a30a594, type: 2}
+    _weight: 10
+  - _pickupData: {fileID: 11400000, guid: 0fe74704657cbb34bb9b91e19bf2ae96, type: 2}
+    _weight: 10
+  - _pickupData: {fileID: 11400000, guid: e0bc6121c1dde5d418915a0bb4987ffa, type: 2}
+    _weight: 8
+  - _pickupData: {fileID: 11400000, guid: 62720e2081799084a8a8b68df99d6664, type: 2}
+    _weight: 2
+  - _pickupData: {fileID: 11400000, guid: 72e03dd9910558043a59b76efde1f73b, type: 2}
+    _weight: 2
+  - _pickupData: {fileID: 11400000, guid: cb6e969811f07ef4c902cbadda4e51c3, type: 2}
+    _weight: 8

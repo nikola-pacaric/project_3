@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30ae2881fd24da4b693efcbde14af81, type: 3}
+  m_Name: DropTable_Shooter
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.DropTable
+  _dropChance: 0.77
+  _weightedPickups:
+  - _pickupData: {fileID: 11400000, guid: ee1bda829505c4a4b9171b2843a56ee9, type: 2}
+    _weight: 45
+  - _pickupData: {fileID: 11400000, guid: 14d71363295d5104bb1a5e726d91ed22, type: 2}
+    _weight: 20
+  - _pickupData: {fileID: 11400000, guid: 702ba575924328f48865f61fc94db6f1, type: 2}
+    _weight: 8
+  - _pickupData: {fileID: 11400000, guid: 4ae6942963c779248a90cd9500a337f3, type: 2}
+    _weight: 12
+  - _pickupData: {fileID: 11400000, guid: b6f9dc7161bac9a41a581bb4707ce2cb, type: 2}
+    _weight: 8
+  - _pickupData: {fileID: 11400000, guid: 8a8f01b810aca15438997a6345aa6033, type: 2}
+    _weight: 4
+  - _pickupData: {fileID: 11400000, guid: 75492b147b750794d94b033abfb8eb42, type: 2}
+    _weight: 8
+  - _pickupData: {fileID: 11400000, guid: 6bb011ddd3a7b5c47b35bf9e5532c1b0, type: 2}
+    _weight: 5
+  - _pickupData: {fileID: 11400000, guid: cd7db9b8f1b556d4884be63a5d4760f2, type: 2}
+    _weight: 5

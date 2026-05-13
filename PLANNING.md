@@ -19,7 +19,9 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## Current Milestone
 
-**M4** *(not started)*
+**M4** *(in progress)*
+
+Detailed M4 phase tracking lives in `PLANNING_M4.md`. That file is the source of truth for the current Risk and Reward implementation plan.
 
 ---
 
@@ -70,7 +72,7 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 - [x] Game Over screen with Restart
 - [x] Score counter on enemy kill
 - [x] Replace `Input.GetAxis` with **New Input System** — Input Actions asset, `InputReader` SO
-- [x] Folder structure under `Assets/Scripts/` per `CLAUDE.md`
+- [x] Folder structure under `Assets/Scripts/` per `AGENTS.md`
 
 **Refactor**
 - [x] **Object pooling for bullets** — both player and enemy bullets use `UnityEngine.Pool.ObjectPool<T>`
@@ -112,22 +114,30 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 **Goal:** the loot loop. The thing that makes Warblade Warblade.
 
+**Status**
+- [x] Phase 1: Run state and GameManager state foundation
+- [x] Phase 2: ScriptableObject event channels
+- [x] Phase 3: Stat-driven player shooting
+- [x] Phase 4: Stat-driven movement, damage, armour, and shield hooks
+- [ ] Phase 5: Enemy drop pickups *(code foundation complete; drop table assets and Play Mode validation pending)*
+
 **Build**
-- [ ] Pickup base class (pooled), `PickupData` SO, `DropTable` SO per enemy
-- [ ] Pickups: cash, weapon upgrades (single→double→triple→quad), autofire (timed), rapid fire (timed), shield (timed), extra life, sucker downgrade
+- [ ] Pickup base class (pooled), `PickupData` SO, `DropTable` SO per enemy, enemy-death drop path
+- [ ] Pickups: $10/$50/$100/$200 cash, exact weapon pickups (Single/Double/Triple/Quad), Speed/Bullets/Time upgrades, autofire (timed), rapid fire (timed), shield (timed), armour, extra life, red/green/blue sucker downgrades
 - [ ] `BuffManager` for active timed effects
-- [ ] Currency system + cash on HUD
-- [ ] Shop scene loaded between level chunks
+- [ ] Currency system + cash/stat HUD
+- [ ] In-scene shop overlay after every 4th level
 - [ ] `ShopItem` SO, shop UI (grid, cash, buy/leave)
-- [ ] Permanent upgrades: extra bullets, ship speed, fire rate, score multiplier, extra life
+- [ ] Run-only upgrades: Speed, Bullets, Time, armour, extra life, weapon tier
 
 **Refactor**
-- [ ] **Event channels** — too many systems broadcasting state (cash, score, lives, buffs, level). Build SO event channel base classes and migrate direct references.
-- [ ] **GameManager state machine** — formalize Playing / Paused / Shop / GameOver. Pause respects state.
+- [x] **Event channels** — managers now broadcast state changes through SO event channels for HUD/shop/pickup/buff wiring.
+- [x] **GameManager state machine** — formalized Playing / Paused / Shop / GameOver states.
+- [ ] Connect pickup, buff, HUD, and shop systems to the completed run-state/event-channel foundation.
 
-**Cut / Defer:** bosses, mini-games, UGS, audio polish.
+**Cut / Defer:** bosses, mini-games, UGS, permanent profile saving, final economy balance, art/audio polish.
 
-**Acceptance:** play several levels, dodge suckers, accumulate cash, hit the shop, buy upgrades, feel them next level.
+**Acceptance:** play several levels, collect pickups, dodge suckers, accumulate cash, hit the shop after level 4, buy upgrades, and feel them in level 5.
 
 ## M5 — Boss Fights
 

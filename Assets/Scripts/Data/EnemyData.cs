@@ -30,6 +30,9 @@ namespace Warblade.Data
         [Header("Visual")]
         [SerializeField] private Color _spriteColor = Color.white;
 
+        [Header("Drops")]
+        [SerializeField] private DropTable _dropTable;
+
         public int MaxHealth => _maxHealth;
         public int ScoreValue => _scoreValue;
         public float EntrySpeed => _entrySpeed;
@@ -47,5 +50,6 @@ namespace Warblade.Data
         public float LingerDurationMin => _lingerDurationMin;
         public float LingerDurationMax => _lingerDurationMax;
         public Color SpriteColor => _spriteColor;
+        public DropTable DropTable => _dropTable;
     }
 }

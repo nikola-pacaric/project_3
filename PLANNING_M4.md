@@ -16,11 +16,11 @@
   - Boss/bonus-wave pattern: cadence only in M4; real bosses stay M5, mini-games stay M6.
   - Starting stats: Warblade-like prototype values.
   - Weapon loss: hit without protection loses one life and downgrades weapon one tier, never below single.
-  - Weapon upgrades: advancing to a higher weapon tier also grants +1 Bullets once, matching Warblade weapon pickups.
+  - Weapon pickups: enemy drops equip exact weapon tiers (Single/Double/Triple/Quad); collecting the same weapon tier grants +1 Bullets.
   - Buffs: independent timers; picking the same buff refreshes that buff only.
   - Shield: timed invulnerability pickup.
   - Armour: separate max-2 hit buffer, bought/dropped.
-  - Sucker: weapon tier down one for the run, plus one random temporary stat debuff for the current level among Speed/Bullets/Time.
+  - Suckers: red/green/blue variants downgrade weapon one tier and apply a specific current-level debuff to Speed/Time/Bullets.
   - Shop upgrades: run-only, reset on game over.
   - Drop tables: per enemy type.
   ———
@@ -36,14 +36,10 @@
   - Refactored GameOverScreen restart to use GameManager when present.
   - LevelManager now clears current-level sucker debuffs when a new level starts.
 
-  Verified:
-  - Local C# compile check passes.
-  - Unity Play Mode smoke test confirmed the game still plays like M3.
-
   Deferred:
   - B/S/T values are stored only; gameplay formulas arrive in later shooting, movement, and buff phases.
   - Shop, pickups, drop tables, timed buffs, and event channels remain later M4 phases.
-  ———
+
 
   ## Phase 2 — Event Channels Before More UI Wiring — Done
   Added ScriptableObject event channels so M4 HUD, shop, pickup, and buff systems can react to state changes without polling managers.
@@ -56,15 +52,10 @@
   - LevelManager now raises level-started and level-completed channels while preserving its existing UnityEvents.
   - LevelHud and LevelCompleteScreen can listen to event channels when assigned, with fallback to the existing LevelManager path.
 
-  Verified:
-  - Local C# compile check passes.
-  - Unity Play Mode smoke test confirmed level HUD, level-complete banner, gameplay, game over, and restart still work.
-
   Deferred:
   - Score HUD stays on the current direct ScoreManager path until the broader HUD pass.
   - Buff-specific event channels wait until BuffManager exists.
 
-  ———
 
   ## Phase 3 — Stat-Driven Player Shooting — Done
   Refactored player shooting so weapon tier, bullet cap, cooldown, and future autofire/rapid-fire all share one firing path.
@@ -84,10 +75,6 @@
   - Bullet.Spawn now accepts a direction and rotates the bullet visual to match travel direction.
   - Added an Enemy despawn guard so multi-shot volleys cannot double-release the same pooled enemy.
 
-  Verified:
-  - Local C# compile check passes.
-  - Unity Play Mode smoke test confirmed single/double/triple/quad, bullet cap, angled visuals, debug autofire/rapid-fire, and restart/gameplay still work.
-  ———
 
   ## Phase 4 — Stat-Driven Movement, Damage, Armour, and Shield Hooks — Done
   Connected movement, damage, armour, shield blocking, and run-stat HUD placeholders to the M4 run-stat foundation.
@@ -100,49 +87,31 @@
   - Added a reusable RunStatHud for lives, armour, cash, and S/B/T placeholder text.
   - Current-level sucker debuffs already clear on level start through LevelManager.
 
-  Verified:
-  - Local C# compile check passes.
-  - Unity Play Mode smoke test confirmed movement scaling, shield blocking, armour-first damage, life loss, and weapon downgrade behavior.
-  ———
 
-  ## Phase 5 — Pickup Data, Pickup Entity, and Pickup Pooling
-  Code
-  - Add PickupData ScriptableObject.
-  - Add pickup effect types:
-      - CashSmall
-      - CashLarge
-      - WeaponUpgrade
-      - SpeedUp
-      - BulletsUp
-      - TimeUp
-      - Autofire
-      - RapidFire
-      - Shield
-      - Armour
-      - ExtraLife
-      - Sucker
-  - WeaponUpgrade rule:
-      - advances weapon tier by one step when possible
-      - grants +1 Bullets only when the weapon tier actually increases
-  - Add pooled Pickup MonoBehaviour:
-      - falls downward
-      - despawns below play area
-      - applies effect on player trigger
-  - Add PickupSpawner system using UnityEngine.Pool.ObjectPool<Pickup>.
-  - Use placeholder colored square/icon sprites for now.
+  ## Phase 5 — Enemy Drop Pickups — Done
+  Implemented enemy-dropped pickups and the first M4 loot pass.
 
-  Refactor
-  - No enemy drops yet; first validate pickups by placing them manually in the scene.
+  Done:
+  - Added PickupData ScriptableObject and PickupEffectType values for cash, exact weapon pickups, S/B/T stat upgrades, armour, extra life, timed buff placeholders, and specific sucker variants.
+  - Added DropTable ScriptableObject with drop chance and weighted pickup entries.
+  - Added Pickup MonoBehaviour: falls downward, despawns below the play area, applies effects on player trigger, and returns to its pool.
+  - Added PickupDropPool using UnityEngine.Pool.ObjectPool<Pickup>.
+  - Added DropTable references to EnemyData.
+  - Enemy.Die now awards score, rolls the enemy's drop table, and releases a pickup at the enemy position when the roll succeeds.
+  - Added RunStatsManager.EquipWeaponTierFromPickup() so exact weapon pickups equip that tier, while collecting the matching current weapon grants +1 Bullets.
+  - Added specific sucker handling so sucker pickups can downgrade the weapon and apply deterministic Speed/Bullets/Time penalties.
+  - Created PickupData assets in Assets/ScriptableObjects/Pickups/.
+  - Created DropTable assets in Assets/ScriptableObjects/DropTables/.
+  - Created the generic Pickup prefab.
+  - Added PickupDropPool to the scene and assigned the Pickup prefab.
+  - Assigned drop tables to Standard, Shooter, and Kamikaze EnemyData assets.
+  - Added HUD text for cash, Speed, Bullets, and Time so pickup effects can be validated during Play Mode.
+  - Added a Pickup layer/collision matrix setup so bullets no longer collide with pickups while the player can still collect them.
 
-  Editor
-  - Create PickupData assets in Assets/ScriptableObjects/Pickups/.
-  - Create a single generic Pickup.prefab.
+  Deferred:
+  - Autofire, RapidFire, and Shield pickup assets exist, but their real timed effects stay in Phase 6 with BuffManager.
+  - Final drop weights and economy balance stay later; current weights are prototype-tuning values.
 
-  Acceptance
-  - Manually placed pickups can be collected.
-  - Cash, stat upgrades, weapon upgrade, armour, life, and sucker effects all change run state correctly.
-  - Pickup instances are pooled.
-  ———
 
   ## Phase 6 — BuffManager and Timed Buff UI
   Code
@@ -180,27 +149,22 @@
   - Time stat visibly changes new buff durations.
   ———
 
-  ## Phase 7 — Drop Tables on Enemy Death
+  ## Phase 7 — Drop Table Tuning Pass
   Code
-  - Add DropTable ScriptableObject with weighted entries referencing PickupData.
-  - Add drop chance and weighted selection logic.
-  - Add a DropTable reference to EnemyData.
-  - On Enemy.Die, after score award, roll the enemy’s drop table and spawn a pickup at enemy position.
+  - Drop table code was pulled forward into Phase 5 so pickups enter play through destroyed enemies.
   - Prototype drop generosity:
       - frequent enough that several pickups appear every level.
       - cash drops are common.
       - suckers are uncommon but visible during testing.
+  - No new drop architecture unless a bug appears during tuning.
 
   Refactor
-  - Keep score award in enemy death for now, but make pickup spawning independent from score.
+  - Keep score award and pickup drop rolls independent inside enemy death.
 
   Editor
-  - Create one DropTable per enemy type:
-      - Standard
-      - Shooter
-      - Kamikaze
-  - Assign those tables to the three EnemyData assets.
-  - Use prototype weights, not final balance.
+  - Review the Standard, Shooter, and Kamikaze DropTable assets created in Phase 5.
+  - Tune prototype weights, not final balance.
+  - Confirm special drops for big monsters/rank markers remain deferred until those enemy types exist.
 
   Acceptance
   - Killing enemies produces pickups.

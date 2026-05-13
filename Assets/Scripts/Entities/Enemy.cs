@@ -355,6 +355,9 @@ namespace Warblade.Entities
             {
                 ScoreManager.Instance.AddScore(_data.ScoreValue);
             }
+
+            PickupDropPool.Instance?.TryDrop(_data.DropTable, transform.position);
+
             Despawn();
         }
 
