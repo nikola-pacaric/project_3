@@ -7,6 +7,7 @@
 
   References used:
   - Warblade manual/shop cadence and S/B/T bars: https://warblade.fandom.com/wiki/Game_Manual
+  - Warblade shop item/cadence reference: https://warblade.fandom.com/wiki/The_Shop
   - Warblade bonuses/stat modifiers: https://warblade.fandom.com/wiki/Bonuses
   - Warblade weapons/suckers/life-loss behavior: https://warblade.fandom.com/wiki/Weapons
 
@@ -16,12 +17,13 @@
   - Boss/bonus-wave pattern: cadence only in M4; real bosses stay M5, mini-games stay M6.
   - Starting stats: Warblade-like prototype values.
   - Weapon loss: hit without protection loses one life and downgrades weapon one tier, never below single.
-  - Weapon pickups: enemy drops equip exact weapon tiers (Single/Double/Triple/Quad); collecting the same weapon tier grants +1 Bullets.
+  - Weapon pickups: enemy drops equip exact weapon tiers (Single/Double/Triple/Quad); collecting a duplicate of the currently active weapon tier grants +1 Bullets.
   - Buffs: independent timers; picking the same buff refreshes that buff only.
   - Shield: timed invulnerability pickup.
   - Armour: separate max-2 hit buffer, bought/dropped.
   - Suckers: red/green/blue variants downgrade weapon one tier and apply a specific current-level debuff to Speed/Time/Bullets.
   - Shop upgrades: run-only, reset on game over.
+  - Original Warblade profile saves, Clear Shields/God Badge reset, purchasable secrets, rank-marker secret chains, Alien Lock, Rocket Pack, Super Autofire, and other deep profile/secret mechanics are out of scope for this project.
   - Drop tables: per enemy type.
   ———
 
@@ -65,7 +67,7 @@
   - Weapon tier comes from RunStatsManager.
   - Bullet cap counts individual projectile instances, not trigger pulls.
   - Full volleys are required: no partial double/triple/quad shots when there is not enough bullet capacity.
-  - Base bullet cap stays Warblade-like at 5; weapon upgrade pickups/shop purchases later grant +1 Bullets when advancing tier.
+  - Base bullet cap stays Warblade-like at 5; advancing to a higher weapon tier does not grant Bullets.
   - Added base cooldown, debug autofire, and debug rapid-fire hooks.
   - Added patterns:
       - Single: one straight bullet
@@ -98,7 +100,7 @@
   - Added PickupDropPool using UnityEngine.Pool.ObjectPool<Pickup>.
   - Added DropTable references to EnemyData.
   - Enemy.Die now awards score, rolls the enemy's drop table, and releases a pickup at the enemy position when the roll succeeds.
-  - Added RunStatsManager.EquipWeaponTierFromPickup() so exact weapon pickups equip that tier, while collecting the matching current weapon grants +1 Bullets.
+  - Exact weapon pickups equip that tier; duplicate pickups for the currently active weapon tier grant +1 Bullets.
   - Added specific sucker handling so sucker pickups can downgrade the weapon and apply deterministic Speed/Bullets/Time penalties.
   - Created PickupData assets in Assets/ScriptableObjects/Pickups/.
   - Created the shared Basic Alien DropTable asset in Assets/ScriptableObjects/DropTables/.
@@ -169,20 +171,32 @@
   ———
 
   ## Phase 9 — Shop Items and Shop Overlay
+  Scope
+  - Build the practical Warblade-inspired shop loop, not the full original Warblade meta/progression shop.
+  - Shop sells run-only upgrades and selected timed buffs that already exist in M4 systems.
+  - Do not implement Clear Shields, profile save/load, Game Secret purchases, rank-marker purchases, Alien Lock, Rocket Pack, Super Autofire, God Badge resets, or any hidden/profile unlock mechanics.
+
   Code
-  - Add ShopItem ScriptableObject.
+  - Add ShopItem ScriptableObject for data-driven shop entries.
   - Shop item types:
       - Speed upgrade
       - Extra Bullets upgrade
       - Extra Time upgrade
       - Armour
       - Extra Life
-      - Weapon upgrade
-  - Weapon upgrade purchases follow the same rule as pickups:
-      - advancing to a higher weapon tier grants +1 Bullets once
-      - buying a tier the player already has or exceeds must not farm extra Bullets
+      - Weapon tier purchase
+      - Timed Autofire purchase through BuffManager
+      - Optional timed RapidFire/Shield purchases only if they reuse the existing BuffManager path without new mechanics
+  - Weapon tier purchases follow the same rule as weapon pickups:
+      - buying a higher weapon tier changes the weapon pattern only
+      - buying a tier the player already has or exceeds is disabled
+      - weapon tier purchases never grant Bullets; the duplicate-pickup conversion rule is for drops only
+  - Timed buff purchases follow the same rule as timed buff pickups:
+      - buying the buff starts or refreshes that buff timer
+      - Time stat affects newly purchased timed buff duration through BuffManager
   - Prototype economy:
-      - cash drops: $10 and $50
+      - cash drops already include $10/$50/$100/$200 pickup assets
+      - first shop should make at least one useful purchase realistic without guaranteeing a weapon jump every run
       - shop prices tuned so the player can usually buy 1-2 useful items at each shop
       - final pricing deferred to M9
   - Add ShopController UI:
@@ -203,6 +217,16 @@
 
   Editor
   - Create ShopItem assets in Assets/ScriptableObjects/Shop/.
+  - First pass item assets:
+      - Extra Speed
+      - Extra Bullets
+      - Extra Time
+      - Armour
+      - Extra Life
+      - Double Shot
+      - Triple Shot
+      - Quad Shot
+      - Timed Autofire Unit
   - Build a simple shop panel under the existing Canvas.
   - Wire item list in inspector.
 
@@ -298,3 +322,10 @@
   - Real art/audio polish stays in M8.
   - Permanent profile saving is out of scope; all M4 upgrades are run-only.
   - Full 100-level enemy-set rotation is deferred, but M4 establishes the every-4th-level shop cadence.
+
+  ## Permanently Out of Scope
+  - Clear Shields / God Badge reset economy.
+  - Warblade-style profile save slots from the shop.
+  - Purchasable Game Secrets and secret clue screens.
+  - Rank-marker shop purchases and hidden rank-marker unlock chains.
+  - Alien Lock, Rocket Pack, Super Autofire, and other deep original-Warblade profile/secret unlock shop items unless explicitly re-scoped later.

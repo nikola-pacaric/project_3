@@ -131,14 +131,17 @@ Detailed M4 phase tracking lives in `PLANNING_M4.md`. That file is the source of
 - [x] Currency system + cash/stat HUD
 - [ ] In-scene shop overlay after every 4th level
 - [ ] `ShopItem` SO, shop UI (grid, cash, buy/leave)
-- [ ] Run-only upgrades: Speed, Bullets, Time, armour, extra life, weapon tier
+- [ ] Run-only shop upgrades: Speed, Bullets, Time, armour, extra life, weapon tier, timed Autofire
+- [ ] Weapon tier purchases only change shot pattern; duplicate active-tier weapon pickups still convert into +1 Bullets
 
 **Refactor**
 - [x] **Event channels** — managers now broadcast state changes through SO event channels for HUD/shop/pickup/buff wiring.
 - [x] **GameManager state machine** — formalized Playing / Paused / Shop / GameOver states.
 - [ ] Connect pickup, buff, HUD, and shop systems to the completed run-state/event-channel foundation.
 
-**Cut / Defer:** bosses, mini-games, UGS, permanent profile saving, final economy balance, art/audio polish.
+**Cut / Defer:** bosses, mini-games, UGS, final economy balance, art/audio polish.
+
+**Permanently Out of Scope:** Warblade-style shop profile saves, Clear Shields / God Badge reset economy, purchasable secrets, rank-marker secret chains, Alien Lock, Rocket Pack, Super Autofire, and other deep original-Warblade profile/secret unlock mechanics.
 
 **Acceptance:** play several levels, collect pickups, dodge suckers, accumulate cash, hit the shop after level 4, buy upgrades, and feel them in level 5.
 
