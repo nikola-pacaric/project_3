@@ -119,13 +119,16 @@ Detailed M4 phase tracking lives in `PLANNING_M4.md`. That file is the source of
 - [x] Phase 2: ScriptableObject event channels
 - [x] Phase 3: Stat-driven player shooting
 - [x] Phase 4: Stat-driven movement, damage, armour, and shield hooks
-- [ ] Phase 5: Enemy drop pickups *(code foundation complete; drop table assets and Play Mode validation pending)*
+- [x] Phase 5: Enemy drop pickups
+- [x] Phase 6: BuffManager and timed buff HUD foundation
+- [x] Phase 7: Drop table tuning pass
+- [x] Phase 8: Cash, stat, lives, armour, weapon, and buff HUD
 
 **Build**
-- [ ] Pickup base class (pooled), `PickupData` SO, `DropTable` SO per enemy, enemy-death drop path
-- [ ] Pickups: $10/$50/$100/$200 cash, exact weapon pickups (Single/Double/Triple/Quad), Speed/Bullets/Time upgrades, autofire (timed), rapid fire (timed), shield (timed), armour, extra life, red/green/blue sucker downgrades
-- [ ] `BuffManager` for active timed effects
-- [ ] Currency system + cash/stat HUD
+- [x] Pickup base class (pooled), `PickupData` SO, shared basic-alien `DropTable` SO, enemy-death drop path
+- [x] Pickups: $10/$50/$100/$200 cash, exact weapon pickups (Single/Double/Triple/Quad), Speed/Bullets/Time upgrades, autofire (timed), rapid fire (timed), shield (timed), armour, extra life, red/green/blue sucker downgrades
+- [x] `BuffManager` for active timed effects
+- [x] Currency system + cash/stat HUD
 - [ ] In-scene shop overlay after every 4th level
 - [ ] `ShopItem` SO, shop UI (grid, cash, buy/leave)
 - [ ] Run-only upgrades: Speed, Bullets, Time, armour, extra life, weapon tier

@@ -56,6 +56,9 @@ namespace Warblade.Managers
         public int Lives => _lives;
         public int Armour => _armour;
         public int MaxArmour => _maxArmour;
+        public int MaxSpeedLevel => _maxSpeedLevel;
+        public int MaxBulletsLevel => _maxBulletsLevel;
+        public int MaxTimeLevel => _maxTimeLevel;
         public WeaponTier WeaponTier => _weaponTier;
         public int SpeedLevel => _speedLevel;
         public int BulletsLevel => _bulletsLevel;

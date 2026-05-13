@@ -124,9 +124,11 @@ namespace Warblade.Entities
             return Mathf.Max(0f, cooldown);
         }
 
-        private bool IsAutofireActive => _debugAutofireActive;
+        private bool IsAutofireActive => _debugAutofireActive
+            || (BuffManager.Instance != null && BuffManager.Instance.IsAutofireActive);
 
-        private bool IsRapidFireActive => _debugRapidFireActive;
+        private bool IsRapidFireActive => _debugRapidFireActive
+            || (BuffManager.Instance != null && BuffManager.Instance.IsRapidFireActive);
 
         private int PopulateVolleyOffsets(WeaponTier weaponTier)
         {

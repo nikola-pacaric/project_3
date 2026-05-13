@@ -155,6 +155,7 @@ If a built-in solution exists, use it. If not, surface the dependency request ex
 - Code samples should be production-ready for this project's conventions, not generic Unity tutorial code.
 - When I ask "how do I do X," default to showing the approach that fits this architecture, even if it's slightly more setup than a quick hack.
 - Flag when something is a hack vs. the right way, so I can choose knowingly.
+- Do **not** perform Unity Editor work directly by editing scene, prefab, ProjectSettings, or other editor-owned YAML files unless I explicitly ask for it. Instead, give me clear step-by-step instructions for what to do in the Unity Editor and explain why each step is needed. Code and ScriptableObject asset changes are okay when they are part of the requested implementation.
 
 ---
 

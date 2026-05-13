@@ -29,4 +29,4 @@ MonoBehaviour:
   _lingerDurationMin: 0.5
   _lingerDurationMax: 1.5
   _spriteColor: {r: 1, g: 1, b: 1, a: 1}
-  _dropTable: {fileID: 11400000, guid: 720d668bfa9c9a64193f6623193ba7e7, type: 2}
+  _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

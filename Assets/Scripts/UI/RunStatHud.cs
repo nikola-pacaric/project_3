@@ -21,6 +21,10 @@ namespace Warblade.UI
         [SerializeField] private IntEventChannel _changed;
         [SerializeField] private TMP_Text _text;
         [SerializeField] private string _format = "{0}";
+        [SerializeField] private bool _showBar;
+        [SerializeField, Min(1)] private int _barWidth = 10;
+        [SerializeField] private string _filledBarCharacter = "#";
+        [SerializeField] private string _emptyBarCharacter = "-";
 
         private void Awake()
         {
@@ -47,7 +51,7 @@ namespace Warblade.UI
 
         private void HandleChanged(int value)
         {
-            SetText(value);
+            Refresh();
         }
 
         private void Refresh()
@@ -55,7 +59,7 @@ namespace Warblade.UI
             RunStatsManager runStats = RunStatsManager.Instance;
             if (runStats == null) return;
 
-            SetText(GetCurrentValue(runStats));
+            SetText(runStats, GetCurrentValue(runStats));
         }
 
         private int GetCurrentValue(RunStatsManager runStats)
@@ -79,12 +83,48 @@ namespace Warblade.UI
             }
         }
 
-        private void SetText(int value)
+        private int GetMaxValue(RunStatsManager runStats)
+        {
+            switch (_stat)
+            {
+                case RunStatDisplay.Armour:
+                    return runStats.MaxArmour;
+                case RunStatDisplay.Speed:
+                    return runStats.MaxSpeedLevel;
+                case RunStatDisplay.Bullets:
+                    return runStats.MaxBulletsLevel;
+                case RunStatDisplay.Time:
+                    return runStats.MaxTimeLevel;
+                default:
+                    return 0;
+            }
+        }
+
+        private void SetText(RunStatsManager runStats, int value)
         {
             if (_text != null)
             {
-                _text.text = string.Format(_format, value);
+                int maxValue = GetMaxValue(runStats);
+                string bar = _showBar && maxValue > 0
+                    ? BuildBar(value, maxValue)
+                    : string.Empty;
+
+                _text.text = string.Format(_format, value, maxValue, bar);
             }
+        }
+
+        private string BuildBar(int value, int maxValue)
+        {
+            int clampedMax = Mathf.Max(1, maxValue);
+            int filledCount = Mathf.RoundToInt(Mathf.Clamp01((float)value / clampedMax) * _barWidth);
+
+            return new string(GetBarCharacter(_filledBarCharacter), filledCount)
+                + new string(GetBarCharacter(_emptyBarCharacter), _barWidth - filledCount);
+        }
+
+        private char GetBarCharacter(string value)
+        {
+            return string.IsNullOrEmpty(value) ? '-' : value[0];
         }
     }
 }

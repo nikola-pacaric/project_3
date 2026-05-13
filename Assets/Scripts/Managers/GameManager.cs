@@ -95,6 +95,7 @@ namespace Warblade.Managers
         {
             if (CurrentState == GameState.GameOver) return;
 
+            BuffManager.Instance?.ClearAllBuffs();
             RunStatsManager.Instance?.ResetRun();
             SetState(GameState.GameOver);
         }
@@ -119,6 +120,7 @@ namespace Warblade.Managers
         /// </summary>
         public void RestartCurrentScene()
         {
+            BuffManager.Instance?.ClearAllBuffs();
             RunStatsManager.Instance?.ResetRun();
             ScoreManager.Instance?.ResetScore();
             Time.timeScale = 1f;

@@ -31,7 +31,7 @@ namespace Warblade.Entities
                 return;
             }
 
-            if (runStats.IsShieldActive)
+            if (IsShieldActive(runStats))
             {
                 Debug.Log("Player hit blocked by shield.");
                 return;
@@ -61,6 +61,16 @@ namespace Warblade.Entities
             GameManager.Instance?.EnterGameOver();
             GameOverRaised?.Invoke();
             _onGameOver?.Invoke();
+        }
+
+        private bool IsShieldActive(RunStatsManager runStats)
+        {
+            if (BuffManager.Instance != null)
+            {
+                return BuffManager.Instance.IsShieldActive;
+            }
+
+            return runStats.IsShieldActive;
         }
     }
 }

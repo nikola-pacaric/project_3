@@ -14,12 +14,17 @@ namespace Warblade.Entities
         [SerializeField] private float _minX = -8.5f;
         [SerializeField] private float _maxX = 8.5f;
 
+        [Header("Runtime Debug")]
+        [SerializeField] private float _currentMovementSpeed;
+
         private void Update()
         {
             if (_input == null) return;
 
+            _currentMovementSpeed = GetMovementSpeed();
+
             Vector3 position = transform.position;
-            position.x += _input.MoveAxis * GetMovementSpeed() * Time.deltaTime;
+            position.x += _input.MoveAxis * _currentMovementSpeed * Time.deltaTime;
             position.x = Mathf.Clamp(position.x, _minX, _maxX);
             transform.position = position;
         }

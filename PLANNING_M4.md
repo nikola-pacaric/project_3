@@ -101,10 +101,10 @@
   - Added RunStatsManager.EquipWeaponTierFromPickup() so exact weapon pickups equip that tier, while collecting the matching current weapon grants +1 Bullets.
   - Added specific sucker handling so sucker pickups can downgrade the weapon and apply deterministic Speed/Bullets/Time penalties.
   - Created PickupData assets in Assets/ScriptableObjects/Pickups/.
-  - Created DropTable assets in Assets/ScriptableObjects/DropTables/.
+  - Created the shared Basic Alien DropTable asset in Assets/ScriptableObjects/DropTables/.
   - Created the generic Pickup prefab.
   - Added PickupDropPool to the scene and assigned the Pickup prefab.
-  - Assigned drop tables to Standard, Shooter, and Kamikaze EnemyData assets.
+  - Assigned the shared Basic Alien DropTable to Standard, Shooter, and Kamikaze EnemyData assets.
   - Added HUD text for cash, Speed, Bullets, and Time so pickup effects can be validated during Play Mode.
   - Added a Pickup layer/collision matrix setup so bullets no longer collide with pickups while the player can still collect them.
 
@@ -113,91 +113,59 @@
   - Final drop weights and economy balance stay later; current weights are prototype-tuning values.
 
 
-  ## Phase 6 — BuffManager and Timed Buff UI
-  Code
-  - Add BuffManager singleton.
-  - Timed buffs:
-      - Autofire
-      - RapidFire
-      - Shield
-  - Buff rules:
-      - independent timers
-      - collecting the same buff refreshes its timer
-      - collecting a different buff does not cancel existing buffs
-  - Duration rule:
-      - base duration comes from serialized buff tuning
-      - Time stat adds fixed seconds per Time level
-      - temporary Time debuff reduces effective duration while active
-  - Expose read APIs:
-      - IsAutofireActive
-      - IsRapidFireActive
-      - IsShieldActive
-      - remaining duration per buff
+  ## Phase 6 — BuffManager and Timed Buff UI — Done
+  Implemented the timed buff foundation for enemy-dropped Autofire, RapidFire, and Shield pickups.
 
-  Refactor
-  - PlayerShooting reads autofire/rapid-fire state from BuffManager.
-  - PlayerHealth reads shield state from BuffManager.
+  Done:
+  - Added BuffType and BuffManager.
+  - Added independent timers for Autofire, RapidFire, and Shield.
+  - Re-collecting the same buff refreshes only that buff's timer.
+  - Different buffs can run at the same time without cancelling each other.
+  - Buff duration uses serialized base values plus fixed seconds per effective Time level, so Time upgrades and current-level Time suckers affect new buff durations.
+  - Exposed IsAutofireActive, IsRapidFireActive, IsShieldActive, and remaining/duration read APIs.
+  - Added a BuffTimerChanged ScriptableObject event channel.
+  - PlayerShooting now reads Autofire and RapidFire from BuffManager while keeping debug toggles available.
+  - PlayerHealth now reads Shield from BuffManager, with the old RunStatsManager shield hook kept as a fallback/debug path.
+  - Timed buff pickups now activate real effects instead of logging placeholders.
+  - Game over and restart clear active buffs.
+  - Added BuffManager to the scene with prototype durations.
+  - Added simple right-side TMP timer labels for Autofire, RapidFire, and Shield.
 
-  Editor
-  - Add simple HUD buff indicators with shrinking timer text or bars.
-  - Use placeholder labels/icons.
-
-  Acceptance
-  - Autofire allows hold-to-fire.
-  - Rapid fire increases firing cadence.
-  - Shield makes the player invulnerable for its timer.
-  - Time stat visibly changes new buff durations.
+  Deferred:
+  - Final buff duration tuning stays in the M4 content pass.
+  - Polished buff icons/bars stay in the broader HUD/art polish passes.
   ———
 
-  ## Phase 7 — Drop Table Tuning Pass
-  Code
-  - Drop table code was pulled forward into Phase 5 so pickups enter play through destroyed enemies.
-  - Prototype drop generosity:
-      - frequent enough that several pickups appear every level.
-      - cash drops are common.
-      - suckers are uncommon but visible during testing.
-  - No new drop architecture unless a bug appears during tuning.
+  ## Phase 7 — Drop Table Tuning Pass — Done
+  Tuned the first prototype drop tables now that Phase 5/6 pickups and timed buffs are working.
 
-  Refactor
-  - Keep score award and pickup drop rolls independent inside enemy death.
+  Done:
+  - Kept the Phase 5 drop architecture unchanged.
+  - Reduced the first-pass validation drop chance from 77% to prototype gameplay values.
+  - Replaced per-normal-enemy drop tables with one shared Basic Alien DropTable, closer to Warblade's normal-alien bonus pool.
+  - Standard, Shooter, and Kamikaze enemies all use the shared basic pool.
+  - Cash remains common in the basic pool.
+  - Weapon bonuses, S/B/T upgrades, timed buffs, armour, extra life, and suckers are all available from normal aliens.
+  - Suckers remain uncommon but visible enough for testing.
+  - Special drops for future big aliens, bosses, hurry-up ships, rank markers, and mini-game extras remain deferred until those enemy/content types exist.
 
-  Editor
-  - Review the Standard, Shooter, and Kamikaze DropTable assets created in Phase 5.
-  - Tune prototype weights, not final balance.
-  - Confirm special drops for big monsters/rank markers remain deferred until those enemy types exist.
-
-  Acceptance
-  - Killing enemies produces pickups.
-  - Different enemy types can have different drop tendencies.
-  - Drops are pooled and do not create clone buildup.
+  Deferred:
+  - Final economy balance remains later; these weights are prototype values for M4 playtesting.
   ———
 
-  ## Phase 8 — Cash HUD, Stat Bars, Lives, Armour, and Weapon HUD
-  Code
-  - Add HUD views for:
-      - cash
-      - lives
-      - armour count
-      - current weapon tier
-      - Speed bar
-      - Bullets bar
-      - Time bar
-      - active timed buffs
-  - HUD listens to event channels from RunStatsManager and BuffManager.
+  ## Phase 8 — Cash HUD, Stat Bars, Lives, Armour, and Weapon HUD — Done
+  Consolidated the M4 HUD placeholders into a functional run HUD.
 
-  Refactor
-  - Avoid direct HUD polling of singletons except for initial value sync in Awake/OnEnable.
+  Done:
+  - Cash, lives, armour, Speed, Bullets, and Time HUD readouts listen to RunStatsManager event channels.
+  - Speed, Bullets, and Time now display simple text bars with current/max values.
+  - Added WeaponTierHud for current weapon display through the weapon-tier event channel.
+  - Active timed buffs continue to display through TimedBuffHud and BuffTimerChanged.
+  - RunStatHud still uses singleton polling only for initial refresh; live updates come from event channels.
+  - Added max Speed/Bullets/Time accessors to RunStatsManager for HUD display.
 
-  Editor
-  - Extend the existing Canvas.
-  - Use TMP text and simple bars.
-  - Placeholder visuals are acceptable; M8 handles polish.
-
-  Acceptance
-  - Collecting pickups updates HUD immediately.
-  - Sucker penalty is visible.
-  - Hit/life/armour changes are visible.
-  - HUD remains readable in 1920x1080 WebGL layout.
+  Deferred:
+  - Final art, icons, animated bars, and layout polish stay in the later visual polish pass.
   ———
 
   ## Phase 9 — Shop Items and Shop Overlay

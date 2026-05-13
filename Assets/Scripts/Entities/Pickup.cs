@@ -91,6 +91,8 @@ namespace Warblade.Entities
                 return;
             }
 
+            Debug.Log($"Collected pickup: {_data.DisplayName} ({_data.EffectType})");
+
             switch (_data.EffectType)
             {
                 case PickupEffectType.Cash10:
@@ -149,15 +151,33 @@ namespace Warblade.Entities
                     break;
 
                 case PickupEffectType.Autofire:
+                    ActivateTimedBuff(BuffType.Autofire);
+                    break;
+
                 case PickupEffectType.RapidFire:
+                    ActivateTimedBuff(BuffType.RapidFire);
+                    break;
+
                 case PickupEffectType.Shield:
-                    Debug.Log($"[{nameof(Pickup)}] '{_data.DisplayName}' collected. Timed buff effects are wired in M4 Phase 6.");
+                    ActivateTimedBuff(BuffType.Shield);
                     break;
 
                 default:
                     Debug.LogWarning($"[{nameof(Pickup)}] Unsupported pickup effect: {_data.EffectType}.");
                     break;
             }
+        }
+
+        private void ActivateTimedBuff(BuffType buffType)
+        {
+            BuffManager buffManager = BuffManager.Instance;
+            if (buffManager == null)
+            {
+                Debug.LogError($"[{nameof(Pickup)}] Cannot apply '{_data.DisplayName}' without a {nameof(BuffManager)}.");
+                return;
+            }
+
+            buffManager.ActivateBuff(buffType);
         }
 
         private void ApplyVisualsFromData()
