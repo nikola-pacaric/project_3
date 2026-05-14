@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BossData_TestBoss
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossData
   _displayName: Test Boss
-  _maxHealth: 500
+  _maxHealth: 10
   _scoreValue: 5000
   _entryStartPosition: {x: 0, y: 7}
   _entryTargetPosition: {x: 0, y: 2.75}

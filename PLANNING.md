@@ -153,13 +153,13 @@ Detailed M5 phase tracking lives in `PLANNING_M5.md`. That file is the source of
 **Goal:** the spectacle. One good boss, then duplicate to four.
 
 **Build**
-- [ ] `Boss` MonoBehaviour with multi-phase FSM
+- [x] `Boss` MonoBehaviour with multi-phase FSM
 - [x] `BossData` SO — health, phases, attack patterns, drops
-- [ ] Bullet pattern systems — radial, aimed, sweep (data-driven)
+- [x] Bullet pattern systems — radial, aimed, sweep (data-driven)
 - [ ] First boss prefab + data — get the architecture right here
 - [ ] Boss intro flow (warning, entry, name banner)
 - [ ] Boss death sequence (long explosion, screen clear, big drops)
-- [ ] Test at level 5 (renumber to 25 in M6)
+- [x] Test at level 5 (renumber to 25 in M6)
 - [ ] Three more boss prefabs + data once architecture is proven
 
 **Refactor**

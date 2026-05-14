@@ -53,6 +53,8 @@ Acceptance:
 
 ## Phase 2 — Boss Runtime and Health
 
+Status: Complete.
+
 Code:
 - Add `Boss` MonoBehaviour in `Assets/Scripts/Entities`.
 - Boss implements `IDamageable`.
@@ -84,6 +86,8 @@ Acceptance:
 
 ## Phase 3 — Boss Bullet Patterns
 
+Status: Complete.
+
 Code:
 - Add boss bullet spawning with `UnityEngine.Pool.ObjectPool<Bullet>`.
 - Reuse the existing `Bullet` behavior where possible.
@@ -107,6 +111,8 @@ Acceptance:
 ---
 
 ## Phase 4 — Boss HUD, Intro, Death, and Rewards
+
+Status: Complete.
 
 Code:
 - Add a simple boss HUD:
@@ -132,6 +138,8 @@ Acceptance:
 
 ## Phase 5 — Level-5 Test Integration
 
+Status: Complete.
+
 Code:
 - Extend level flow so the first boss can be tested after level 5 waves clear.
 - Add serialized optional boss test configuration to `LevelManager` or a small boss encounter runner.
@@ -156,6 +164,8 @@ Acceptance:
 ---
 
 ## Phase 6 — M5 Gate Cleanup and Validation
+
+Status: Complete.
 
 Code:
 - Remove noisy temporary logs.

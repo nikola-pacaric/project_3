@@ -26,6 +26,10 @@ namespace Warblade.Managers
         [SerializeField] private bool _playOnStart = true;
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
         [SerializeField, Min(1)] private int _shopInterval = 4;
+        [Header("M5 Boss Test")]
+        [SerializeField] private bool _enableTestBossAfterWaves;
+        [SerializeField, Min(1)] private int _testBossLevel = 5;
+        [SerializeField] private Boss _testBoss;
         [SerializeField] private LevelChangedEvent _onLevelStarted = new LevelChangedEvent();
         [SerializeField] private LevelChangedEvent _onLevelCompleted = new LevelChangedEvent();
         [Header("Event Channels")]
@@ -150,6 +154,12 @@ namespace Warblade.Managers
                 yield return WaitForLevelClearRoutine();
 
                 if (_isGameOver) break;
+                if (ShouldRunTestBossAfterWaves(CurrentLevel))
+                {
+                    yield return RunTestBossEncounterRoutine();
+                }
+
+                if (_isGameOver) break;
                 _onLevelCompleted?.Invoke(CurrentLevel);
                 _levelCompleted?.Raise(CurrentLevel);
                 if (_levelTransitionDelay > 0f)
@@ -185,6 +195,18 @@ namespace Warblade.Managers
         public void ForceShopEntry()
         {
             GameManager.Instance?.EnterShop();
+        }
+
+        [ContextMenu("Force Test Boss Encounter")]
+        public void ForceTestBossEncounter()
+        {
+            if (_levelRoutine != null)
+            {
+                StopCoroutine(_levelRoutine);
+            }
+
+            _isGameOver = false;
+            _levelRoutine = StartCoroutine(RunForcedTestBossRoutine());
         }
 
         private IEnumerator WaitForLevelClearRoutine()
@@ -249,6 +271,41 @@ namespace Warblade.Managers
         private bool ShouldEnterShopAfterLevel(int completedLevel)
         {
             return _shopInterval > 0 && completedLevel % _shopInterval == 0;
+        }
+
+        private bool ShouldRunTestBossAfterWaves(int levelNumber)
+        {
+            return _enableTestBossAfterWaves && levelNumber == _testBossLevel;
+        }
+
+        private IEnumerator RunTestBossEncounterRoutine()
+        {
+            if (_testBoss == null)
+            {
+                Debug.LogWarning($"[{nameof(LevelManager)}] Test boss is enabled for level {_testBossLevel}, but no boss reference is assigned.");
+                yield break;
+            }
+
+            _playerShooting?.SetShootingEnabled(true);
+            _testBoss.Spawn();
+
+            while (!_isGameOver && !_testBoss.IsDefeated)
+            {
+                yield return null;
+            }
+
+            _playerShooting?.SetShootingEnabled(false);
+
+            while (!_isGameOver && (Bullet.ActiveBulletCount > 0 || Pickup.ActivePickupCount > 0))
+            {
+                yield return null;
+            }
+        }
+
+        private IEnumerator RunForcedTestBossRoutine()
+        {
+            yield return RunTestBossEncounterRoutine();
+            _levelRoutine = null;
         }
 
         private IEnumerator EnterShopRoutine()

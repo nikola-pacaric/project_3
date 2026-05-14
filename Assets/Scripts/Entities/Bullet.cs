@@ -44,6 +44,12 @@ namespace Warblade.Entities
             SetActiveState(true);
         }
 
+        public void Spawn(Vector3 position, Vector2 direction, float speed)
+        {
+            _speed = Mathf.Max(0f, speed);
+            Spawn(position, direction);
+        }
+
         private void OnDestroy()
         {
             SetActiveState(false);
