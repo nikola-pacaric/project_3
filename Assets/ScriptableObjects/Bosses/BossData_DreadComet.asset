@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 052ae5b3ed884ebca4c3ba0f8a4a8611, type: 3}
+  m_Name: BossData_DreadComet
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossData
+  _displayName: Dread Comet
+  _maxHealth: 18
+  _scoreValue: 11000
+  _entryStartPosition: {x: 0, y: 7}
+  _entryTargetPosition: {x: 0, y: 2.65}
+  _entrySpeed: 3.6
+  _contactDamage: 1
+  _phases:
+  - _phaseName: Lock On
+    _healthThreshold: 1
+    _movementBehavior: 2
+    _movementAmplitude: 1.5
+    _movementSpeed: 2
+    _attackCooldownMin: 0.95
+    _attackCooldownMax: 1.55
+    _attackPatterns:
+    - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
+  - _phaseName: Pursuit Volley
+    _healthThreshold: 0.6
+    _movementBehavior: 1
+    _movementAmplitude: 2.5
+    _movementSpeed: 2.8
+    _attackCooldownMin: 0.75
+    _attackCooldownMax: 1.2
+    _attackPatterns:
+    - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
+    - {fileID: 11400000, guid: 229846e4d44441b9a52a054b04fa27ce, type: 2}
+  - _phaseName: Burnout
+    _healthThreshold: 0.25
+    _movementBehavior: 1
+    _movementAmplitude: 3.25
+    _movementSpeed: 3.4
+    _attackCooldownMin: 0.55
+    _attackCooldownMax: 0.9
+    _attackPatterns:
+    - {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
+    - {fileID: 11400000, guid: 229846e4d44441b9a52a054b04fa27ce, type: 2}
+  _rewardDropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

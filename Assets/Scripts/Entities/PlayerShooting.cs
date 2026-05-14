@@ -48,6 +48,17 @@ namespace Warblade.Entities
                 collectionCheck: true,
                 defaultCapacity: _poolDefaultCapacity,
                 maxSize: _poolMaxSize);
+
+            PoolPrewarmer.Prewarm(_pool, _poolDefaultCapacity);
+        }
+
+        private void OnValidate()
+        {
+            _poolDefaultCapacity = Mathf.Max(1, _poolDefaultCapacity);
+            _poolMaxSize = Mathf.Max(_poolDefaultCapacity, _poolMaxSize);
+            _rapidFireBurstVolleyCount = Mathf.Max(1, _rapidFireBurstVolleyCount);
+            _rapidFireBurstSpacing = Mathf.Max(0f, _rapidFireBurstSpacing);
+            _baseFireCooldown = Mathf.Max(0f, _baseFireCooldown);
         }
 
         private void OnEnable()

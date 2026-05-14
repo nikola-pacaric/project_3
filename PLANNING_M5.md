@@ -2,15 +2,16 @@
 
 ## Summary
 
-M5 adds the first real boss-fight architecture to the project. The goal is not to author all final bosses yet; the goal is to build one strong, reusable boss system and one playable first boss that appears after the current level-5 slice for testing.
+M5 adds the first real boss-fight architecture to the project. The goal is to build one strong, reusable boss system, prove it with the first playable boss after the current level-5 slice, then author three additional boss prefabs/data sets that reuse the same architecture.
 
 M5 follows the same placeholder-first rule as earlier milestones. Visual polish, real sprite sheets, audio, explosions, screen shake, and final VFX stay in M8.
 
 Key decisions locked:
-- M5 completion means one reusable first boss, not all four final bosses.
+- M5 completion means four boss prefabs/data sets exist and can be fought, with the first boss used for level-5 slice testing while the architecture is proven.
 - First boss style: classic Galaga-like readable spectacle, not bullet-hell density.
 - Boss test placement: after level 5 for now.
 - Real boss placement at levels 25 / 50 / 75 / 100 stays in M6.
+- Bosses 2-4 are M5 content, but final level routing for them is M6.
 - Bosses are separate from future mother aliens / big aliens.
 - No Unity scene, prefab, ProjectSettings, or build-file editing by Codex unless explicitly requested.
 
@@ -163,38 +164,105 @@ Acceptance:
 
 ---
 
-## Phase 6 — M5 Gate Cleanup and Validation
+## Phase 6 — Boss Variants 2-4
 
 Status: Complete.
 
 Code:
-- Remove noisy temporary logs.
-- Keep useful context-menu debug helpers if they help development.
-- Fix obvious null-reference and missing-reference warnings.
-- Keep placeholder visuals.
+- [x] Reuse the same `Boss`, `BossData`, phase, and attack-pattern systems from boss 1.
+- [x] Add any missing data hooks only if a second concrete boss needs them.
+- Avoid one-off runtime branches for specific bosses unless the behavior cannot be represented cleanly through data.
+- [x] Keep all new tuning in ScriptableObjects.
+- [x] Add placeholder `BossData` assets for Sentinel Sweeper, Orbital Core, and Dread Comet.
+- [x] Add reusable attack-pattern assets for faster aimed shots, wider sweeps, forward arcs, and denser radial bursts.
+- [x] Implement the existing phase `MovementBehavior` data at runtime so boss variants can differ by movement style.
 
 Editor:
-- Run Play Mode validation manually.
-- Run WebGL build manually when ready.
-- Confirm no mobile/touch-specific UI or architecture was added.
+- [x] Create three additional placeholder boss prefabs manually.
+- [x] Assign the authored `BossData` assets to those prefabs manually.
+- [x] Give each boss a distinct readable identity through data:
+  - different phase thresholds
+  - different movement behavior emphasis
+  - different aimed/radial/sweep pattern mixes
+  - different cooldowns, bullet counts, spread angles, and bullet speeds
+
+Acceptance:
+- [x] Bosses 1-4 can each be spawned/tested manually.
+- [x] Each boss fights differently enough to justify being separate content for M5 placeholder validation.
+- [x] No boss-specific prefab or scene wiring breaks the reusable boss architecture.
+
+Notes:
+- Boss attacks and movement are intentionally still first-pass placeholder tuning. Deeper tuning belongs in M6 content pass and M8 game-feel polish.
+
+---
+
+## Phase 7 — M5 Refactor and Bullet-Storm Audit
+
+Status: Complete.
+
+Code:
+- [x] Formalize the enemy FSM if current enemy behavior is too ad-hoc and bosses can share a clearer pattern.
+- [x] Audit collision layers for boss, boss bullets, player bullets, pickups, and existing enemies.
+- [x] Audit bullet and pickup pool capacities for boss-fight bursts.
+- [x] Remove any hot-path `Instantiate` / `Destroy` introduced during boss work.
+
+Editor:
+- [x] Review layer assignments on boss and boss-bullet prefabs manually.
+- [x] Tune pool capacities in the Inspector after Play Mode testing.
+
+Acceptance:
+- [x] Boss fights do not create collision leaks or friendly-fire mistakes.
+- [x] Bullet bursts remain pooled and readable.
+- [x] The enemy/boss state structure is understandable before M6 content scaling.
+
+Notes:
+- Collision matrix is correct for M5: player bullets hit enemy-layer targets, enemy/boss bullets hit the player, pickups only hit the player, and bullets do not collide with each other.
+- The existing enemy enum FSM is not worth abstracting into a shared enemy/boss framework yet. Bosses already have their own explicit encounter FSM, and forcing a shared base now would add complexity before M6 proves a second need.
+- Added pool prewarming for player bullets, enemy instances, enemy bullets, boss bullets, and pickups so object creation happens before active combat instead of on the first burst/drop.
+
+---
+
+## Phase 8 — M5 Gate Cleanup and Validation
+
+Status: Complete.
+
+Code:
+- [x] Remove noisy temporary logs.
+- [x] Keep useful context-menu debug helpers if they help development.
+- [x] Fix obvious null-reference and missing-reference warnings.
+- [x] Keep placeholder visuals.
+
+Editor:
+- [x] Run Play Mode validation manually.
+- [x] Run WebGL build manually when ready.
+- [x] Confirm no mobile/touch-specific UI or architecture was added.
 
 Acceptance:
 - M5 milestone gate:
-  - first boss enters cleanly
-  - boss takes damage from all current weapon tiers
-  - boss changes phases
-  - aimed/radial/sweep attacks work
-  - player can die during boss fight
-  - shield and armour protect correctly
-  - boss defeat ends the encounter cleanly
-  - existing shop/loot/run-state systems still work
+  - [x] boss 1 enters cleanly after level 5 waves for the test slice
+  - [x] bosses 1-4 can each be test-spawned/fought
+  - [x] every boss takes damage from all current weapon tiers
+  - [x] every boss changes phases
+  - [x] aimed/radial/sweep attacks work across the boss set
+  - [x] player can die during boss fight
+  - [x] shield and armour protect correctly
+  - [x] boss defeat ends the encounter cleanly
+  - [x] existing shop/loot/run-state systems still work
+  - [x] all 4 bosses fight differently
+
+Notes:
+- Code-side validation passes: `dotnet build project_3.sln` succeeds with 0 warnings and 0 errors.
+- Log audit found useful missing-reference/data guardrails, not temporary spam that should be removed.
+- Context-menu helpers remain because they support M5/M6 development testing.
+- Static search found no mobile/touch input code in `Assets/Scripts`.
+- Editor Play Mode and WebGL validation passed manually.
 
 ---
 
 ## Cut / Defer From M5
 
 - Boss placement at levels 25 / 50 / 75 / 100 stays in M6.
-- Bosses 2-4 stay deferred until the first boss architecture is proven.
+- Final boss routing and campaign placement stay in M6.
 - Mother aliens / big aliens stay in M6 content work.
 - Mini-games stay in M6.
 - Final art, sprite sheets, VFX, lighting, particles, audio, and screen shake stay in M8.

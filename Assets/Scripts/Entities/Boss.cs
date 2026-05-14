@@ -49,6 +49,9 @@ namespace Warblade.Entities
         private float _nextAttackTime;
         private int _volleyIndex;
         private bool _isSpawning;
+        private Vector2 _arenaCenterPosition;
+        private float _phaseMovementTime;
+        private int _patrolDirection = 1;
 
         public BossData Data => _data;
         public int CurrentHealth => _currentHealth;
@@ -86,6 +89,8 @@ namespace Warblade.Entities
                     collectionCheck: true,
                     defaultCapacity: _bulletPoolDefaultCapacity,
                     maxSize: _bulletPoolMaxSize);
+
+                PoolPrewarmer.Prewarm(_bulletPool, _bulletPoolDefaultCapacity);
             }
         }
 
@@ -126,6 +131,7 @@ namespace Warblade.Entities
             }
             else if (_state == State.Active)
             {
+                UpdateMovement();
                 UpdateAttacks();
             }
         }
@@ -145,8 +151,11 @@ namespace Warblade.Entities
             _isSpawning = false;
 
             transform.position = _data.EntryStartPosition;
+            _arenaCenterPosition = _data.EntryTargetPosition;
             _currentHealth = _data.MaxHealth;
             _currentPhaseIndex = ResolvePhaseIndex();
+            _phaseMovementTime = 0f;
+            _patrolDirection = 1;
             _volleyIndex = 0;
             _state = State.Entering;
             StopCurrentAttack();
@@ -199,8 +208,69 @@ namespace Warblade.Entities
 
             if ((Vector2)transform.position == targetPosition)
             {
+                _arenaCenterPosition = targetPosition;
                 BeginIntro();
             }
+        }
+
+        private void UpdateMovement()
+        {
+            BossPhaseData phase = CurrentPhase;
+            if (phase == null)
+            {
+                return;
+            }
+
+            _phaseMovementTime += Time.deltaTime;
+
+            switch (phase.MovementBehavior)
+            {
+                case BossMovementBehavior.HoldPosition:
+                    transform.position = Vector2.MoveTowards(
+                        transform.position,
+                        _arenaCenterPosition,
+                        phase.MovementSpeed * Time.deltaTime);
+                    break;
+
+                case BossMovementBehavior.HorizontalPatrol:
+                    UpdateHorizontalPatrol(phase);
+                    break;
+
+                case BossMovementBehavior.SineDrift:
+                    UpdateSineDrift(phase);
+                    break;
+            }
+        }
+
+        private void UpdateHorizontalPatrol(BossPhaseData phase)
+        {
+            float amplitude = phase.MovementAmplitude;
+            if (amplitude <= Mathf.Epsilon || phase.MovementSpeed <= Mathf.Epsilon)
+            {
+                return;
+            }
+
+            Vector2 position = transform.position;
+            position.x += _patrolDirection * phase.MovementSpeed * Time.deltaTime;
+
+            float minX = _arenaCenterPosition.x - amplitude;
+            float maxX = _arenaCenterPosition.x + amplitude;
+            if (position.x <= minX || position.x >= maxX)
+            {
+                position.x = Mathf.Clamp(position.x, minX, maxX);
+                _patrolDirection *= -1;
+            }
+
+            position.y = Mathf.MoveTowards(position.y, _arenaCenterPosition.y, phase.MovementSpeed * Time.deltaTime);
+            transform.position = position;
+        }
+
+        private void UpdateSineDrift(BossPhaseData phase)
+        {
+            float xOffset = Mathf.Sin(_phaseMovementTime * phase.MovementSpeed) * phase.MovementAmplitude;
+            transform.position = new Vector2(
+                _arenaCenterPosition.x + xOffset,
+                Mathf.MoveTowards(transform.position.y, _arenaCenterPosition.y, phase.MovementSpeed * Time.deltaTime));
         }
 
         private void BeginIntro()
@@ -244,6 +314,8 @@ namespace Warblade.Entities
             }
 
             _currentPhaseIndex = nextPhaseIndex;
+            _phaseMovementTime = 0f;
+            _patrolDirection = transform.position.x >= _arenaCenterPosition.x ? -1 : 1;
             StopCurrentAttack();
             ScheduleNextAttack();
             RaisePhaseChanged();

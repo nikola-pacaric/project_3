@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c43897bc2af3499685e9dc923b787d49, type: 3}
+  m_Name: BossAttackPattern_RadialForwardArc
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossAttackPatternData
+  _patternType: 1
+  _bulletCount: 9
+  _spreadAngle: 120
+  _patternDuration: 0
+  _shotInterval: 0.3
+  _baseAngleDegrees: 270
+  _aimAtPlayer: 0
+  _rotateEachVolley: 0
+  _volleyRotationDegrees: 12
+  _sweepStartAngleDegrees: 210
+  _sweepEndAngleDegrees: 330
+  _bulletSpeed: 4

@@ -39,6 +39,8 @@ namespace Warblade.Systems
 
         private void Start()
         {
+            PrewarmConfiguredPools();
+
             if (_testFormationSpawns == null) return;
 
             for (int i = 0; i < _testFormationSpawns.Length; i++)
@@ -243,6 +245,32 @@ namespace Warblade.Systems
 
             _pools[prefab] = pool;
             return pool;
+        }
+
+        private void PrewarmConfiguredPools()
+        {
+            if (_enemyPrefabs == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _enemyPrefabs.Length; i++)
+            {
+                Enemy prefab = _enemyPrefabs[i];
+                if (prefab == null)
+                {
+                    continue;
+                }
+
+                PoolPrewarmer.Prewarm(GetOrCreatePool(prefab), _defaultCapacity);
+            }
+        }
+
+        private void OnValidate()
+        {
+            _defaultCapacity = Mathf.Max(1, _defaultCapacity);
+            _maxSize = Mathf.Max(_defaultCapacity, _maxSize);
+            _debugFormationIndex = Mathf.Max(0, _debugFormationIndex);
         }
 
         private void OnDrawGizmos()

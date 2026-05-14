@@ -68,6 +68,8 @@ namespace Warblade.Entities
                     collectionCheck: true,
                     defaultCapacity: _bulletPoolDefaultCapacity,
                     maxSize: _bulletPoolMaxSize);
+
+                PoolPrewarmer.Prewarm(_bulletPool, _bulletPoolDefaultCapacity);
             }
         }
 
@@ -77,6 +79,9 @@ namespace Warblade.Entities
             {
                 Debug.LogWarning($"[{nameof(Enemy)}] Assign {nameof(EnemyData)} on '{name}'.");
             }
+
+            _bulletPoolDefaultCapacity = Mathf.Max(1, _bulletPoolDefaultCapacity);
+            _bulletPoolMaxSize = Mathf.Max(_bulletPoolDefaultCapacity, _bulletPoolMaxSize);
         }
 
         public void SetPool(IObjectPool<Enemy> pool)

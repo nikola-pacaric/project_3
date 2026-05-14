@@ -19,7 +19,7 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## Current Milestone
 
-**M5** *(in progress)*
+**M5** *(complete)*
 
 Detailed M5 phase tracking lives in `PLANNING_M5.md`. That file is the source of truth for the current Boss Fights implementation plan.
 
@@ -156,15 +156,15 @@ Detailed M5 phase tracking lives in `PLANNING_M5.md`. That file is the source of
 - [x] `Boss` MonoBehaviour with multi-phase FSM
 - [x] `BossData` SO — health, phases, attack patterns, drops
 - [x] Bullet pattern systems — radial, aimed, sweep (data-driven)
-- [ ] First boss prefab + data — get the architecture right here
-- [ ] Boss intro flow (warning, entry, name banner)
-- [ ] Boss death sequence (long explosion, screen clear, big drops)
+- [x] First boss test object + data — get the architecture right here
+- [x] Boss intro flow — entry, intro delay/event, boss name/HUD; warning visuals stay placeholder until M8
+- [x] Boss death sequence — stop attacks, award score/drop, clear encounter; polished explosion stays in M8
 - [x] Test at level 5 (renumber to 25 in M6)
-- [ ] Three more boss prefabs + data once architecture is proven
+- [x] Three more boss prefabs + data once architecture is proven — placeholder attacks/movement accepted for M5; tuning continues later
 
 **Refactor**
-- [ ] Formalize the enemy FSM if it was ad-hoc — bosses share the pattern
-- [ ] Audit collision layers and pool capacities for bullet-storm scenarios
+- [x] Formalize the enemy FSM if it was ad-hoc — audited; existing enum FSM is clear enough for M5, no shared abstraction needed yet
+- [x] Audit collision layers and pool capacities for bullet-storm scenarios — layer matrix verified, pools now prewarm before gameplay
 
 **Cut / Defer:** real level placement (M6), boss-rush modes.
 

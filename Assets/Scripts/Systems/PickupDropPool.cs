@@ -42,6 +42,8 @@ namespace Warblade.Systems
                 collectionCheck: true,
                 defaultCapacity: _defaultCapacity,
                 maxSize: _maxSize);
+
+            PoolPrewarmer.Prewarm(_pool, _defaultCapacity);
         }
 
         private void OnDestroy()
@@ -88,6 +90,12 @@ namespace Warblade.Systems
             Pickup pickup = Instantiate(_pickupPrefab, transform);
             pickup.SetPool(_pool);
             return pickup;
+        }
+
+        private void OnValidate()
+        {
+            _defaultCapacity = Mathf.Max(1, _defaultCapacity);
+            _maxSize = Mathf.Max(_defaultCapacity, _maxSize);
         }
     }
 }

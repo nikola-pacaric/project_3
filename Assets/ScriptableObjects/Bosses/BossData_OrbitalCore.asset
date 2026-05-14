@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 052ae5b3ed884ebca4c3ba0f8a4a8611, type: 3}
+  m_Name: BossData_OrbitalCore
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossData
+  _displayName: Orbital Core
+  _maxHealth: 22
+  _scoreValue: 9000
+  _entryStartPosition: {x: 0, y: 7.25}
+  _entryTargetPosition: {x: 0, y: 3}
+  _entrySpeed: 2.6
+  _contactDamage: 1
+  _phases:
+  - _phaseName: Charging Ring
+    _healthThreshold: 1
+    _movementBehavior: 0
+    _movementAmplitude: 0
+    _movementSpeed: 1.5
+    _attackCooldownMin: 1.25
+    _attackCooldownMax: 2
+    _attackPatterns:
+    - {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
+  - _phaseName: Rotating Shell
+    _healthThreshold: 0.7
+    _movementBehavior: 2
+    _movementAmplitude: 1.25
+    _movementSpeed: 1.8
+    _attackCooldownMin: 1
+    _attackCooldownMax: 1.5
+    _attackPatterns:
+    - {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
+    - {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
+  - _phaseName: Unstable Core
+    _healthThreshold: 0.35
+    _movementBehavior: 2
+    _movementAmplitude: 1.8
+    _movementSpeed: 2.4
+    _attackCooldownMin: 0.8
+    _attackCooldownMax: 1.15
+    _attackPatterns:
+    - {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
+    - {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
+  _rewardDropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}
