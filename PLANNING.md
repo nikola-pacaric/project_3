@@ -154,7 +154,7 @@ Detailed M5 phase tracking lives in `PLANNING_M5.md`. That file is the source of
 
 **Build**
 - [ ] `Boss` MonoBehaviour with multi-phase FSM
-- [ ] `BossData` SO — health, phases, attack patterns, drops
+- [x] `BossData` SO — health, phases, attack patterns, drops
 - [ ] Bullet pattern systems — radial, aimed, sweep (data-driven)
 - [ ] First boss prefab + data — get the architecture right here
 - [ ] Boss intro flow (warning, entry, name banner)

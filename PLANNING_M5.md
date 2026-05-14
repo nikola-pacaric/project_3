@@ -18,6 +18,8 @@ Key decisions locked:
 
 ## Phase 1 — Boss Data Model
 
+Status: Complete.
+
 Code:
 - Add `BossData` ScriptableObject for boss-level tuning:
   - display name
@@ -188,4 +190,3 @@ Acceptance:
 - Final art, sprite sheets, VFX, lighting, particles, audio, and screen shake stay in M8.
 - Final boss balance stays in M9.
 - Boss rush modes are out of scope.
-
