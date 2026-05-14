@@ -15,7 +15,14 @@ namespace Warblade.Entities
         private IObjectPool<Pickup> _pool;
         private bool _hasResolved;
 
+        public static int ActivePickupCount { get; private set; }
         public PickupData Data => _data;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetActivePickupCount()
+        {
+            ActivePickupCount = 0;
+        }
 
         private void Awake()
         {
@@ -52,7 +59,13 @@ namespace Warblade.Entities
             transform.position = position;
             _data = data;
             _hasResolved = false;
+            ActivePickupCount++;
             ApplyVisualsFromData();
+        }
+
+        private void OnDestroy()
+        {
+            ResolveActivePickup();
         }
 
         private void Update()
@@ -90,8 +103,6 @@ namespace Warblade.Entities
                 Debug.LogError($"[{nameof(Pickup)}] Cannot apply '{_data.DisplayName}' without a {nameof(RunStatsManager)}.");
                 return;
             }
-
-            Debug.Log($"Collected pickup: {_data.DisplayName} ({_data.EffectType})");
 
             switch (_data.EffectType)
             {
@@ -195,7 +206,7 @@ namespace Warblade.Entities
         private void ReturnToPool()
         {
             if (_hasResolved) return;
-            _hasResolved = true;
+            ResolveActivePickup();
 
             if (_pool != null)
             {
@@ -205,6 +216,14 @@ namespace Warblade.Entities
             {
                 Destroy(gameObject);
             }
+        }
+
+        private void ResolveActivePickup()
+        {
+            if (_hasResolved) return;
+
+            _hasResolved = true;
+            ActivePickupCount = Mathf.Max(0, ActivePickupCount - 1);
         }
     }
 }

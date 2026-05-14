@@ -15,6 +15,14 @@ namespace Warblade.Entities
         private IObjectPool<Bullet> _pool;
         private bool _isActive;
 
+        public static int ActiveBulletCount { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetActiveBulletCount()
+        {
+            ActiveBulletCount = 0;
+        }
+
         public void SetPool(IObjectPool<Bullet> pool)
         {
             _pool = pool;
@@ -33,7 +41,12 @@ namespace Warblade.Entities
                 : Vector2.up;
             transform.up = _direction;
             _spawnPosition = position;
-            _isActive = true;
+            SetActiveState(true);
+        }
+
+        private void OnDestroy()
+        {
+            SetActiveState(false);
         }
 
         private void Update()
@@ -62,7 +75,7 @@ namespace Warblade.Entities
         private void ReturnToPool()
         {
             if (!_isActive) return;
-            _isActive = false;
+            SetActiveState(false);
 
             if (_pool != null)
             {
@@ -72,6 +85,14 @@ namespace Warblade.Entities
             {
                 Destroy(gameObject);
             }
+        }
+
+        private void SetActiveState(bool isActive)
+        {
+            if (_isActive == isActive) return;
+
+            _isActive = isActive;
+            ActiveBulletCount = Mathf.Max(0, ActiveBulletCount + (isActive ? 1 : -1));
         }
     }
 }

@@ -14,7 +14,8 @@ namespace Warblade.Entities
         [SerializeField] private float _spawnYOffset = 0.5f;
         [SerializeField, Min(1)] private int _baseMaxActiveBullets = 5;
         [SerializeField, Min(0f)] private float _baseFireCooldown = 0.2f;
-        [SerializeField, Range(0.05f, 1f)] private float _rapidFireCooldownMultiplier = 0.5f;
+        [SerializeField, Min(1)] private int _rapidFireBurstVolleyCount = 3;
+        [SerializeField, Min(0f)] private float _rapidFireBurstSpacing = 0.35f;
         [SerializeField] private Vector2 _doubleShotOffset = new Vector2(0.18f, 0f);
         [SerializeField] private Vector2 _tripleShotSideOffset = new Vector2(0.24f, 0f);
         [SerializeField, Range(0f, 60f)] private float _tripleShotSideAngle = 35f;
@@ -32,6 +33,8 @@ namespace Warblade.Entities
         private readonly Vector2[] _volleyOffsets = new Vector2[4];
         private readonly Vector2[] _volleyDirections = new Vector2[4];
         private bool _wasFireHeld;
+        private bool _canShoot = true;
+        private bool _suppressFireUntilReleased;
         private float _nextFireTime;
         private IObjectPool<Bullet> _pool;
 
@@ -47,6 +50,22 @@ namespace Warblade.Entities
                 maxSize: _poolMaxSize);
         }
 
+        private void OnEnable()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.StateChanged += HandleGameStateChanged;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.StateChanged -= HandleGameStateChanged;
+            }
+        }
+
         private Bullet CreateBullet()
         {
             GameObject go = Instantiate(_bulletPrefab);
@@ -58,8 +77,24 @@ namespace Warblade.Entities
         private void Update()
         {
             if (_input == null) return;
+            if (!_canShoot || GameManager.Instance == null || !GameManager.Instance.IsPlaying)
+            {
+                _wasFireHeld = false;
+                return;
+            }
 
             bool fireHeld = _input.FireHeld;
+            if (_suppressFireUntilReleased)
+            {
+                if (!fireHeld)
+                {
+                    _suppressFireUntilReleased = false;
+                }
+
+                _wasFireHeld = fireHeld;
+                return;
+            }
+
             bool firePressedThisFrame = fireHeld && !_wasFireHeld;
 
             if (firePressedThisFrame || (IsAutofireActive && fireHeld))
@@ -75,19 +110,42 @@ namespace Warblade.Entities
             if (Time.time < _nextFireTime) return false;
 
             int volleySize = PopulateVolleyOffsets(GetWeaponTier());
-            if (_activePlayerBullets.Count + volleySize > GetMaxActiveBullets())
+            int burstVolleyCount = CalculateAllowedBurstVolleyCount(volleySize);
+            if (burstVolleyCount <= 0)
             {
                 return false;
             }
 
             Vector3 baseSpawnPosition = transform.position + Vector3.up * _spawnYOffset;
-            for (int i = 0; i < volleySize; i++)
+            for (int burstIndex = 0; burstIndex < burstVolleyCount; burstIndex++)
             {
-                SpawnBullet(baseSpawnPosition + (Vector3)_volleyOffsets[i], _volleyDirections[i]);
+                Vector3 burstOffset = Vector3.up * (_rapidFireBurstSpacing * burstIndex);
+                for (int i = 0; i < volleySize; i++)
+                {
+                    SpawnBullet(baseSpawnPosition + burstOffset + (Vector3)_volleyOffsets[i], _volleyDirections[i]);
+                }
             }
 
             _nextFireTime = Time.time + GetFireCooldown();
             return true;
+        }
+
+        public void SetShootingEnabled(bool isEnabled)
+        {
+            _canShoot = isEnabled;
+            if (!isEnabled)
+            {
+                _wasFireHeld = false;
+            }
+        }
+
+        private void HandleGameStateChanged(GameState gameState)
+        {
+            if (gameState == GameState.Playing && _input != null && _input.FireHeld)
+            {
+                _suppressFireUntilReleased = true;
+                _wasFireHeld = true;
+            }
         }
 
         private void SpawnBullet(Vector3 spawnPosition, Vector2 direction)
@@ -115,13 +173,7 @@ namespace Warblade.Entities
 
         private float GetFireCooldown()
         {
-            float cooldown = _baseFireCooldown;
-            if (IsRapidFireActive)
-            {
-                cooldown *= _rapidFireCooldownMultiplier;
-            }
-
-            return Mathf.Max(0f, cooldown);
+            return Mathf.Max(0f, _baseFireCooldown);
         }
 
         private bool IsAutofireActive => _debugAutofireActive
@@ -129,6 +181,15 @@ namespace Warblade.Entities
 
         private bool IsRapidFireActive => _debugRapidFireActive
             || (BuffManager.Instance != null && BuffManager.Instance.IsRapidFireActive);
+
+        private int CalculateAllowedBurstVolleyCount(int volleySize)
+        {
+            int requestedVolleyCount = IsRapidFireActive ? _rapidFireBurstVolleyCount : 1;
+            int availableBulletSlots = GetMaxActiveBullets() - _activePlayerBullets.Count;
+            int availableFullVolleys = availableBulletSlots / Mathf.Max(1, volleySize);
+
+            return Mathf.Min(requestedVolleyCount, availableFullVolleys);
+        }
 
         private int PopulateVolleyOffsets(WeaponTier weaponTier)
         {

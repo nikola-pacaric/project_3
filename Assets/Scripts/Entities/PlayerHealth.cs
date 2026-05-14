@@ -33,19 +33,16 @@ namespace Warblade.Entities
 
             if (IsShieldActive(runStats))
             {
-                Debug.Log("Player hit blocked by shield.");
                 return;
             }
 
             if (runStats.TryConsumeArmour())
             {
-                Debug.Log($"Player hit. Armour remaining: {runStats.Armour}");
                 return;
             }
 
             runStats.DowngradeWeaponTier();
             bool outOfLives = runStats.LoseLife();
-            Debug.Log($"Player hit. Lives remaining: {runStats.Lives}");
 
             if (outOfLives)
             {

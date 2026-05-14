@@ -19,7 +19,7 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## Current Milestone
 
-**M4** *(in progress)*
+**M5** *(in progress)*
 
 Detailed M4 phase tracking lives in `PLANNING_M4.md`. That file is the source of truth for the current Risk and Reward implementation plan.
 
@@ -123,21 +123,24 @@ Detailed M4 phase tracking lives in `PLANNING_M4.md`. That file is the source of
 - [x] Phase 6: BuffManager and timed buff HUD foundation
 - [x] Phase 7: Drop table tuning pass
 - [x] Phase 8: Cash, stat, lives, armour, weapon, and buff HUD
+- [x] Phase 9: Shop items and shop overlay
+- [x] Phase 10: Four-level shop cadence
+- [x] Phase 11: M4 content pass
 
 **Build**
 - [x] Pickup base class (pooled), `PickupData` SO, shared basic-alien `DropTable` SO, enemy-death drop path
 - [x] Pickups: $10/$50/$100/$200 cash, exact weapon pickups (Single/Double/Triple/Quad), Speed/Bullets/Time upgrades, autofire (timed), rapid fire (timed), shield (timed), armour, extra life, red/green/blue sucker downgrades
 - [x] `BuffManager` for active timed effects
 - [x] Currency system + cash/stat HUD
-- [ ] In-scene shop overlay after every 4th level
-- [ ] `ShopItem` SO, shop UI (grid, cash, buy/leave)
-- [ ] Run-only shop upgrades: Speed, Bullets, Time, armour, extra life, weapon tier, timed Autofire
-- [ ] Weapon tier purchases only change shot pattern; duplicate active-tier weapon pickups still convert into +1 Bullets
+- [x] In-scene shop overlay after every 4th level
+- [x] `ShopItem` SO, shop UI (grid, cash, buy/leave)
+- [x] Run-only shop upgrades: Speed, Bullets, Time, armour, extra life, weapon tier, timed Autofire
+- [x] Weapon tier purchases only change shot pattern; duplicate active-tier weapon pickups still convert into +1 Bullets
 
 **Refactor**
 - [x] **Event channels** — managers now broadcast state changes through SO event channels for HUD/shop/pickup/buff wiring.
 - [x] **GameManager state machine** — formalized Playing / Paused / Shop / GameOver states.
-- [ ] Connect pickup, buff, HUD, and shop systems to the completed run-state/event-channel foundation.
+- [x] Connect pickup, buff, HUD, and shop systems to the completed run-state/event-channel foundation.
 
 **Cut / Defer:** bosses, mini-games, UGS, final economy balance, art/audio polish.
 
@@ -174,7 +177,7 @@ Detailed M4 phase tracking lives in `PLANNING_M4.md`. That file is the source of
 **Goal:** scale from 5 levels to 100 + infinite. Mostly authoring, after the content model is made scalable.
 
 **Build**
-- [ ] `LevelManager` modulo logic: `level % 25 == 0` → boss, `level / 3` → enemy set rotation
+- [ ] `LevelManager` modulo logic: `level % 25 == 0` → boss, `level / 4` → enemy set rotation
 - [ ] All 100 `LevelData` SOs authored — first-pass tuning
 - [ ] Bosses placed at levels 25, 50, 75, 100
 - [ ] Cycle scaling: `cycle = (currentLevel - 1) / 100` → health/speed multipliers + sprite color tint

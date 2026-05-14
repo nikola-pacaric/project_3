@@ -43,7 +43,7 @@ namespace Warblade.Managers
         {
             if (_input != null)
             {
-                _input.PausePressed += TogglePause;
+                _input.PausePressed += HandlePausePressed;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Warblade.Managers
         {
             if (_input != null)
             {
-                _input.PausePressed -= TogglePause;
+                _input.PausePressed -= HandlePausePressed;
             }
         }
 
@@ -81,11 +81,21 @@ namespace Warblade.Managers
         }
 
         /// <summary>
-        /// Enters the shop state. Full shop behavior is implemented later in M4.
+        /// Enters the shop state from any non-game-over state.
         /// </summary>
         public void EnterShop()
         {
+            if (CurrentState == GameState.GameOver) return;
             SetState(GameState.Shop);
+        }
+
+        /// <summary>
+        /// Leaves the shop and returns to active gameplay.
+        /// </summary>
+        public void LeaveShop()
+        {
+            if (CurrentState != GameState.Shop) return;
+            SetState(GameState.Playing);
         }
 
         /// <summary>
@@ -101,7 +111,7 @@ namespace Warblade.Managers
         }
 
         /// <summary>
-        /// Toggles pause while gameplay is active or paused.
+        /// Toggles between active gameplay and pause. Shop and game-over state ignore pause toggles.
         /// </summary>
         public void TogglePause()
         {
@@ -113,6 +123,17 @@ namespace Warblade.Managers
             {
                 SetState(GameState.Playing);
             }
+        }
+
+        private void HandlePausePressed()
+        {
+            if (CurrentState == GameState.Shop)
+            {
+                LeaveShop();
+                return;
+            }
+
+            TogglePause();
         }
 
         /// <summary>

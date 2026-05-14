@@ -22,10 +22,11 @@ namespace Warblade.Managers
         [SerializeField, Min(0)] private int _startingTimeLevel;
 
         [Header("Caps")]
+        [SerializeField, Min(1)] private int _maxLives = 4;
         [SerializeField, Min(0)] private int _maxArmour = 2;
-        [SerializeField, Min(0)] private int _maxSpeedLevel = 5;
-        [SerializeField, Min(0)] private int _maxBulletsLevel = 5;
-        [SerializeField, Min(0)] private int _maxTimeLevel = 5;
+        [SerializeField, Min(0)] private int _maxSpeedLevel = 10;
+        [SerializeField, Min(0)] private int _maxBulletsLevel = 10;
+        [SerializeField, Min(0)] private int _maxTimeLevel = 10;
 
         [Header("Event Channels")]
         [SerializeField] private IntEventChannel _cashChanged;
@@ -54,6 +55,7 @@ namespace Warblade.Managers
 
         public int Cash => _cash;
         public int Lives => _lives;
+        public int MaxLives => _maxLives;
         public int Armour => _armour;
         public int MaxArmour => _maxArmour;
         public int MaxSpeedLevel => _maxSpeedLevel;
@@ -93,6 +95,8 @@ namespace Warblade.Managers
 
         private void OnValidate()
         {
+            _maxLives = Mathf.Max(1, _maxLives);
+            _startingLives = Mathf.Clamp(_startingLives, 1, _maxLives);
             _maxArmour = Mathf.Max(0, _maxArmour);
             _startingArmour = Mathf.Clamp(_startingArmour, 0, _maxArmour);
             _startingSpeedLevel = Mathf.Clamp(_startingSpeedLevel, 0, _maxSpeedLevel);
@@ -137,7 +141,10 @@ namespace Warblade.Managers
         public void AddLife(int amount = 1)
         {
             if (amount <= 0) return;
-            _lives += amount;
+            int newLives = Mathf.Min(_maxLives, _lives + amount);
+            if (_lives == newLives) return;
+
+            _lives = newLives;
             RaiseLivesChanged();
         }
 
@@ -347,7 +354,7 @@ namespace Warblade.Managers
         public void ResetRun()
         {
             _cash = Mathf.Max(0, _startingCash);
-            _lives = Mathf.Max(1, _startingLives);
+            _lives = Mathf.Clamp(_startingLives, 1, _maxLives);
             _armour = Mathf.Clamp(_startingArmour, 0, _maxArmour);
             _weaponTier = ClampWeaponTier(_startingWeaponTier);
             _speedLevel = Mathf.Clamp(_startingSpeedLevel, 0, _maxSpeedLevel);

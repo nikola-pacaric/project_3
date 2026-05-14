@@ -20,10 +20,12 @@ namespace Warblade.Managers
 
         [SerializeField] private WaveRunner _waveRunner;
         [SerializeField] private EnemySpawner _enemySpawner;
+        [SerializeField] private PlayerShooting _playerShooting;
         [SerializeField] private LevelData[] _levels;
         [SerializeField, Min(1)] private int _startingLevel = 1;
         [SerializeField] private bool _playOnStart = true;
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
+        [SerializeField, Min(1)] private int _shopInterval = 4;
         [SerializeField] private LevelChangedEvent _onLevelStarted = new LevelChangedEvent();
         [SerializeField] private LevelChangedEvent _onLevelCompleted = new LevelChangedEvent();
         [Header("Event Channels")]
@@ -94,6 +96,11 @@ namespace Warblade.Managers
             {
                 Debug.LogWarning($"[{nameof(LevelManager)}] Assign {nameof(EnemySpawner)} on '{name}'.");
             }
+
+            if (_playerShooting == null)
+            {
+                Debug.LogWarning($"[{nameof(LevelManager)}] Assign {nameof(PlayerShooting)} on '{name}' so level transitions can disable shooting while bullets clear.");
+            }
         }
 
         /// <summary>
@@ -138,6 +145,7 @@ namespace Warblade.Managers
                 _onLevelStarted?.Invoke(CurrentLevel);
                 _levelStarted?.Raise(CurrentLevel);
                 RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
+                _playerShooting?.SetShootingEnabled(true);
                 _waveRunner.PlayWaves(levelData.Waves);
                 yield return WaitForLevelClearRoutine();
 
@@ -149,6 +157,7 @@ namespace Warblade.Managers
                     yield return new WaitForSeconds(_levelTransitionDelay);
                 }
 
+                int completedLevel = CurrentLevel;
                 int nextLevel = CurrentLevel + 1;
                 if (!HasLevelData(nextLevel))
                 {
@@ -157,25 +166,47 @@ namespace Warblade.Managers
                     yield break;
                 }
 
+                if (ShouldEnterShopAfterLevel(completedLevel))
+                {
+                    yield return EnterShopRoutine();
+                    if (_isGameOver) break;
+                }
+
                 CurrentLevel = nextLevel;
             }
 
             _levelRoutine = null;
         }
 
+        /// <summary>
+        /// Opens the shop immediately for development testing.
+        /// </summary>
+        [ContextMenu("Force Shop Entry")]
+        public void ForceShopEntry()
+        {
+            GameManager.Instance?.EnterShop();
+        }
+
         private IEnumerator WaitForLevelClearRoutine()
         {
             while (!_isGameOver)
             {
-                bool levelCleared =
+                bool enemiesCleared =
                     _waveRunner.HasCompletedSequence &&
                     _enemySpawner.ActiveEnemyCount == 0;
 
-                if (levelCleared)
+                if (enemiesCleared)
                 {
-                    yield break;
+                    break;
                 }
 
+                yield return null;
+            }
+
+            _playerShooting?.SetShootingEnabled(false);
+
+            while (!_isGameOver && (Bullet.ActiveBulletCount > 0 || Pickup.ActivePickupCount > 0))
+            {
                 yield return null;
             }
         }
@@ -213,6 +244,27 @@ namespace Warblade.Managers
             }
 
             return false;
+        }
+
+        private bool ShouldEnterShopAfterLevel(int completedLevel)
+        {
+            return _shopInterval > 0 && completedLevel % _shopInterval == 0;
+        }
+
+        private IEnumerator EnterShopRoutine()
+        {
+            GameManager gameManager = GameManager.Instance;
+            if (gameManager == null)
+            {
+                Debug.LogWarning($"[{nameof(LevelManager)}] Cannot enter shop because no {nameof(GameManager)} is active.");
+                yield break;
+            }
+
+            gameManager.EnterShop();
+            while (!_isGameOver && GameManager.Instance != null && GameManager.Instance.IsShopOpen)
+            {
+                yield return null;
+            }
         }
 
         private void HandleGameOver()

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ef9126484ad4874b6a3b70fd9d0242d, type: 3}
+  m_Name: ShopItem_ExtraBullets
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.ShopItem
+  _itemType: 1
+  _displayName: Extra Bullets
+  _description: Increase the active bullet limit for this run.
+  _price: 75
+  _amount: 1
+  _weaponTier: 2
+  _buffType: 0
+  _icon: {fileID: 0}

@@ -21,9 +21,12 @@ namespace Warblade.Systems
         private InputAction _moveAction;
         private InputAction _fireAction;
         private InputAction _pauseAction;
+        private InputAction _navigateAction;
 
         public float MoveAxis => _moveAction?.ReadValue<float>() ?? 0f;
         public bool FireHeld => _fireAction?.IsPressed() ?? false;
+        public bool FirePressedThisFrame => _fireAction?.WasPressedThisFrame() ?? false;
+        public float ShopNavigateAxis => ReadShopNavigateAxis();
 
         public event Action PausePressed;
 
@@ -39,6 +42,7 @@ namespace Warblade.Systems
             _moveAction = _playerMap.FindAction("Move", throwIfNotFound: true);
             _fireAction = _playerMap.FindAction("Fire", throwIfNotFound: true);
             _pauseAction = _playerMap.FindAction("Pause", throwIfNotFound: true);
+            _navigateAction = _playerMap.FindAction("Navigate", throwIfNotFound: false);
 
             _pauseAction.performed += OnPausePerformed;
             _playerMap.Enable();
@@ -54,5 +58,32 @@ namespace Warblade.Systems
         }
 
         private void OnPausePerformed(InputAction.CallbackContext _) => PausePressed?.Invoke();
+
+        private float ReadShopNavigateAxis()
+        {
+            if (_navigateAction != null)
+            {
+                return _navigateAction.ReadValue<Vector2>().y;
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
+            {
+                return 0f;
+            }
+
+            float axis = 0f;
+            if (keyboard.upArrowKey.isPressed)
+            {
+                axis += 1f;
+            }
+
+            if (keyboard.downArrowKey.isPressed)
+            {
+                axis -= 1f;
+            }
+
+            return axis;
+        }
     }
 }
