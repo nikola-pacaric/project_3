@@ -21,7 +21,7 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 **M5** *(in progress)*
 
-Detailed M4 phase tracking lives in `PLANNING_M4.md`. That file is the source of truth for the current Risk and Reward implementation plan.
+Detailed M5 phase tracking lives in `PLANNING_M5.md`. That file is the source of truth for the current Boss Fights implementation plan.
 
 ---
 

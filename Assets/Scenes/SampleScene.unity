@@ -220,7 +220,7 @@ MonoBehaviour:
   _text: {fileID: 135394889}
   _format: 'Time: {0}/{1} [{2}]'
   _showBar: 1
-  _barWidth: 10
+  _barWidth: 15
   _filledBarCharacter: '#'
   _emptyBarCharacter: '-'
 --- !u!114 &135394889
@@ -544,9 +544,9 @@ MonoBehaviour:
   _startingTimeLevel: 0
   _maxLives: 4
   _maxArmour: 2
-  _maxSpeedLevel: 10
-  _maxBulletsLevel: 10
-  _maxTimeLevel: 10
+  _maxSpeedLevel: 15
+  _maxBulletsLevel: 15
+  _maxTimeLevel: 15
   _cashChanged: {fileID: 11400000, guid: 9106b73d12e4663459295336aecb2a40, type: 2}
   _livesChanged: {fileID: 11400000, guid: 6c2f4974fd450674ead6ee8406dfa9dd, type: 2}
   _armourChanged: {fileID: 11400000, guid: 477fc8d75a5ae2b4badc78525ca9c1ec, type: 2}
@@ -1991,7 +1991,7 @@ MonoBehaviour:
   _text: {fileID: 1290937543}
   _format: 'Speed: {0}/{1} [{2}]'
   _showBar: 1
-  _barWidth: 10
+  _barWidth: 15
   _filledBarCharacter: '#'
   _emptyBarCharacter: '-'
 --- !u!114 &1290937543
@@ -2226,7 +2226,7 @@ MonoBehaviour:
   _text: {fileID: 1366832664}
   _format: 'Bullets: {0}/{1} [{2}]'
   _showBar: 1
-  _barWidth: 10
+  _barWidth: 15
   _filledBarCharacter: '#'
   _emptyBarCharacter: '-'
 --- !u!114 &1366832664
@@ -2723,7 +2723,8 @@ MonoBehaviour:
   _spawnYOffset: 0.5
   _baseMaxActiveBullets: 5
   _baseFireCooldown: 0.2
-  _rapidFireCooldownMultiplier: 0.5
+  _rapidFireBurstVolleyCount: 3
+  _rapidFireBurstSpacing: 0.35
   _doubleShotOffset: {x: 0.18, y: 0}
   _tripleShotSideOffset: {x: 0.24, y: 0}
   _tripleShotSideAngle: 15

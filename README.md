@@ -8,7 +8,7 @@ This is a solo portfolio project focused on clean Unity architecture, responsive
 
 ## Current State
 
-The project currently has the core shooter loop in place:
+The project currently has the core shooter loop and M4 reward loop in place:
 
 - Player movement and shooting
 - Enemy waves, formations, and level progression
@@ -16,8 +16,9 @@ The project currently has the core shooter loop in place:
 - Object pooling for bullets and enemies
 - ScriptableObject-driven enemy, wave, formation, and level data
 - Run stats, lives, armour, weapon tiers, and event-channel foundations
+- Pickup drops, timed buffs, cash rewards, stat upgrades, and the shop overlay
 
-The current milestone is **M4: Risk and Reward**, which adds pickups, timed buffs, cash, upgrades, and the shop loop.
+The current milestone is **M5: Boss Fights**, which adds the first reusable boss architecture and a level-5 test boss encounter.
 
 ## Target Platform
 
@@ -44,8 +45,8 @@ Placeholder art and simple effects are intentional for now. Visual polish, audio
 ## Roadmap
 
 - **M3:** Core wave shooter loop - complete
-- **M4:** Pickups, buffs, cash, and shop loop - in progress
-- **M5:** Boss fights
+- **M4:** Pickups, buffs, cash, and shop loop - complete
+- **M5:** Boss fights - in progress
 - **M6:** Content fill and mini-games
 - **M7:** Online leaderboard
 - **M8:** Game feel, art, and audio polish
