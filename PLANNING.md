@@ -19,9 +19,9 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## Current Milestone
 
-**M5** *(complete)*
+**M6** *(not started)*
 
-Detailed M5 phase tracking lives in `PLANNING_M5.md`. That file is the source of truth for the current Boss Fights implementation plan.
+Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of truth for the current Content Fill implementation plan.
 
 ---
 
@@ -177,12 +177,12 @@ Detailed M5 phase tracking lives in `PLANNING_M5.md`. That file is the source of
 **Goal:** scale from 5 levels to 100 + infinite. Mostly authoring, after the content model is made scalable.
 
 **Build**
-- [ ] `LevelManager` modulo logic: `level % 25 == 0` → boss, `level / 4` → enemy set rotation
+- [ ] `LevelManager` chapter logic: `level % 25 == 0` → boss; six 4-level enemy-set blocks fill the 24 normal levels before each boss
 - [ ] All 100 `LevelData` SOs authored — first-pass tuning
 - [ ] Bosses placed at levels 25, 50, 75, 100
 - [ ] Cycle scaling: `cycle = (currentLevel - 1) / 100` → health/speed multipliers + sprite color tint
 - [ ] Mini-games: Meteor Storm (dodge round, gem pickups), Memory Match (flip cards)
-- [ ] Mini-game trigger logic in `LevelManager`
+- [ ] Mini-game trigger logic in `LevelManager` — Meteor Storm / Memory Match are random popups only eligible after a wave completes
 - [ ] Mini-game scene flow (enter → play → reward → return)
 - [ ] Dev tool: level skip / cash grant / kill-all (you'll need this; build it now)
 
