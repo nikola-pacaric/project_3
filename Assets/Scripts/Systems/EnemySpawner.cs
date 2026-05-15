@@ -31,12 +31,23 @@ namespace Warblade.Systems
         [SerializeField] private int _defaultCapacity = 10;
         [SerializeField] private int _maxSize = 50;
         [SerializeField] private bool _drawGizmos = true;
+        [SerializeField, Min(1f)] private float _specialPerfectClearScoreMultiplier = 2f;
+        [SerializeField, Range(0f, 1f)] private float _concurrentDiveLimitRemainingRatio = 0.1f;
 
         private readonly Dictionary<Enemy, IObjectPool<Enemy>> _pools =
             new Dictionary<Enemy, IObjectPool<Enemy>>();
+        private readonly List<Enemy> _activeEnemies = new List<Enemy>();
         private int _activeEnemyCount;
+        private int _spawnedEnemyCount;
+        private bool _finalDiveTriggered;
+        private int _specialEnemyCount;
+        private int _specialKilledScore;
+        private bool _specialEnemyEscaped;
+        private bool _specialPerfectClearBonusConsumed;
+        private Enemy _limitedDiveEnemy;
 
         public int ActiveEnemyCount => _activeEnemyCount;
+        public int SpawnedEnemyCount => _spawnedEnemyCount;
 
         private void Start()
         {
@@ -52,7 +63,7 @@ namespace Warblade.Systems
 
         public Enemy Spawn(Enemy prefab, Vector2 startPosition, Vector2 formationPosition)
         {
-            return Spawn(prefab, startPosition, formationPosition, null, -1, prefab != null ? prefab.EntryControlOffset : Vector2.zero);
+            return Spawn(prefab, startPosition, formationPosition, null, -1, prefab != null ? prefab.EntryControlOffset : Vector2.zero, null);
         }
 
         public Enemy Spawn(
@@ -68,7 +79,8 @@ namespace Warblade.Systems
                 formationPosition,
                 formation,
                 formationSlotIndex,
-                prefab != null ? prefab.EntryControlOffset : Vector2.zero);
+                prefab != null ? prefab.EntryControlOffset : Vector2.zero,
+                null);
         }
 
         public Enemy Spawn(
@@ -79,17 +91,50 @@ namespace Warblade.Systems
             int formationSlotIndex,
             Vector2 entryControlOffset)
         {
+            return Spawn(prefab, startPosition, formationPosition, formation, formationSlotIndex, entryControlOffset, null);
+        }
+
+        public Enemy Spawn(
+            Enemy prefab,
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset,
+            Vector2[] entryPathPoints)
+        {
+            return Spawn(prefab, startPosition, formationPosition, formation, formationSlotIndex, entryControlOffset, entryPathPoints, null);
+        }
+
+        public Enemy Spawn(
+            Enemy prefab,
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset,
+            Vector2[] entryPathPoints,
+            Vector2[] entryPathControlPoints)
+        {
             if (prefab == null) return null;
 
             IObjectPool<Enemy> pool = GetOrCreatePool(prefab);
             Enemy enemy = pool.Get();
+            _spawnedEnemyCount++;
+            if (enemy.Data != null && enemy.Data.CountsForPerfectClearBonus)
+            {
+                _specialEnemyCount++;
+            }
+
             enemy.Spawn(
                 startPosition,
                 formationPosition,
                 _playerTransform,
                 formation,
                 formationSlotIndex,
-                entryControlOffset);
+                entryControlOffset,
+                entryPathPoints,
+                entryPathControlPoints);
             return enemy;
         }
 
@@ -97,20 +142,20 @@ namespace Warblade.Systems
         /// Spawns a full formation using a start center and a per-slot spacing step vector.
         /// </summary>
         public Coroutine SpawnFormation(
-            Formation formation,
             WaveData wave,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
             float perSlotDelay,
-            float delay = 0f)
+            float delay = 0f,
+            Formation runtimeFormation = null)
         {
             return StartCoroutine(SpawnFormationAfterDelay(
-                formation,
                 wave,
                 entryStartCenter,
                 entryStartSpacingStep,
                 perSlotDelay,
-                delay));
+                delay,
+                runtimeFormation));
         }
 
         [ContextMenu("Spawn Debug Formation")]
@@ -144,55 +189,80 @@ namespace Warblade.Systems
         }
 
         private IEnumerator SpawnFormationAfterDelay(
-            Formation formation,
             WaveData wave,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
             float perSlotDelay,
-            float delay)
+            float delay,
+            Formation runtimeFormation)
         {
             if (delay > 0f) yield return new WaitForSeconds(delay);
             yield return SpawnFormationRoutine(
-                formation,
                 wave,
                 entryStartCenter,
                 entryStartSpacingStep,
-                perSlotDelay);
+                perSlotDelay,
+                runtimeFormation);
         }
 
         private IEnumerator SpawnFormationRoutine(
-            Formation formation,
             WaveData wave,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
-            float perSlotDelay)
+            float perSlotDelay,
+            Formation runtimeFormation = null)
         {
-            yield return SpawnFormationRoutine(
-                formation,
-                wave != null ? new WaveEnemyComposition(wave) : null,
-                entryStartCenter,
-                entryStartSpacingStep,
-                perSlotDelay);
+            if (wave == null) yield break;
+            if (wave.SlotCount <= 0)
+            {
+                Debug.LogWarning($"[{nameof(EnemySpawner)}] Wave '{wave.name}' has no slots.");
+                yield break;
+            }
+
+            float halfSpan = (wave.SlotCount - 1) * 0.5f;
+            for (int slotIndex = 0; slotIndex < wave.SlotCount; slotIndex++)
+            {
+                WaveData.WaveSlot slot = wave.GetSlot(slotIndex);
+                EnemyData enemyData = slot.EnemyData;
+                if (enemyData == null)
+                {
+                    Debug.LogError(
+                        $"[{nameof(EnemySpawner)}] Slot {slotIndex} in wave '{wave.name}' has no EnemyData.");
+                    if (perSlotDelay > 0f) yield return new WaitForSeconds(perSlotDelay);
+                    continue;
+                }
+
+                Enemy prefab = FindPrefabForData(enemyData);
+                if (prefab == null)
+                {
+                    Debug.LogError(
+                        $"[{nameof(EnemySpawner)}] No prefab found for EnemyData '{enemyData.name}'. " +
+                        "Assign matching prefabs in _enemyPrefabs.");
+                    if (perSlotDelay > 0f) yield return new WaitForSeconds(perSlotDelay);
+                    continue;
+                }
+
+                Vector2 spacedStartPosition = entryStartCenter + entryStartSpacingStep * (slotIndex - halfSpan);
+                Vector2 startPosition = wave.UsesWaypointEntryPath ? entryStartCenter : spacedStartPosition;
+                Vector2 formationPosition = runtimeFormation != null && runtimeFormation.HasSlot(slotIndex)
+                    ? runtimeFormation.GetSlotWorldPosition(slotIndex)
+                    : wave.GetSlotWorldPosition(slotIndex);
+                Vector2 entryControlOffset = slot.EntryControlOffset;
+                Vector2[] entryPathPoints = wave.BuildEntryPathWorldPoints(startPosition, formationPosition);
+                Vector2[] entryPathControlPoints = wave.BuildEntryPathWorldControlPoints(entryPathPoints);
+
+                Spawn(prefab, startPosition, formationPosition, runtimeFormation, slotIndex, entryControlOffset, entryPathPoints, entryPathControlPoints);
+
+                if (perSlotDelay > 0f)
+                {
+                    yield return new WaitForSeconds(perSlotDelay);
+                }
+            }
         }
 
         private IEnumerator SpawnFormationRoutine(
             Formation formation,
             EnemyData[] enemyComposition,
-            Vector2 entryStartCenter,
-            Vector2 entryStartSpacingStep,
-            float perSlotDelay)
-        {
-            yield return SpawnFormationRoutine(
-                formation,
-                enemyComposition != null ? new ArrayEnemyComposition(enemyComposition) : null,
-                entryStartCenter,
-                entryStartSpacingStep,
-                perSlotDelay);
-        }
-
-        private IEnumerator SpawnFormationRoutine(
-            Formation formation,
-            IEnemyComposition enemyComposition,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
             float perSlotDelay)
@@ -204,24 +274,17 @@ namespace Warblade.Systems
                 yield break;
             }
 
-            if (enemyComposition == null || enemyComposition.Count == 0)
+            if (enemyComposition == null || enemyComposition.Length == 0)
             {
                 Debug.LogError($"[{nameof(EnemySpawner)}] Formation '{formation.name}' has no enemy composition.");
                 yield break;
             }
 
-            if (enemyComposition.Count != formation.SlotCount)
+            int slotCount = Mathf.Min(formation.SlotCount, enemyComposition.Length);
+            float halfSpan = (slotCount - 1) * 0.5f;
+            for (int slotIndex = 0; slotIndex < slotCount; slotIndex++)
             {
-                Debug.LogError(
-                    $"[{nameof(EnemySpawner)}] Formation '{formation.name}' has {formation.SlotCount} slots, " +
-                    $"but the enemy composition has {enemyComposition.Count} entries.");
-                yield break;
-            }
-
-            float halfSpan = (formation.SlotCount - 1) * 0.5f;
-            for (int slotIndex = 0; slotIndex < formation.SlotCount; slotIndex++)
-            {
-                EnemyData enemyData = enemyComposition.GetEnemyData(slotIndex);
+                EnemyData enemyData = enemyComposition[slotIndex];
                 if (enemyData == null)
                 {
                     Debug.LogError(
@@ -253,51 +316,6 @@ namespace Warblade.Systems
             }
         }
 
-        private interface IEnemyComposition
-        {
-            int Count { get; }
-            EnemyData GetEnemyData(int slotIndex);
-        }
-
-        private sealed class WaveEnemyComposition : IEnemyComposition
-        {
-            private readonly WaveData _wave;
-
-            public WaveEnemyComposition(WaveData wave)
-            {
-                _wave = wave;
-            }
-
-            public int Count => _wave.EnemyCompositionCount;
-
-            public EnemyData GetEnemyData(int slotIndex)
-            {
-                return _wave.GetEnemyDataForSlot(slotIndex);
-            }
-        }
-
-        private sealed class ArrayEnemyComposition : IEnemyComposition
-        {
-            private readonly EnemyData[] _enemyComposition;
-
-            public ArrayEnemyComposition(EnemyData[] enemyComposition)
-            {
-                _enemyComposition = enemyComposition;
-            }
-
-            public int Count => _enemyComposition.Length;
-
-            public EnemyData GetEnemyData(int slotIndex)
-            {
-                if (slotIndex < 0 || slotIndex >= _enemyComposition.Length)
-                {
-                    return null;
-                }
-
-                return _enemyComposition[slotIndex];
-            }
-        }
-
         private Enemy FindPrefabForData(EnemyData enemyData)
         {
             if (enemyData == null || _enemyPrefabs == null) return null;
@@ -323,16 +341,20 @@ namespace Warblade.Systems
                 {
                     Enemy enemy = Instantiate(capturedPrefab);
                     enemy.SetPool(pool);
+                    enemy.SetSpawner(this);
+                    enemy.Released += HandleEnemyReleased;
                     return enemy;
                 },
                 actionOnGet: e =>
                 {
                     _activeEnemyCount++;
+                    _activeEnemies.Add(e);
                     e.gameObject.SetActive(true);
                 },
                 actionOnRelease: e =>
                 {
                     _activeEnemyCount = Mathf.Max(0, _activeEnemyCount - 1);
+                    _activeEnemies.Remove(e);
                     e.gameObject.SetActive(false);
                 },
                 actionOnDestroy: e => Destroy(e.gameObject),
@@ -342,6 +364,98 @@ namespace Warblade.Systems
 
             _pools[prefab] = pool;
             return pool;
+        }
+
+        public void BeginLevelEnemyTracking()
+        {
+            _spawnedEnemyCount = 0;
+            _finalDiveTriggered = false;
+            _specialEnemyCount = 0;
+            _specialKilledScore = 0;
+            _specialEnemyEscaped = false;
+            _specialPerfectClearBonusConsumed = false;
+            _limitedDiveEnemy = null;
+            _activeEnemies.Clear();
+            _activeEnemyCount = 0;
+        }
+
+        public int ConsumeSpecialPerfectClearBonusScore()
+        {
+            if (_specialPerfectClearBonusConsumed ||
+                _specialEnemyCount <= 0 ||
+                _specialEnemyEscaped ||
+                _activeEnemyCount > 0)
+            {
+                return 0;
+            }
+
+            _specialPerfectClearBonusConsumed = true;
+            return Mathf.RoundToInt(_specialKilledScore * (_specialPerfectClearScoreMultiplier - 1f));
+        }
+
+        public void ForceFinalEnemiesToDive(float remainingRatioThreshold)
+        {
+            if (_finalDiveTriggered || _spawnedEnemyCount <= 0 || _activeEnemyCount <= 0)
+            {
+                return;
+            }
+
+            if (remainingRatioThreshold <= 0f)
+            {
+                return;
+            }
+
+            int remainingEnemyThreshold = Mathf.CeilToInt(_spawnedEnemyCount * remainingRatioThreshold);
+            if (_activeEnemyCount > remainingEnemyThreshold)
+            {
+                return;
+            }
+
+            _finalDiveTriggered = true;
+            _limitedDiveEnemy = null;
+
+            for (int i = _activeEnemies.Count - 1; i >= 0; i--)
+            {
+                Enemy enemy = _activeEnemies[i];
+                if (enemy == null || !enemy.CanForceDive)
+                {
+                    continue;
+                }
+
+                enemy.ForceDive();
+            }
+        }
+
+        public bool TryBeginLimitedDive(Enemy enemy)
+        {
+            if (enemy == null || enemy.Data == null)
+            {
+                return true;
+            }
+
+            if (!enemy.Data.LimitConcurrentDivesAboveFinalThreshold ||
+                _finalDiveTriggered ||
+                _spawnedEnemyCount <= 0 ||
+                _activeEnemyCount <= GetConcurrentDiveLimitThreshold())
+            {
+                return true;
+            }
+
+            if (_limitedDiveEnemy != null && _limitedDiveEnemy != enemy)
+            {
+                return false;
+            }
+
+            _limitedDiveEnemy = enemy;
+            return true;
+        }
+
+        public void EndLimitedDive(Enemy enemy)
+        {
+            if (_limitedDiveEnemy == enemy)
+            {
+                _limitedDiveEnemy = null;
+            }
         }
 
         private void PrewarmConfiguredPools()
@@ -368,6 +482,31 @@ namespace Warblade.Systems
             _defaultCapacity = Mathf.Max(1, _defaultCapacity);
             _maxSize = Mathf.Max(_defaultCapacity, _maxSize);
             _debugFormationIndex = Mathf.Max(0, _debugFormationIndex);
+            _specialPerfectClearScoreMultiplier = Mathf.Max(1f, _specialPerfectClearScoreMultiplier);
+        }
+
+        private int GetConcurrentDiveLimitThreshold()
+        {
+            return Mathf.CeilToInt(_spawnedEnemyCount * _concurrentDiveLimitRemainingRatio);
+        }
+
+        private void HandleEnemyReleased(Enemy enemy, bool killed)
+        {
+            EndLimitedDive(enemy);
+
+            if (enemy == null || enemy.Data == null || !enemy.Data.CountsForPerfectClearBonus)
+            {
+                return;
+            }
+
+            if (killed)
+            {
+                _specialKilledScore += enemy.Data.ScoreValue;
+            }
+            else
+            {
+                _specialEnemyEscaped = true;
+            }
         }
 
         private void OnDrawGizmos()

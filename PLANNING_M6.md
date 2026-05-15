@@ -119,27 +119,33 @@ Acceptance:
 - [x] Invalid wave composition data produces clear warnings/errors before Play Mode testing.
 - [x] No M5 boss/shop/loot behavior is touched by this refactor except where level flow naturally references waves.
 
+Follow-up decision:
+- [x] Simplified the active authoring model after editor workflow review: `WaveData` now owns its editable slots directly (`LocalPosition`, `EnemyData`, `EntryControlOffset`). `FormationData` remains available only as an inactive preset/reference concept, not as the runtime source of wave shape data.
+
 ---
 
 ## Phase 3 — Entry Spawn vs Final Formation Placement
 
-Status: Pending.
+Status: Complete.
 
 Code:
-- Separate final formation placement from entry spawn placement where needed.
-- Let designers place:
+- [x] Separate final formation placement from entry spawn placement where needed.
+- [x] Let designers place:
   - where enemies enter from
   - where enemies settle in formation
-- Avoid compensating for entry starts through awkward local slot offsets.
-- Preserve current simple wave authoring for levels that do not need custom entry starts.
+- [x] Avoid compensating for entry starts through awkward local slot offsets.
+- [x] Preserve current simple wave authoring for levels that do not need custom entry starts.
 
 Editor:
-- Update existing Level 1-5 waves if the serialized model changes.
-- Author at least two test waves with different entry starts and final positions.
+- [x] Update existing Level 1-5 waves if the serialized model changes.
+- [x] Author at least two test waves with different entry starts and final positions.
 
 Acceptance:
-- A side-entry wave can start offscreen and settle into a centered formation without distorting the reusable formation shape.
-- Existing waves still work.
+- [x] A side-entry wave can start offscreen and settle into a centered formation without distorting the reusable formation shape.
+- [x] Existing waves still work.
+
+Follow-up decision:
+- [x] Extended Phase 3 authoring with shared waypoint entry paths, live formation sway, explicit enemy behavior modes, special-wave perfect-clear bonuses, and a standard-enemy dive coordinator. This makes early level authoring more fluent before the larger 100-level pass.
 
 ---
 

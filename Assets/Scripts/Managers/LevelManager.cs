@@ -26,6 +26,7 @@ namespace Warblade.Managers
         [SerializeField] private bool _playOnStart = true;
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
         [SerializeField, Min(1)] private int _shopInterval = 4;
+        [SerializeField, Range(0f, 1f)] private float _finalDiveRemainingRatio = 0.1f;
         [Header("M5 Boss Test")]
         [SerializeField] private bool _enableTestBossAfterWaves;
         [SerializeField, Min(1)] private int _testBossLevel = 5;
@@ -150,6 +151,7 @@ namespace Warblade.Managers
                 _levelStarted?.Raise(CurrentLevel);
                 RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
                 _playerShooting?.SetShootingEnabled(true);
+                _enemySpawner.BeginLevelEnemyTracking();
                 _waveRunner.PlayWaves(levelData.Waves);
                 yield return WaitForLevelClearRoutine();
 
@@ -160,6 +162,7 @@ namespace Warblade.Managers
                 }
 
                 if (_isGameOver) break;
+                AwardSpecialPerfectClearBonus();
                 _onLevelCompleted?.Invoke(CurrentLevel);
                 _levelCompleted?.Raise(CurrentLevel);
                 if (_levelTransitionDelay > 0f)
@@ -213,6 +216,11 @@ namespace Warblade.Managers
         {
             while (!_isGameOver)
             {
+                if (_waveRunner.HasCompletedSequence)
+                {
+                    _enemySpawner.ForceFinalEnemiesToDive(_finalDiveRemainingRatio);
+                }
+
                 bool enemiesCleared =
                     _waveRunner.HasCompletedSequence &&
                     _enemySpawner.ActiveEnemyCount == 0;
@@ -306,6 +314,20 @@ namespace Warblade.Managers
         {
             yield return RunTestBossEncounterRoutine();
             _levelRoutine = null;
+        }
+
+        private void AwardSpecialPerfectClearBonus()
+        {
+            if (_enemySpawner == null || ScoreManager.Instance == null)
+            {
+                return;
+            }
+
+            int bonusScore = _enemySpawner.ConsumeSpecialPerfectClearBonusScore();
+            if (bonusScore > 0)
+            {
+                ScoreManager.Instance.AddScore(bonusScore);
+            }
         }
 
         private IEnumerator EnterShopRoutine()

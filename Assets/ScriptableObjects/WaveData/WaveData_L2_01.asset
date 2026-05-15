@@ -12,14 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8a2f3f5f9d24ac89f6f3b19a2d7c4e1, type: 3}
   m_Name: WaveData_L2_01
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
-  _formationData: {fileID: 11400000, guid: b065cfdbd26466546a70380800c85305, type: 2}
-  _enemyComposition:
-  - {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
-  - {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
-  - {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+  _slots:
+  - LocalPosition: {x: -5, y: -5}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 2.8, y: -15}
+  - LocalPosition: {x: -3, y: -5}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 1.6, y: -15}
+  - LocalPosition: {x: -1, y: -5}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0.2, y: -15}
   _formationAnchorPosition: {x: -1, y: 7}
   _spawnDelay: 3
   _entrySide: 0
   _entryDistance: 0
+  _useCustomEntryStartCenter: 0
+  _entryStartCenter: {x: -1, y: 7}
   _entrySpacing: 0
   _perSlotDelay: 0.3

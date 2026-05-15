@@ -10,22 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37777848def89bc44bfa241dbbcc28b0, type: 3}
-  m_Name: EnemyData_Shooter
+  m_Name: EnemyData_Standard
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.EnemyData
   _maxHealth: 1
   _scoreValue: 100
   _entrySpeed: 3
-  _diveSpeed: 6
+  _diveSpeed: 5.5
   _diveBottomY: -6
-  _sitsInFormation: 1
+  _behaviorMode: 0
   _diesAtDiveBottom: 0
   _canFire: 1
-  _passThroughChance: 0.5
+  _limitConcurrentDivesAboveFinalThreshold: 1
+  _passThroughChance: 0.15
   _respawnTopY: 6
-  _diveCooldownMin: 999
-  _diveCooldownMax: 999
+  _diveCooldownMin: 8
+  _diveCooldownMax: 14
   _fireCooldownMin: 2
-  _fireCooldownMax: 5
+  _fireCooldownMax: 6
   _lingerDurationMin: 0.5
   _lingerDurationMax: 1.5
   _spriteColor: {r: 1, g: 1, b: 1, a: 1}

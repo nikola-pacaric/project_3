@@ -30,6 +30,7 @@ namespace Warblade.Entities
         private bool _isPassThroughDive;
         private IObjectPool<Bullet> _bulletPool;
         private IObjectPool<Enemy> _enemyPool;
+        private EnemySpawner _spawner;
         private Formation _formation;
         private int _formationSlotIndex = -1;
         private bool _hasDespawned;
@@ -37,12 +38,22 @@ namespace Warblade.Entities
         private Vector2 _entryStart;
         private Vector2 _entryControlPoint;
         private Vector2 _entryEnd;
+        private Vector2[] _entryPathPoints;
+        private Vector2[] _entryPathControlPoints;
+        private Vector2[] _entryPathControlOffsets;
         private Vector2 _defaultEntryControlOffset;
         private float _entryElapsed;
         private float _entryDuration;
+        private bool _isReturningToSpawnForDespawn;
 
         public Vector2 EntryControlOffset => _entryControlOffset;
         public EnemyData Data => _data;
+        public bool CanForceDive =>
+            !_hasDespawned &&
+            _data != null &&
+            _data.BehaviorMode == EnemyBehaviorMode.Formation &&
+            (_state == State.InFormation || _state == State.Returning);
+        public event System.Action<Enemy, bool> Released;
 
         private void Awake()
         {
@@ -89,9 +100,14 @@ namespace Warblade.Entities
             _enemyPool = pool;
         }
 
+        public void SetSpawner(EnemySpawner spawner)
+        {
+            _spawner = spawner;
+        }
+
         public void Spawn(Vector2 startPosition, Vector2 formationPosition, Transform playerTransform)
         {
-            Spawn(startPosition, formationPosition, playerTransform, null, -1, _defaultEntryControlOffset);
+            Spawn(startPosition, formationPosition, playerTransform, null, -1, _defaultEntryControlOffset, null);
         }
 
         public void Spawn(
@@ -107,7 +123,8 @@ namespace Warblade.Entities
                 playerTransform,
                 formation,
                 formationSlotIndex,
-                _defaultEntryControlOffset);
+                _defaultEntryControlOffset,
+                null);
         }
 
         public void Spawn(
@@ -118,12 +135,45 @@ namespace Warblade.Entities
             int formationSlotIndex,
             Vector2 entryControlOffset)
         {
+            Spawn(startPosition, formationPosition, playerTransform, formation, formationSlotIndex, entryControlOffset, null);
+        }
+
+        public void Spawn(
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Transform playerTransform,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset,
+            Vector2[] entryPathPoints)
+        {
+            Spawn(
+                startPosition,
+                formationPosition,
+                playerTransform,
+                formation,
+                formationSlotIndex,
+                entryControlOffset,
+                entryPathPoints,
+                null);
+        }
+
+        public void Spawn(
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Transform playerTransform,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset,
+            Vector2[] entryPathPoints,
+            Vector2[] entryPathControlPoints)
+        {
             _hasDespawned = false;
 
             if (_data == null)
             {
                 Debug.LogError($"[{nameof(Enemy)}] Cannot spawn '{name}' without {nameof(EnemyData)}.");
-                Despawn();
+                Release(killed: false);
                 return;
             }
 
@@ -133,7 +183,18 @@ namespace Warblade.Entities
             _formation = formation;
             _formationSlotIndex = formationSlotIndex;
             _entryControlOffset = entryControlOffset;
+            bool hasSegmentedEntryPath =
+                entryPathPoints != null &&
+                entryPathPoints.Length >= 2 &&
+                entryPathControlPoints != null &&
+                entryPathControlPoints.Length >= entryPathPoints.Length - 1;
+            _entryPathPoints = hasSegmentedEntryPath ? entryPathPoints : null;
+            _entryPathControlPoints = hasSegmentedEntryPath ? entryPathControlPoints : null;
+            _entryPathControlOffsets = hasSegmentedEntryPath
+                ? BuildControlOffsets(entryPathPoints, entryPathControlPoints)
+                : null;
             _currentHealth = _data.MaxHealth;
+            _isReturningToSpawnForDespawn = false;
             ApplyVisualsFromData();
             BeginEntry();
         }
@@ -148,10 +209,25 @@ namespace Warblade.Entities
         {
             _entryStart = transform.position;
             _entryEnd = ResolveFormationPosition();
-            Vector2 midpoint = (_entryStart + _entryEnd) * 0.5f;
-            _entryControlPoint = midpoint + _entryControlOffset;
-            float entryPathLength = BezierPath.ApproximateQuadraticLength(
-                _entryStart, _entryControlPoint, _entryEnd);
+            float entryPathLength;
+            if (_entryPathPoints != null)
+            {
+                _entryPathPoints[0] = _entryStart;
+                _entryPathPoints[_entryPathPoints.Length - 1] = _entryEnd;
+                RefreshSegmentedPathControlPoints();
+                entryPathLength = BezierPath.ApproximateSegmentedQuadraticPathLength(_entryPathPoints, _entryPathControlPoints);
+                _entryControlPoint = _entryPathControlPoints != null && _entryPathControlPoints.Length > 0
+                    ? _entryPathControlPoints[0]
+                    : (_entryStart + _entryEnd) * 0.5f;
+            }
+            else
+            {
+                Vector2 midpoint = (_entryStart + _entryEnd) * 0.5f;
+                _entryControlPoint = midpoint + _entryControlOffset;
+                entryPathLength = BezierPath.ApproximateQuadraticLength(
+                    _entryStart, _entryControlPoint, _entryEnd);
+            }
+
             _entryDuration = entryPathLength / Mathf.Max(_data.EntrySpeed, 0.01f);
             _entryElapsed = 0f;
             _state = State.Entering;
@@ -194,13 +270,23 @@ namespace Warblade.Entities
                     _entryElapsed += Time.deltaTime;
                     float t = Mathf.Clamp01(_entryElapsed / _entryDuration);
 
-                    // Track a moving formation slot during entry to avoid end-of-path snapping.
-                    _entryEnd = ResolveFormationPosition();
-                    Vector2 midpoint = (_entryStart + _entryEnd) * 0.5f;
-                    _entryControlPoint = midpoint + _entryControlOffset;
+                    if (_entryPathPoints != null)
+                    {
+                        _entryPathPoints[_entryPathPoints.Length - 1] = ResolveFormationPosition();
+                        RefreshSegmentedPathControlPoints();
+                        transform.position = BezierPath.EvaluateSegmentedQuadraticPath(_entryPathPoints, _entryPathControlPoints, t);
+                    }
+                    else
+                    {
+                        // Track a moving formation slot during entry to avoid end-of-path snapping.
+                        _entryEnd = ResolveFormationPosition();
+                        Vector2 midpoint = (_entryStart + _entryEnd) * 0.5f;
+                        _entryControlPoint = midpoint + _entryControlOffset;
 
-                    transform.position = BezierPath.EvaluateQuadratic(
-                        _entryStart, _entryControlPoint, _entryEnd, t);
+                        transform.position = BezierPath.EvaluateQuadratic(
+                            _entryStart, _entryControlPoint, _entryEnd, t);
+                    }
+
                     if (t >= 1f)
                     {
                         EnterFormation();
@@ -208,14 +294,14 @@ namespace Warblade.Entities
                     break;
 
                 case State.InFormation:
-                    MoveToward(_formationPosition, _data.EntrySpeed);
+                    transform.position = _formationPosition;
                     if (_data.CanFire && Time.time >= _nextFireTime)
                     {
                         FireBullet();
                     }
                     if (Time.time >= _nextDiveTime)
                     {
-                        StartDive();
+                        TryStartDive();
                     }
                     break;
 
@@ -238,6 +324,12 @@ namespace Warblade.Entities
                     MoveToward(_formationPosition, _data.DiveSpeed);
                     if (Reached(_formationPosition))
                     {
+                        if (_isReturningToSpawnForDespawn)
+                        {
+                            Release(killed: false);
+                            break;
+                        }
+
                         EnterFormation();
                     }
                     break;
@@ -253,6 +345,13 @@ namespace Warblade.Entities
             {
                 Die();
             }
+        }
+
+        public void ForceDive()
+        {
+            if (!CanForceDive) return;
+
+            StartDive();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -279,11 +378,30 @@ namespace Warblade.Entities
         {
             _formationPosition = ResolveFormationPosition();
 
-            if (!_data.SitsInFormation)
+            switch (_data.BehaviorMode)
             {
-                StartDive();
-                return;
+                case EnemyBehaviorMode.Formation:
+                case EnemyBehaviorMode.Mother:
+                    StartFormationIdle();
+                    break;
+
+                case EnemyBehaviorMode.KamikazeReturn:
+                    StartReturnToSpawnForDespawn();
+                    break;
+
+                case EnemyBehaviorMode.BonusSnake:
+                    Release(killed: false);
+                    break;
+
+                default:
+                    StartFormationIdle();
+                    break;
             }
+        }
+
+        private void StartFormationIdle()
+        {
+            _spawner?.EndLimitedDive(this);
             _state = State.InFormation;
             _nextDiveTime = Time.time + Random.Range(_data.DiveCooldownMin, _data.DiveCooldownMax);
             _nextFireTime = Time.time + Random.Range(_data.FireCooldownMin, _data.FireCooldownMax);
@@ -297,6 +415,17 @@ namespace Warblade.Entities
                 bullet.Spawn(transform.position);
             }
             _nextFireTime = Time.time + Random.Range(_data.FireCooldownMin, _data.FireCooldownMax);
+        }
+
+        private void TryStartDive()
+        {
+            if (_spawner != null && !_spawner.TryBeginLimitedDive(this))
+            {
+                _nextDiveTime = Time.time + Random.Range(0.5f, 1.25f);
+                return;
+            }
+
+            StartDive();
         }
 
         private void StartDive()
@@ -331,7 +460,7 @@ namespace Warblade.Entities
         {
             if (_data.DiesAtDiveBottom)
             {
-                Despawn();
+                Release(killed: false);
                 return;
             }
             _lingerEndTime = Time.time + Random.Range(_data.LingerDurationMin, _data.LingerDurationMax);
@@ -340,16 +469,32 @@ namespace Warblade.Entities
 
         private void StartReturn()
         {
+            if (_isReturningToSpawnForDespawn)
+            {
+                _state = State.Returning;
+                return;
+            }
+
             if (_isPassThroughDive)
             {
                 Vector2 liveFormationPosition = ResolveFormationPosition();
                 transform.position = new Vector2(liveFormationPosition.x, _data.RespawnTopY);
+                _entryPathPoints = null;
+                _entryPathControlPoints = null;
+                _entryPathControlOffsets = null;
                 BeginEntry();
             }
             else
             {
                 _state = State.Returning;
             }
+        }
+
+        private void StartReturnToSpawnForDespawn()
+        {
+            _formationPosition = _entryStart;
+            _isReturningToSpawnForDespawn = true;
+            _state = State.Returning;
         }
 
         private void Die()
@@ -363,13 +508,15 @@ namespace Warblade.Entities
 
             PickupDropPool.Instance?.TryDrop(_data.DropTable, transform.position);
 
-            Despawn();
+            Release(killed: true);
         }
 
-        private void Despawn()
+        private void Release(bool killed)
         {
             if (_hasDespawned) return;
             _hasDespawned = true;
+            _spawner?.EndLimitedDive(this);
+            Released?.Invoke(this, killed);
 
             if (_enemyPool != null)
             {
@@ -392,6 +539,28 @@ namespace Warblade.Entities
                 start = _entryStart;
                 control = _entryControlPoint;
                 end = _entryEnd;
+                if (_entryPathPoints != null)
+                {
+                    Gizmos.color = Color.cyan;
+                    DrawSegmentedQuadraticGizmo(_entryPathPoints, _entryPathControlPoints, 32);
+                    for (int i = 0; i < _entryPathPoints.Length; i++)
+                    {
+                        Gizmos.DrawWireSphere(_entryPathPoints[i], 0.10f);
+                    }
+
+                    if (_entryPathControlPoints != null)
+                    {
+                        Gizmos.color = Color.yellow;
+                        for (int i = 0; i < _entryPathControlPoints.Length; i++)
+                        {
+                            Gizmos.DrawWireSphere(_entryPathControlPoints[i], 0.08f);
+                            Gizmos.DrawLine(_entryPathPoints[i], _entryPathControlPoints[i]);
+                            Gizmos.DrawLine(_entryPathControlPoints[i], _entryPathPoints[i + 1]);
+                        }
+                    }
+
+                    return;
+                }
             }
             else
             {
@@ -422,6 +591,56 @@ namespace Warblade.Entities
             Gizmos.DrawWireSphere(control, 0.12f);
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(end, 0.15f);
+        }
+
+        private static void DrawSegmentedQuadraticGizmo(Vector2[] points, Vector2[] controlPoints, int samples)
+        {
+            if (points == null || points.Length < 2 || controlPoints == null || controlPoints.Length == 0) return;
+
+            Vector2 previous = points[0];
+            int clampedSamples = Mathf.Max(samples, 4);
+            for (int i = 1; i <= clampedSamples; i++)
+            {
+                float t = i / (float)clampedSamples;
+                Vector2 point = BezierPath.EvaluateSegmentedQuadraticPath(points, controlPoints, t);
+                Gizmos.DrawLine(previous, point);
+                previous = point;
+            }
+        }
+
+        private static Vector2[] BuildControlOffsets(Vector2[] points, Vector2[] controlPoints)
+        {
+            if (points == null || controlPoints == null)
+            {
+                return null;
+            }
+
+            int segmentCount = Mathf.Min(points.Length - 1, controlPoints.Length);
+            Vector2[] offsets = new Vector2[segmentCount];
+            for (int i = 0; i < segmentCount; i++)
+            {
+                Vector2 midpoint = (points[i] + points[i + 1]) * 0.5f;
+                offsets[i] = controlPoints[i] - midpoint;
+            }
+
+            return offsets;
+        }
+
+        private void RefreshSegmentedPathControlPoints()
+        {
+            if (_entryPathPoints == null || _entryPathControlPoints == null || _entryPathControlOffsets == null)
+            {
+                return;
+            }
+
+            int segmentCount = Mathf.Min(
+                _entryPathPoints.Length - 1,
+                Mathf.Min(_entryPathControlPoints.Length, _entryPathControlOffsets.Length));
+            for (int i = 0; i < segmentCount; i++)
+            {
+                Vector2 midpoint = (_entryPathPoints[i] + _entryPathPoints[i + 1]) * 0.5f;
+                _entryPathControlPoints[i] = midpoint + _entryPathControlOffsets[i];
+            }
         }
     }
 }

@@ -2,6 +2,14 @@ using UnityEngine;
 
 namespace Warblade.Data
 {
+    public enum EnemyBehaviorMode
+    {
+        Formation = 0,
+        KamikazeReturn = 1,
+        BonusSnake = 2,
+        Mother = 3
+    }
+
     [CreateAssetMenu(menuName = "Warblade/Data/Enemy Data", fileName = "EnemyData")]
     public class EnemyData : ScriptableObject
     {
@@ -13,9 +21,10 @@ namespace Warblade.Data
         [SerializeField] private float _diveBottomY = -6f;
 
         [Header("Behavior")]
-        [SerializeField] private bool _sitsInFormation = true;
+        [SerializeField] private EnemyBehaviorMode _behaviorMode = EnemyBehaviorMode.Formation;
         [SerializeField] private bool _diesAtDiveBottom;
         [SerializeField] private bool _canFire = true;
+        [SerializeField] private bool _limitConcurrentDivesAboveFinalThreshold;
         [SerializeField, Range(0f, 1f)] private float _passThroughChance = 0.5f;
         [SerializeField] private float _respawnTopY = 6f;
 
@@ -38,9 +47,13 @@ namespace Warblade.Data
         public float EntrySpeed => _entrySpeed;
         public float DiveSpeed => _diveSpeed;
         public float DiveBottomY => _diveBottomY;
-        public bool SitsInFormation => _sitsInFormation;
+        public EnemyBehaviorMode BehaviorMode => _behaviorMode;
         public bool DiesAtDiveBottom => _diesAtDiveBottom;
         public bool CanFire => _canFire;
+        public bool LimitConcurrentDivesAboveFinalThreshold => _limitConcurrentDivesAboveFinalThreshold;
+        public bool CountsForPerfectClearBonus =>
+            _behaviorMode == EnemyBehaviorMode.KamikazeReturn ||
+            _behaviorMode == EnemyBehaviorMode.BonusSnake;
         public float PassThroughChance => _passThroughChance;
         public float RespawnTopY => _respawnTopY;
         public float DiveCooldownMin => _diveCooldownMin;

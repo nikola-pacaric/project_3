@@ -15,18 +15,18 @@ MonoBehaviour:
   _maxHealth: 1
   _scoreValue: 100
   _entrySpeed: 3
-  _diveSpeed: 6
+  _diveSpeed: 8
   _diveBottomY: -6
-  _sitsInFormation: 1
-  _diesAtDiveBottom: 0
+  _behaviorMode: 1
+  _diesAtDiveBottom: 1
   _canFire: 0
   _passThroughChance: 1
   _respawnTopY: 6
-  _diveCooldownMin: 2
-  _diveCooldownMax: 6
+  _diveCooldownMin: 0.25
+  _diveCooldownMax: 0.75
   _fireCooldownMin: 1.5
   _fireCooldownMax: 4
-  _lingerDurationMin: 0.5
-  _lingerDurationMax: 1.5
-  _spriteColor: {r: 1, g: 1, b: 1, a: 1}
+  _lingerDurationMin: 0
+  _lingerDurationMax: 0
+  _spriteColor: {r: 1, g: 0.35, b: 0.2, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

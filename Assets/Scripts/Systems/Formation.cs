@@ -1,22 +1,44 @@
 using UnityEngine;
+using Warblade.Data;
 
 namespace Warblade.Systems
 {
     public class Formation : MonoBehaviour
     {
-        [SerializeField] private Warblade.Data.FormationData _data;
+        [SerializeField] private FormationData _data;
+        [SerializeField] private WaveData _waveData;
         [SerializeField] private bool _drawGizmos = true;
 
         private Vector3 _anchorPosition;
 
-        public int SlotCount => _data == null ? 0 : _data.SlotCount;
+        public int SlotCount
+        {
+            get
+            {
+                if (_waveData != null) return _waveData.SlotCount;
+                return _data == null ? 0 : _data.SlotCount;
+            }
+        }
 
         /// <summary>
         /// Assigns runtime formation data and anchor position for waves.
         /// </summary>
-        public void Configure(Warblade.Data.FormationData data, Vector2 anchorPosition)
+        public void Configure(FormationData data, Vector2 anchorPosition)
         {
             _data = data;
+            _waveData = null;
+            _anchorPosition = anchorPosition;
+            transform.position = anchorPosition;
+        }
+
+        /// <summary>
+        /// Assigns runtime wave slot data and anchor motion for authored waves.
+        /// </summary>
+        public void Configure(WaveData waveData)
+        {
+            _data = null;
+            _waveData = waveData;
+            Vector2 anchorPosition = waveData != null ? waveData.FormationAnchorPosition : Vector2.zero;
             _anchorPosition = anchorPosition;
             transform.position = anchorPosition;
         }
@@ -30,7 +52,7 @@ namespace Warblade.Systems
         {
             if (Application.isPlaying) return;
 
-            if (_data == null)
+            if (_data == null && _waveData == null)
             {
                 Debug.LogWarning($"[{nameof(Formation)}] Assign FormationData on '{name}'.");
             }
@@ -38,14 +60,27 @@ namespace Warblade.Systems
 
         private void Update()
         {
+            if (_waveData != null)
+            {
+                transform.position = _anchorPosition + (Vector3)ResolveWaveMotionOffset();
+                return;
+            }
+
             if (_data == null) return;
 
             float offsetX = Mathf.Sin(Time.time * _data.BreatheSpeed) * _data.BreatheAmplitude;
             transform.position = _anchorPosition + Vector3.right * offsetX;
         }
 
+        public void SetStaticAnchor(Vector2 anchorPosition)
+        {
+            _anchorPosition = anchorPosition;
+            transform.position = anchorPosition;
+        }
+
         public bool HasSlot(int slotIndex)
         {
+            if (_waveData != null) return _waveData.HasSlot(slotIndex);
             return _data != null && _data.HasSlot(slotIndex);
         }
 
@@ -55,6 +90,11 @@ namespace Warblade.Systems
             {
                 Debug.LogError($"[{nameof(Formation)}] Slot index {slotIndex} is out of range on '{name}'.");
                 return transform.position;
+            }
+
+            if (_waveData != null)
+            {
+                return (Vector2)transform.position + _waveData.GetSlot(slotIndex).LocalPosition;
             }
 
             return (Vector2)transform.position + _data.GetSlot(slotIndex).LocalPosition;
@@ -68,19 +108,42 @@ namespace Warblade.Systems
                 return Vector2.zero;
             }
 
+            if (_waveData != null)
+            {
+                return _waveData.GetSlot(slotIndex).EntryControlOffset;
+            }
+
             return _data.GetSlot(slotIndex).EntryControlOffset;
         }
 
         private void OnDrawGizmos()
         {
-            if (!_drawGizmos || _data == null || _data.SlotCount == 0) return;
+            if (!_drawGizmos || SlotCount == 0) return;
 
             Gizmos.color = new Color(0.2f, 1f, 1f, 0.75f);
-            for (int i = 0; i < _data.SlotCount; i++)
+            for (int i = 0; i < SlotCount; i++)
             {
-                Vector2 slotWorld = (Vector2)transform.position + _data.GetSlot(i).LocalPosition;
+                Vector2 slotWorld = GetSlotWorldPosition(i);
                 Gizmos.DrawWireSphere(slotWorld, 0.16f);
                 Gizmos.DrawLine(transform.position, slotWorld);
+            }
+        }
+
+        private Vector2 ResolveWaveMotionOffset()
+        {
+            if (_waveData == null)
+            {
+                return Vector2.zero;
+            }
+
+            switch (_waveData.MotionMode)
+            {
+                case WaveData.FormationMotionMode.HorizontalSway:
+                    float offsetX = Mathf.Sin((Time.time * _waveData.FormationSwaySpeed) + _waveData.FormationSwayPhase) *
+                        _waveData.FormationSwayAmplitude;
+                    return Vector2.right * offsetX;
+                default:
+                    return Vector2.zero;
             }
         }
     }

@@ -915,7 +915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6495838d04fbfff409cc9ab2a8077e70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.Formation
-  _data: {fileID: 11400000, guid: 279c9a3d2e6ad42488bcfeb1653dfda6, type: 2}
+  _data: {fileID: 11400000, guid: dcefeffa4be359142ab19b792658dbcb, type: 2}
   _drawGizmos: 0
 --- !u!1 &586435082
 GameObject:
@@ -3661,8 +3661,9 @@ MonoBehaviour:
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
+  _finalDiveRemainingRatio: 0.1
   _enableTestBossAfterWaves: 1
-  _testBossLevel: 1
+  _testBossLevel: 5
   _testBoss: {fileID: 1539885663}
   _onLevelStarted:
     m_PersistentCalls:
@@ -4723,12 +4724,12 @@ MonoBehaviour:
   _enemyPrefabs:
   - {fileID: 4704408080886951517, guid: 8aa3b15bf87865e4eaf22d1c18480956, type: 3}
   - {fileID: 2528458533209315102, guid: d6fcf2b9496d5f24391b9c5af97734aa, type: 3}
-  - {fileID: 3970561841897826399, guid: 0f27ed28cbe7a4a459c2f0f0d2e6dc06, type: 3}
   _testFormationSpawns: []
   _debugFormationIndex: 0
   _defaultCapacity: 10
   _maxSize: 50
   _drawGizmos: 1
+  _specialPerfectClearScoreMultiplier: 2
 --- !u!4 &2078825176
 Transform:
   m_ObjectHideFlags: 0
@@ -4940,7 +4941,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.WaveRunner
   _enemySpawner: {fileID: 2078825175}
-  _waves: []
+  _waves:
+  - {fileID: 11400000, guid: 3f8546f551c64fe4857d11bfb9db3107, type: 2}
+  - {fileID: 11400000, guid: 265dd5005dd855e46b9ff17accecdc0a, type: 2}
   _playOnStart: 1
   _drawGizmos: 1
   _gizmoCurveSamples: 24

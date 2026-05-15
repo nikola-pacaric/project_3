@@ -52,14 +52,14 @@ namespace Warblade.Systems
             for (int waveIndex = 0; waveIndex < _waves.Count; waveIndex++)
             {
                 WaveData wave = _waves[waveIndex];
-                if (wave == null || wave.FormationData == null) continue;
+                if (wave == null) continue;
 
-                int slotCount = wave.FormationData.SlotCount;
+                int slotCount = wave.SlotCount;
                 if (slotCount <= 0) continue;
 
                 Vector2 anchor = wave.FormationAnchorPosition;
-                Vector2 entryStartCenter = anchor + GetEntryDirection(wave.Side) * wave.EntryDistance;
-                Vector2 entrySpacingStep = GetEntrySpacingDirection(wave.Side) * wave.EntrySpacing;
+                Vector2 entryStartCenter = wave.EntryStartCenter;
+                Vector2 entrySpacingStep = wave.EntrySpacingStep;
                 float halfSpan = (slotCount - 1) * 0.5f;
 
                 Color waveColor = Color.HSVToRGB((waveIndex * 0.173f) % 1f, 0.65f, 1f);
@@ -67,16 +67,42 @@ namespace Warblade.Systems
                 DrawCross(anchor, 0.22f);
                 Gizmos.DrawWireSphere(entryStartCenter, 0.12f);
 
+                if (wave.UsesWaypointEntryPath)
+                {
+                    Vector2[] sharedPathPoints = wave.BuildSharedEntryPathWorldPoints(entryStartCenter);
+                    Vector2[] sharedControlPoints = wave.BuildEntryPathWorldControlPoints(sharedPathPoints);
+                    DrawSegmentedQuadraticPath(sharedPathPoints, sharedControlPoints, _gizmoCurveSamples);
+                    DrawSegmentControlPoints(sharedPathPoints, sharedControlPoints);
+
+                    for (int waypointIndex = 0; waypointIndex < wave.EntryPathWaypointCount; waypointIndex++)
+                    {
+                        Vector2 waypoint = wave.GetEntryPathWaypointWorldPosition(waypointIndex);
+                        Gizmos.DrawWireSphere(waypoint, 0.14f);
+                        DrawCross(waypoint, 0.08f);
+                    }
+                }
+
                 for (int slotIndex = 0; slotIndex < slotCount; slotIndex++)
                 {
-                    FormationData.SlotDefinition slot = wave.FormationData.GetSlot(slotIndex);
+                    WaveData.WaveSlot slot = wave.GetSlot(slotIndex);
                     Vector2 start = entryStartCenter + entrySpacingStep * (slotIndex - halfSpan);
                     Vector2 end = anchor + slot.LocalPosition;
-                    Vector2 control = ((start + end) * 0.5f) + slot.EntryControlOffset;
 
-                    DrawQuadraticPath(start, control, end, _gizmoCurveSamples);
+                    if (wave.UsesWaypointEntryPath)
+                    {
+                        Vector2 branchStart = wave.GetEntryPathEndWorldPosition(entryStartCenter);
+                        Vector2 branchControl = wave.GetEntryPathBranchControlPoint(branchStart, end);
+                        DrawQuadraticPath(branchStart, branchControl, end, _gizmoCurveSamples);
+                        DrawBranchControlPoint(branchStart, branchControl, end);
+                    }
+                    else
+                    {
+                        Vector2 control = ((start + end) * 0.5f) + slot.EntryControlOffset;
+                        DrawQuadraticPath(start, control, end, _gizmoCurveSamples);
+                        Gizmos.DrawSphere(start, 0.05f);
+                    }
+
                     Gizmos.DrawWireSphere(end, 0.10f);
-                    Gizmos.DrawSphere(start, 0.05f);
                 }
             }
         }
@@ -154,22 +180,22 @@ namespace Warblade.Systems
                     yield return new WaitForSeconds(wave.SpawnDelay);
                 }
 
-                if (wave.FormationData == null)
+                if (wave.SlotCount <= 0)
                 {
-                    Debug.LogError($"[{nameof(WaveRunner)}] Wave '{wave.name}' has no FormationData.");
+                    Debug.LogError($"[{nameof(WaveRunner)}] Wave '{wave.name}' has no slots.");
                     continue;
                 }
 
-                Formation formation = CreateRuntimeFormation(wave, waveIndex);
-                Vector2 entryStartCenter = wave.FormationAnchorPosition + GetEntryDirection(wave.Side) * wave.EntryDistance;
-                Vector2 entrySpacingStep = GetEntrySpacingDirection(wave.Side) * wave.EntrySpacing;
+                Formation runtimeFormation = CreateRuntimeFormation(wave, waveIndex);
+                Vector2 entryStartCenter = wave.EntryStartCenter;
+                Vector2 entrySpacingStep = wave.EntrySpacingStep;
 
                 _enemySpawner.SpawnFormation(
-                    formation,
                     wave,
                     entryStartCenter,
                     entrySpacingStep,
-                    wave.PerSlotDelay);
+                    wave.PerSlotDelay,
+                    runtimeFormation: runtimeFormation);
             }
 
             _runRoutine = null;
@@ -182,35 +208,10 @@ namespace Warblade.Systems
             formationObject.transform.SetParent(transform, true);
 
             Formation formation = formationObject.AddComponent<Formation>();
-            formation.Configure(wave.FormationData, wave.FormationAnchorPosition);
+            formation.Configure(wave);
             _runtimeFormations.Add(formation);
 
             return formation;
-        }
-
-        private static Vector2 GetEntryDirection(WaveData.EntrySide side)
-        {
-            switch (side)
-            {
-                case WaveData.EntrySide.Left:
-                    return Vector2.left;
-                case WaveData.EntrySide.Right:
-                    return Vector2.right;
-                default:
-                    return Vector2.up;
-            }
-        }
-
-        private static Vector2 GetEntrySpacingDirection(WaveData.EntrySide side)
-        {
-            switch (side)
-            {
-                case WaveData.EntrySide.Left:
-                case WaveData.EntrySide.Right:
-                    return Vector2.up;
-                default:
-                    return Vector2.right;
-            }
         }
 
         private static void DrawCross(Vector2 center, float size)
@@ -230,6 +231,48 @@ namespace Warblade.Systems
                 Gizmos.DrawLine(previous, point);
                 previous = point;
             }
+        }
+
+        private static void DrawSegmentedQuadraticPath(Vector2[] points, Vector2[] controlPoints, int samples)
+        {
+            if (points == null || points.Length < 2 || controlPoints == null || controlPoints.Length == 0) return;
+
+            int clampedSamples = Mathf.Max(samples, 4);
+            Vector2 previous = points[0];
+            for (int i = 1; i <= clampedSamples; i++)
+            {
+                float t = i / (float)clampedSamples;
+                Vector2 point = BezierPath.EvaluateSegmentedQuadraticPath(points, controlPoints, t);
+                Gizmos.DrawLine(previous, point);
+                previous = point;
+            }
+        }
+
+        private static void DrawSegmentControlPoints(Vector2[] points, Vector2[] controlPoints)
+        {
+            if (points == null || controlPoints == null) return;
+
+            Color previousColor = Gizmos.color;
+            Gizmos.color = Color.yellow;
+            int segmentCount = Mathf.Min(points.Length - 1, controlPoints.Length);
+            for (int i = 0; i < segmentCount; i++)
+            {
+                Gizmos.DrawWireSphere(controlPoints[i], 0.07f);
+                Gizmos.DrawLine(points[i], controlPoints[i]);
+                Gizmos.DrawLine(controlPoints[i], points[i + 1]);
+            }
+
+            Gizmos.color = previousColor;
+        }
+
+        private static void DrawBranchControlPoint(Vector2 start, Vector2 control, Vector2 end)
+        {
+            Color previousColor = Gizmos.color;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(control, 0.07f);
+            Gizmos.DrawLine(start, control);
+            Gizmos.DrawLine(control, end);
+            Gizmos.color = previousColor;
         }
 
         private void CleanupRuntimeFormations()
