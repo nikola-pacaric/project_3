@@ -69,55 +69,55 @@ Acceptance:
 
 ## Phase 2 — Formation Shape / Composition Refactor
 
-Status: Pending.
+Status: Complete.
 
 Code:
-- [ ] Inspect current formation pipeline before editing:
+- [x] Inspect current formation pipeline before editing:
   - `FormationData`
   - `Formation`
   - `WaveData`
   - `EnemySpawner`
   - existing `LevelData` assets for levels 1-5
-- [ ] Identify every place that currently reads enemy data from `FormationData`.
-- [ ] Refactor `FormationData` into shape-only data:
+- [x] Identify every place that currently reads enemy data from `FormationData`.
+- [x] Refactor `FormationData` into shape-only data:
   - slot positions
   - slot entry control offsets
   - formation breathing/motion settings
   - slot count
-- [ ] Remove enemy-type ownership from reusable formation shapes.
-- [ ] Move enemy composition into wave-level data:
+- [x] Remove enemy-type ownership from reusable formation shapes.
+- [x] Move enemy composition into wave-level data:
   - formation shape reference
   - enemy data per slot
   - spawn timing
   - entry start info
-- [ ] Decide whether composition should live directly on `WaveData` or in a separate reusable loadout asset.
-- [ ] Prefer the simpler option unless two concrete waves need to reuse the exact same composition independently.
-- [ ] Update `EnemySpawner` so it resolves each slot from:
+- [x] Decide whether composition should live directly on `WaveData` or in a separate reusable loadout asset.
+- [x] Prefer the simpler option unless two concrete waves need to reuse the exact same composition independently.
+- [x] Update `EnemySpawner` so it resolves each slot from:
   - shape slot position/control data from `FormationData`
   - enemy type from the wave composition/loadout
-- [ ] Preserve current Level 1-5 behavior after migration.
-- [ ] Add validation before mass authoring:
+- [x] Preserve current Level 1-5 behavior after migration.
+- [x] Add validation before mass authoring:
   - wave has missing formation shape
   - wave has empty enemy composition
   - composition count does not match formation slot count
   - any composition slot has missing `EnemyData`
   - old formation assets still contain obsolete enemy ownership if temporary compatibility exists
-- [ ] Keep migration code temporary and obvious if any compatibility bridge is needed.
-- [ ] Do not add editor tooling beyond simple validation unless manual migration becomes error-prone.
+- [x] Keep migration code temporary and obvious if any compatibility bridge is needed.
+- [x] Do not add editor tooling beyond simple validation unless manual migration becomes error-prone.
 
 Editor:
-- [ ] Back up or inspect the current Level 1-5 intended enemy layouts before changing assets.
-- [ ] Update reusable formation assets so they are shape-only.
-- [ ] Update existing wave assets so each wave owns its enemy composition.
-- [ ] Confirm Level 1-5 waves still use the same intended enemy layouts after migration.
-- [ ] Fix all validation warnings/errors on the migrated M3/M4/M5 assets.
+- [x] Back up or inspect the current Level 1-5 intended enemy layouts before changing assets.
+- [x] Update reusable formation assets so they are shape-only.
+- [x] Update existing wave assets so each wave owns its enemy composition.
+- [x] Confirm Level 1-5 waves still use the same intended enemy layouts after migration.
+- [x] Fix all validation warnings/errors on the migrated M3/M4/M5 assets.
 
 Acceptance:
-- [ ] Reusing a V/line/snake/dual-flank shape in a later level no longer changes enemy types in earlier levels.
-- [ ] Levels 1-5 still play correctly after asset migration.
-- [ ] A single formation shape can be reused by at least two waves with different enemy compositions.
-- [ ] Invalid wave composition data produces clear warnings/errors before Play Mode testing.
-- [ ] No M5 boss/shop/loot behavior is touched by this refactor except where level flow naturally references waves.
+- [x] Reusing a V/line/snake/dual-flank shape in a later level no longer changes enemy types in earlier levels.
+- [x] Levels 1-5 still play correctly after asset migration.
+- [x] A single formation shape can be reused by at least two waves with different enemy compositions.
+- [x] Invalid wave composition data produces clear warnings/errors before Play Mode testing.
+- [x] No M5 boss/shop/loot behavior is touched by this refactor except where level flow naturally references waves.
 
 ---
 

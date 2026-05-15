@@ -17,6 +17,7 @@ namespace Warblade.Systems
         public struct TestFormationSpawn
         {
             public Formation Formation;
+            public EnemyData[] EnemyComposition;
             public Vector2 EntryStartCenter;
             [Min(0f)] public float EntryStartSpacingX;
             [Min(0f)] public float Delay;
@@ -97,6 +98,7 @@ namespace Warblade.Systems
         /// </summary>
         public Coroutine SpawnFormation(
             Formation formation,
+            WaveData wave,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
             float perSlotDelay,
@@ -104,6 +106,7 @@ namespace Warblade.Systems
         {
             return StartCoroutine(SpawnFormationAfterDelay(
                 formation,
+                wave,
                 entryStartCenter,
                 entryStartSpacingStep,
                 perSlotDelay,
@@ -123,6 +126,7 @@ namespace Warblade.Systems
             TestFormationSpawn debugSpawn = _testFormationSpawns[clampedIndex];
             StartCoroutine(SpawnFormationRoutine(
                 debugSpawn.Formation,
+                debugSpawn.EnemyComposition,
                 debugSpawn.EntryStartCenter,
                 Vector2.right * debugSpawn.EntryStartSpacingX,
                 debugSpawn.PerSlotDelay));
@@ -133,6 +137,7 @@ namespace Warblade.Systems
             if (spawn.Delay > 0f) yield return new WaitForSeconds(spawn.Delay);
             yield return SpawnFormationRoutine(
                 spawn.Formation,
+                spawn.EnemyComposition,
                 spawn.EntryStartCenter,
                 Vector2.right * spawn.EntryStartSpacingX,
                 spawn.PerSlotDelay);
@@ -140,6 +145,7 @@ namespace Warblade.Systems
 
         private IEnumerator SpawnFormationAfterDelay(
             Formation formation,
+            WaveData wave,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
             float perSlotDelay,
@@ -148,6 +154,7 @@ namespace Warblade.Systems
             if (delay > 0f) yield return new WaitForSeconds(delay);
             yield return SpawnFormationRoutine(
                 formation,
+                wave,
                 entryStartCenter,
                 entryStartSpacingStep,
                 perSlotDelay);
@@ -155,6 +162,37 @@ namespace Warblade.Systems
 
         private IEnumerator SpawnFormationRoutine(
             Formation formation,
+            WaveData wave,
+            Vector2 entryStartCenter,
+            Vector2 entryStartSpacingStep,
+            float perSlotDelay)
+        {
+            yield return SpawnFormationRoutine(
+                formation,
+                wave != null ? new WaveEnemyComposition(wave) : null,
+                entryStartCenter,
+                entryStartSpacingStep,
+                perSlotDelay);
+        }
+
+        private IEnumerator SpawnFormationRoutine(
+            Formation formation,
+            EnemyData[] enemyComposition,
+            Vector2 entryStartCenter,
+            Vector2 entryStartSpacingStep,
+            float perSlotDelay)
+        {
+            yield return SpawnFormationRoutine(
+                formation,
+                enemyComposition != null ? new ArrayEnemyComposition(enemyComposition) : null,
+                entryStartCenter,
+                entryStartSpacingStep,
+                perSlotDelay);
+        }
+
+        private IEnumerator SpawnFormationRoutine(
+            Formation formation,
+            IEnemyComposition enemyComposition,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
             float perSlotDelay)
@@ -166,10 +204,24 @@ namespace Warblade.Systems
                 yield break;
             }
 
+            if (enemyComposition == null || enemyComposition.Count == 0)
+            {
+                Debug.LogError($"[{nameof(EnemySpawner)}] Formation '{formation.name}' has no enemy composition.");
+                yield break;
+            }
+
+            if (enemyComposition.Count != formation.SlotCount)
+            {
+                Debug.LogError(
+                    $"[{nameof(EnemySpawner)}] Formation '{formation.name}' has {formation.SlotCount} slots, " +
+                    $"but the enemy composition has {enemyComposition.Count} entries.");
+                yield break;
+            }
+
             float halfSpan = (formation.SlotCount - 1) * 0.5f;
             for (int slotIndex = 0; slotIndex < formation.SlotCount; slotIndex++)
             {
-                EnemyData enemyData = formation.GetSlotEnemyData(slotIndex);
+                EnemyData enemyData = enemyComposition.GetEnemyData(slotIndex);
                 if (enemyData == null)
                 {
                     Debug.LogError(
@@ -198,6 +250,51 @@ namespace Warblade.Systems
                 {
                     yield return new WaitForSeconds(perSlotDelay);
                 }
+            }
+        }
+
+        private interface IEnemyComposition
+        {
+            int Count { get; }
+            EnemyData GetEnemyData(int slotIndex);
+        }
+
+        private sealed class WaveEnemyComposition : IEnemyComposition
+        {
+            private readonly WaveData _wave;
+
+            public WaveEnemyComposition(WaveData wave)
+            {
+                _wave = wave;
+            }
+
+            public int Count => _wave.EnemyCompositionCount;
+
+            public EnemyData GetEnemyData(int slotIndex)
+            {
+                return _wave.GetEnemyDataForSlot(slotIndex);
+            }
+        }
+
+        private sealed class ArrayEnemyComposition : IEnemyComposition
+        {
+            private readonly EnemyData[] _enemyComposition;
+
+            public ArrayEnemyComposition(EnemyData[] enemyComposition)
+            {
+                _enemyComposition = enemyComposition;
+            }
+
+            public int Count => _enemyComposition.Length;
+
+            public EnemyData GetEnemyData(int slotIndex)
+            {
+                if (slotIndex < 0 || slotIndex >= _enemyComposition.Length)
+                {
+                    return null;
+                }
+
+                return _enemyComposition[slotIndex];
             }
         }
 

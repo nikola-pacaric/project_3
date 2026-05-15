@@ -166,6 +166,7 @@ namespace Warblade.Systems
 
                 _enemySpawner.SpawnFormation(
                     formation,
+                    wave,
                     entryStartCenter,
                     entrySpacingStep,
                     wave.PerSlotDelay);

@@ -60,17 +60,6 @@ namespace Warblade.Systems
             return (Vector2)transform.position + _data.GetSlot(slotIndex).LocalPosition;
         }
 
-        public Warblade.Data.EnemyData GetSlotEnemyData(int slotIndex)
-        {
-            if (!HasSlot(slotIndex))
-            {
-                Debug.LogError($"[{nameof(Formation)}] Slot index {slotIndex} is out of range on '{name}'.");
-                return null;
-            }
-
-            return _data.GetSlot(slotIndex).EnemyData;
-        }
-
         public Vector2 GetSlotEntryControlOffset(int slotIndex)
         {
             if (!HasSlot(slotIndex))

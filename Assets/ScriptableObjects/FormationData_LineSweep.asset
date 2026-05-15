@@ -14,25 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.FormationData
   _slots:
   - LocalPosition: {x: -6, y: 3}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -4, y: 3}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -2, y: 3}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 3}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 2, y: 3}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 4, y: 3}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 6, y: 3}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   _breatheAmplitude: 0.5
   _breatheSpeed: 1

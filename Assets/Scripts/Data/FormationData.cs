@@ -9,7 +9,6 @@ namespace Warblade.Data
         public struct SlotDefinition
         {
             public Vector2 LocalPosition;
-            public EnemyData EnemyData;
             [Tooltip("Added to the midpoint of (spawn start -> slot world) for Bezier entry shape.")]
             public Vector2 EntryControlOffset;
         }

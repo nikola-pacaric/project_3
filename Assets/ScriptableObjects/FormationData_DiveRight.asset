@@ -14,13 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.FormationData
   _slots:
   - LocalPosition: {x: -5, y: -5}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 2.8, y: -15}
   - LocalPosition: {x: -3, y: -5}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 1.6, y: -15}
   - LocalPosition: {x: -1, y: -5}
-    EnemyData: {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
     EntryControlOffset: {x: 0.2, y: -15}
   _breatheAmplitude: 0.5
   _breatheSpeed: 1

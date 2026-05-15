@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: WaveData_L1_03
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _formationData: {fileID: 11400000, guid: b065cfdbd26466546a70380800c85305, type: 2}
+  _enemyComposition:
+  - {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+  - {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
+  - {fileID: 11400000, guid: e55e6c682f4536e4fa3d3f984b74f824, type: 2}
   _formationAnchorPosition: {x: 8, y: 7}
   _spawnDelay: 0
   _entrySide: 0
