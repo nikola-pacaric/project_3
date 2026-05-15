@@ -45,6 +45,7 @@ namespace Warblade.Systems
         private bool _specialEnemyEscaped;
         private bool _specialPerfectClearBonusConsumed;
         private Enemy _limitedDiveEnemy;
+        private CycleScalingState _cycleScaling = CycleScalingState.Default;
 
         public int ActiveEnemyCount => _activeEnemyCount;
         public int SpawnedEnemyCount => _spawnedEnemyCount;
@@ -134,7 +135,8 @@ namespace Warblade.Systems
                 formationSlotIndex,
                 entryControlOffset,
                 entryPathPoints,
-                entryPathControlPoints);
+                entryPathControlPoints,
+                _cycleScaling);
             return enemy;
         }
 
@@ -368,6 +370,7 @@ namespace Warblade.Systems
 
         public void BeginLevelEnemyTracking()
         {
+            ClearActiveEnemies();
             _spawnedEnemyCount = 0;
             _finalDiveTriggered = false;
             _specialEnemyCount = 0;
@@ -377,6 +380,33 @@ namespace Warblade.Systems
             _limitedDiveEnemy = null;
             _activeEnemies.Clear();
             _activeEnemyCount = 0;
+        }
+
+        /// <summary>
+        /// Despawns every currently tracked enemy before a forced level change or reset.
+        /// </summary>
+        public void ClearActiveEnemies()
+        {
+            for (int i = _activeEnemies.Count - 1; i >= 0; i--)
+            {
+                Enemy enemy = _activeEnemies[i];
+                if (enemy != null)
+                {
+                    enemy.DespawnForLevelReset();
+                }
+            }
+
+            _activeEnemies.Clear();
+            _activeEnemyCount = 0;
+            _limitedDiveEnemy = null;
+        }
+
+        /// <summary>
+        /// Applies runtime cycle modifiers to enemies spawned after this call.
+        /// </summary>
+        public void SetCycleScaling(CycleScalingState cycleScaling)
+        {
+            _cycleScaling = cycleScaling;
         }
 
         public int ConsumeSpecialPerfectClearBonusScore()

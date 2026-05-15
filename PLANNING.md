@@ -19,7 +19,7 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## Current Milestone
 
-**M6** *(not started)*
+**M6** *(in progress)*
 
 Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of truth for the current Content Fill implementation plan.
 
@@ -179,17 +179,17 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 **Build**
 - [ ] `LevelManager` chapter logic: `level % 25 == 0` → boss; six 4-level enemy-set blocks fill the 24 normal levels before each boss
 - [ ] All 100 `LevelData` SOs authored — first-pass tuning
-- [ ] Bosses placed at levels 25, 50, 75, 100
-- [ ] Cycle scaling: `cycle = (currentLevel - 1) / 100` → health/speed multipliers + sprite color tint
+- [x] Bosses placed at levels 25, 50, 75, 100
+- [x] Cycle scaling: `cycle = (currentLevel - 1) / 100` → health/speed multipliers + sprite color tint
 - [ ] Mini-games: Meteor Storm (dodge round, gem pickups), Memory Match (flip cards)
 - [ ] Mini-game trigger logic in `LevelManager` — Meteor Storm / Memory Match are random popups only eligible after a wave completes
 - [ ] Mini-game scene flow (enter → play → reward → return)
-- [ ] Dev tool: level skip / cash grant / kill-all (you'll need this; build it now)
+- [ ] Minimal dev-only authoring helpers: level jump exists; add cash grant / kill-all only when authoring or validation needs them.
 
 **Refactor**
-- [ ] **Split formation shape from enemy composition before authoring all 100 levels.** Current M3 `FormationData` stores both slot layout/path data and `EnemyData` per slot, which makes reusable shapes unsafe: changing a V formation for Level 31 would also change Level 1. Refactor so reusable formation data owns the shape only — slot positions, entry control offsets, breathing — while each wave or a separate loadout/composition asset owns the enemy types for those slots.
-- [ ] **Separate final formation placement from entry spawn placement if needed for Warblade-style paths.** Current `WaveData` anchor affects both final slot positions and entry start center. For hand-authored side dives, the designer should be able to place "where enemies start" and "where they settle" independently instead of compensating with local slot offsets.
-- [ ] Add validation/editor safeguards for scalable level authoring: warn on missing enemy data, slot/loadout count mismatches, empty wave lists, missing boss levels, and duplicate/missing `LevelData` numbers.
+- [x] **Split formation shape from enemy composition before authoring all 100 levels.** Current M3 `FormationData` stores both slot layout/path data and `EnemyData` per slot, which makes reusable shapes unsafe: changing a V formation for Level 31 would also change Level 1. Refactor so reusable formation data owns the shape only — slot positions, entry control offsets, breathing — while each wave or a separate loadout/composition asset owns the enemy types for those slots.
+- [x] **Separate final formation placement from entry spawn placement if needed for Warblade-style paths.** Current `WaveData` anchor affects both final slot positions and entry start center. For hand-authored side dives, the designer should be able to place "where enemies start" and "where they settle" independently instead of compensating with local slot offsets.
+- [x] Add validation/editor safeguards for scalable level authoring: warn on missing enemy data, slot/loadout count mismatches, empty wave lists, missing boss levels, and duplicate/missing `LevelData` numbers.
 
 **Cut / Defer:** final balance pass (M9), real art (M8).
 

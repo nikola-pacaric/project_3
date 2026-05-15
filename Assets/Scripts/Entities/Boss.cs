@@ -22,6 +22,7 @@ namespace Warblade.Entities
         [Header("Data")]
         [SerializeField] private BossData _data;
         [SerializeField] private bool _spawnOnEnable = true;
+        [SerializeField] private SpriteRenderer[] _spriteRenderers;
 
         [Header("Intro")]
         [SerializeField, Min(0f)] private float _introDuration = 1.5f;
@@ -52,10 +53,12 @@ namespace Warblade.Entities
         private Vector2 _arenaCenterPosition;
         private float _phaseMovementTime;
         private int _patrolDirection = 1;
+        private Color[] _baseSpriteColors;
+        private CycleScalingState _cycleScaling = CycleScalingState.Default;
 
         public BossData Data => _data;
         public int CurrentHealth => _currentHealth;
-        public int MaxHealth => _data == null ? 0 : _data.MaxHealth;
+        public int MaxHealth => ResolveMaxHealth();
         public BossPhaseData CurrentPhase => HasCurrentPhase ? _data.Phases[_currentPhaseIndex] : null;
         public int CurrentPhaseIndex => _currentPhaseIndex;
         public bool IsActive => _state == State.Entering || _state == State.Intro || _state == State.Active;
@@ -71,6 +74,8 @@ namespace Warblade.Entities
 
         private void Awake()
         {
+            CacheSpriteRenderers();
+
             if (_bossBulletPrefab != null)
             {
                 if (!_bossBulletPrefab.TryGetComponent(out Bullet _))
@@ -152,7 +157,7 @@ namespace Warblade.Entities
 
             transform.position = _data.EntryStartPosition;
             _arenaCenterPosition = _data.EntryTargetPosition;
-            _currentHealth = _data.MaxHealth;
+            _currentHealth = MaxHealth;
             _currentPhaseIndex = ResolvePhaseIndex();
             _phaseMovementTime = 0f;
             _patrolDirection = 1;
@@ -160,8 +165,35 @@ namespace Warblade.Entities
             _state = State.Entering;
             StopCurrentAttack();
             StopIntro();
+            ApplyCycleVisuals();
 
             _bossSpawned?.Raise(_data);
+            RaiseHealthChanged();
+            RaisePhaseChanged();
+        }
+
+        /// <summary>
+        /// Assigns runtime cycle scaling before the boss encounter starts.
+        /// </summary>
+        public void SetCycleScaling(CycleScalingState cycleScaling)
+        {
+            int previousMaxHealth = MaxHealth;
+            float previousHealthPercent = previousMaxHealth <= 0
+                ? 1f
+                : _currentHealth / (float)previousMaxHealth;
+
+            _cycleScaling = cycleScaling;
+
+            if (!IsEncounterRunning)
+            {
+                return;
+            }
+
+            _currentHealth = Mathf.Clamp(
+                Mathf.RoundToInt(MaxHealth * previousHealthPercent),
+                1,
+                MaxHealth);
+            ApplyCycleVisuals();
             RaiseHealthChanged();
             RaisePhaseChanged();
         }
@@ -212,7 +244,7 @@ namespace Warblade.Entities
             transform.position = Vector2.MoveTowards(
                 transform.position,
                 targetPosition,
-                _data.EntrySpeed * Time.deltaTime);
+                ResolveBossPressureSpeed(_data.EntrySpeed) * Time.deltaTime);
 
             if ((Vector2)transform.position == targetPosition)
             {
@@ -237,7 +269,7 @@ namespace Warblade.Entities
                     transform.position = Vector2.MoveTowards(
                         transform.position,
                         _arenaCenterPosition,
-                        phase.MovementSpeed * Time.deltaTime);
+                        ResolveBossPressureSpeed(phase.MovementSpeed) * Time.deltaTime);
                     break;
 
                 case BossMovementBehavior.HorizontalPatrol:
@@ -253,13 +285,14 @@ namespace Warblade.Entities
         private void UpdateHorizontalPatrol(BossPhaseData phase)
         {
             float amplitude = phase.MovementAmplitude;
-            if (amplitude <= Mathf.Epsilon || phase.MovementSpeed <= Mathf.Epsilon)
+            float movementSpeed = ResolveBossPressureSpeed(phase.MovementSpeed);
+            if (amplitude <= Mathf.Epsilon || movementSpeed <= Mathf.Epsilon)
             {
                 return;
             }
 
             Vector2 position = transform.position;
-            position.x += _patrolDirection * phase.MovementSpeed * Time.deltaTime;
+            position.x += _patrolDirection * movementSpeed * Time.deltaTime;
 
             float minX = _arenaCenterPosition.x - amplitude;
             float maxX = _arenaCenterPosition.x + amplitude;
@@ -269,16 +302,17 @@ namespace Warblade.Entities
                 _patrolDirection *= -1;
             }
 
-            position.y = Mathf.MoveTowards(position.y, _arenaCenterPosition.y, phase.MovementSpeed * Time.deltaTime);
+            position.y = Mathf.MoveTowards(position.y, _arenaCenterPosition.y, movementSpeed * Time.deltaTime);
             transform.position = position;
         }
 
         private void UpdateSineDrift(BossPhaseData phase)
         {
-            float xOffset = Mathf.Sin(_phaseMovementTime * phase.MovementSpeed) * phase.MovementAmplitude;
+            float movementSpeed = ResolveBossPressureSpeed(phase.MovementSpeed);
+            float xOffset = Mathf.Sin(_phaseMovementTime * movementSpeed) * phase.MovementAmplitude;
             transform.position = new Vector2(
                 _arenaCenterPosition.x + xOffset,
-                Mathf.MoveTowards(transform.position.y, _arenaCenterPosition.y, phase.MovementSpeed * Time.deltaTime));
+                Mathf.MoveTowards(transform.position.y, _arenaCenterPosition.y, movementSpeed * Time.deltaTime));
         }
 
         private void BeginIntro()
@@ -336,9 +370,10 @@ namespace Warblade.Entities
                 return -1;
             }
 
-            float healthPercent = _data.MaxHealth <= 0
+            int maxHealth = MaxHealth;
+            float healthPercent = maxHealth <= 0
                 ? 0f
-                : _currentHealth / (float)_data.MaxHealth;
+                : _currentHealth / (float)maxHealth;
 
             int selectedIndex = 0;
             float selectedThreshold = float.MaxValue;
@@ -505,7 +540,7 @@ namespace Warblade.Entities
 
             for (int i = 0; i < bulletCount; i++)
             {
-                FireBulletAtAngle(startAngle + step * i, pattern.BulletSpeed);
+                FireBulletAtAngle(startAngle + step * i, ResolveBossPressureSpeed(pattern.BulletSpeed));
             }
 
             _volleyIndex++;
@@ -520,7 +555,7 @@ namespace Warblade.Entities
 
             for (int i = 0; i < bulletCount; i++)
             {
-                FireBulletAtAngle(startAngle + step * i, pattern.BulletSpeed);
+                FireBulletAtAngle(startAngle + step * i, ResolveBossPressureSpeed(pattern.BulletSpeed));
             }
         }
 
@@ -606,6 +641,49 @@ namespace Warblade.Entities
             if (CurrentPhase != null)
             {
                 _bossPhaseChanged?.Raise(CurrentPhase);
+            }
+        }
+
+        private int ResolveMaxHealth()
+        {
+            return _data == null ? 0 : Mathf.Max(1, Mathf.RoundToInt(_data.MaxHealth * _cycleScaling.BossHealthMultiplier));
+        }
+
+        private float ResolveBossPressureSpeed(float baseSpeed)
+        {
+            return baseSpeed * _cycleScaling.BossPressureMultiplier;
+        }
+
+        private void CacheSpriteRenderers()
+        {
+            if (_spriteRenderers == null || _spriteRenderers.Length == 0)
+            {
+                _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+            }
+
+            _baseSpriteColors = new Color[_spriteRenderers == null ? 0 : _spriteRenderers.Length];
+            for (int i = 0; i < _baseSpriteColors.Length; i++)
+            {
+                _baseSpriteColors[i] = _spriteRenderers[i] == null ? Color.white : _spriteRenderers[i].color;
+            }
+        }
+
+        private void ApplyCycleVisuals()
+        {
+            if (_spriteRenderers == null || _baseSpriteColors == null)
+            {
+                return;
+            }
+
+            int count = Mathf.Min(_spriteRenderers.Length, _baseSpriteColors.Length);
+            for (int i = 0; i < count; i++)
+            {
+                SpriteRenderer spriteRenderer = _spriteRenderers[i];
+                if (spriteRenderer == null) continue;
+
+                Color color = Color.Lerp(_baseSpriteColors[i], _cycleScaling.TintColor, _cycleScaling.TintStrength);
+                color.a = _baseSpriteColors[i].a;
+                spriteRenderer.color = color;
             }
         }
     }

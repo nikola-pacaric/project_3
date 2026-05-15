@@ -42,6 +42,7 @@ namespace Warblade.Entities
         private Vector2[] _entryPathControlPoints;
         private Vector2[] _entryPathControlOffsets;
         private Vector2 _defaultEntryControlOffset;
+        private CycleScalingState _cycleScaling = CycleScalingState.Default;
         private float _entryElapsed;
         private float _entryDuration;
         private bool _isReturningToSpawnForDespawn;
@@ -168,6 +169,29 @@ namespace Warblade.Entities
             Vector2[] entryPathPoints,
             Vector2[] entryPathControlPoints)
         {
+            Spawn(
+                startPosition,
+                formationPosition,
+                playerTransform,
+                formation,
+                formationSlotIndex,
+                entryControlOffset,
+                entryPathPoints,
+                entryPathControlPoints,
+                CycleScalingState.Default);
+        }
+
+        public void Spawn(
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Transform playerTransform,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset,
+            Vector2[] entryPathPoints,
+            Vector2[] entryPathControlPoints,
+            CycleScalingState cycleScaling)
+        {
             _hasDespawned = false;
 
             if (_data == null)
@@ -183,6 +207,7 @@ namespace Warblade.Entities
             _formation = formation;
             _formationSlotIndex = formationSlotIndex;
             _entryControlOffset = entryControlOffset;
+            _cycleScaling = cycleScaling;
             bool hasSegmentedEntryPath =
                 entryPathPoints != null &&
                 entryPathPoints.Length >= 2 &&
@@ -193,7 +218,7 @@ namespace Warblade.Entities
             _entryPathControlOffsets = hasSegmentedEntryPath
                 ? BuildControlOffsets(entryPathPoints, entryPathControlPoints)
                 : null;
-            _currentHealth = _data.MaxHealth;
+            _currentHealth = ResolveMaxHealth();
             _isReturningToSpawnForDespawn = false;
             ApplyVisualsFromData();
             BeginEntry();
@@ -202,7 +227,9 @@ namespace Warblade.Entities
         private void ApplyVisualsFromData()
         {
             if (_spriteRenderer == null || _data == null) return;
-            _spriteRenderer.color = _data.SpriteColor;
+            Color color = Color.Lerp(_data.SpriteColor, _cycleScaling.TintColor, _cycleScaling.TintStrength);
+            color.a = _data.SpriteColor.a;
+            _spriteRenderer.color = color;
         }
 
         private void BeginEntry()
@@ -228,7 +255,7 @@ namespace Warblade.Entities
                     _entryStart, _entryControlPoint, _entryEnd);
             }
 
-            _entryDuration = entryPathLength / Mathf.Max(_data.EntrySpeed, 0.01f);
+            _entryDuration = entryPathLength / Mathf.Max(ResolveEntrySpeed(), 0.01f);
             _entryElapsed = 0f;
             _state = State.Entering;
         }
@@ -306,7 +333,7 @@ namespace Warblade.Entities
                     break;
 
                 case State.Diving:
-                    MoveToward(_diveTarget, _data.DiveSpeed);
+                    MoveToward(_diveTarget, ResolveDiveSpeed());
                     if (Reached(_diveTarget))
                     {
                         StartLinger();
@@ -321,7 +348,7 @@ namespace Warblade.Entities
                     break;
 
                 case State.Returning:
-                    MoveToward(_formationPosition, _data.DiveSpeed);
+                    MoveToward(_formationPosition, ResolveDiveSpeed());
                     if (Reached(_formationPosition))
                     {
                         if (_isReturningToSpawnForDespawn)
@@ -354,6 +381,11 @@ namespace Warblade.Entities
             StartDive();
         }
 
+        public void DespawnForLevelReset()
+        {
+            Release(killed: false);
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (_hasDespawned) return;
@@ -370,6 +402,21 @@ namespace Warblade.Entities
                 transform.position,
                 target,
                 speed * Time.deltaTime);
+        }
+
+        private int ResolveMaxHealth()
+        {
+            return Mathf.Max(1, Mathf.RoundToInt(_data.MaxHealth * _cycleScaling.EnemyHealthMultiplier));
+        }
+
+        private float ResolveEntrySpeed()
+        {
+            return _data.EntrySpeed * _cycleScaling.EnemySpeedMultiplier;
+        }
+
+        private float ResolveDiveSpeed()
+        {
+            return _data.DiveSpeed * _cycleScaling.EnemySpeedMultiplier;
         }
 
         private bool Reached(Vector2 target) => (Vector2)transform.position == target;

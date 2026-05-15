@@ -208,26 +208,39 @@ Validation note:
 
 ## Phase 6 — Cycle Scaling
 
-Status: Pending.
+Status: Complete.
 
 Code:
-- Implement `cycle = (currentLevel - 1) / 100`.
-- Apply cycle scaling after level 100:
-  - enemy health multiplier
-  - enemy speed multiplier
-  - boss health/speed pressure where appropriate
-  - visual tinting for cycle readability
-- Keep cycle scaling data-driven where practical.
-- Avoid final balance tuning; this is first-pass functional scaling.
+- [x] Implement `cycleIndex = (currentLevel - 1) / 100`.
+- [x] Expose `CurrentCycleNumber` as the player-facing cycle number, so level 101 reports cycle 2.
+- [x] Resolve repeated cycles from authored campaign content:
+  - [x] level 101 resolves to campaign level 1
+  - [x] level 125 resolves to the level-25 campaign boss route
+  - [x] level 200 resolves to the level-100 campaign boss route
+- [x] Apply cycle scaling after level 100:
+  - [x] enemy health multiplier
+  - [x] enemy speed multiplier
+  - [x] boss health multiplier
+  - [x] boss movement/projectile pressure multiplier
+  - [x] visual tinting for cycle readability
+- [x] Keep cycle scaling data-driven where practical through `CycleScalingData`.
+- [x] Avoid final balance tuning; this is first-pass functional scaling.
 
 Editor:
-- Assign placeholder tint/scaling values.
-- Test cycle 2 through dev tools.
+- [x] Provide code fallback placeholder tint/scaling values when no `CycleScalingData` asset is assigned.
+- [ ] Optionally create/assign a project-specific `CycleScalingData` asset for tuning.
+- [ ] Test cycle 2 through dev tools.
 
 Acceptance:
-- Level 101 plays as cycle 2.
-- Difficulty visibly increases.
-- Cycle tinting is visible with placeholder visuals.
+- [x] Level 101 resolves to campaign level 1 as cycle 2 in code.
+- [x] Level 101 plays as cycle 2 in Unity Play Mode.
+- [x] Difficulty visibly increases.
+- [x] Cycle tinting is visible with placeholder visuals.
+
+Validation note:
+- [x] Static implementation pass complete.
+- [x] Unity Play Mode validation completed by testing the level-101 cycle path.
+- [x] Runtime `Enemy(Clone)` scene pollution from out-of-Play-Mode context menu use was cleaned up, and dev helpers are now Play Mode guarded.
 
 ---
 
@@ -235,13 +248,18 @@ Acceptance:
 
 Status: Pending.
 
+Scope note:
+- Phase 7 is not meant to become a full debug console before the 100-level authoring pass.
+- Build only the minimum dev-only helpers needed to make level authoring and validation practical.
+- The level-jump pieces already added during Phase 5/6 count toward this phase; add cash grant, kill-all, or force mini-game only when the next authoring/testing step actually needs them.
+
 Code:
 - Add dev-only tools needed to test the expanded game:
-  - level skip / jump to level
-  - cash grant
-  - kill-all active enemies
-  - force boss encounter if useful
-  - force mini-game if useful
+  - [x] level skip / jump to level
+  - [ ] cash grant, if shop/economy testing blocks authoring
+  - [ ] kill-all active enemies, if wave authoring iteration is too slow
+  - [x] force boss encounter
+  - [ ] force mini-game, after mini-game flow exists
 - Keep tools out of normal player UI.
 - Prefer context menu methods or clearly gated debug UI.
 

@@ -3689,7 +3689,7 @@ MonoBehaviour:
     _boss: {fileID: 1539885663}
   - _levelNumber: 100
     _boss: {fileID: 1734419065}
-  _startingLevel: 100
+  _startingLevel: 1
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4

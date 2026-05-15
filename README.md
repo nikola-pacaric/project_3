@@ -8,7 +8,7 @@ This is a solo portfolio project focused on clean Unity architecture, responsive
 
 ## Current State
 
-The project currently has the core shooter loop and M4 reward loop in place:
+The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, and early M6 content-fill foundations in place:
 
 - Player movement and shooting
 - Enemy waves, formations, and level progression
@@ -17,8 +17,11 @@ The project currently has the core shooter loop and M4 reward loop in place:
 - ScriptableObject-driven enemy, wave, formation, and level data
 - Run stats, lives, armour, weapon tiers, and event-channel foundations
 - Pickup drops, timed buffs, cash rewards, stat upgrades, and the shop overlay
+- Four campaign boss routes at levels 25, 50, 75, and 100
+- M6 wave-authoring safeguards and content validation tools
+- Cycle scaling code for levels 101+ using repeated campaign content, runtime health/speed multipliers, and placeholder tinting
 
-The current milestone is **M5: Boss Fights**, which adds the first reusable boss architecture and a level-5 test boss encounter.
+The current milestone is **M6: Content Fill**. Detailed phase tracking lives in `PLANNING_M6.md`.
 
 ## Target Platform
 
@@ -46,8 +49,8 @@ Placeholder art and simple effects are intentional for now. Visual polish, audio
 
 - **M3:** Core wave shooter loop - complete
 - **M4:** Pickups, buffs, cash, and shop loop - complete
-- **M5:** Boss fights - in progress
-- **M6:** Content fill and mini-games
+- **M5:** Boss fights - complete
+- **M6:** Content fill and mini-games - in progress
 - **M7:** Online leaderboard
 - **M8:** Game feel, art, and audio polish
 - **M9:** Final tuning and WebGL release pass

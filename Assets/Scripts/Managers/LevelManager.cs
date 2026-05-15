@@ -32,6 +32,7 @@ namespace Warblade.Managers
         [SerializeField] private WaveRunner _waveRunner;
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private PlayerShooting _playerShooting;
+        [SerializeField] private CycleScalingData _cycleScalingData;
         [SerializeField] private LevelData[] _levels;
         [SerializeField] private CampaignBossRoute[] _campaignBosses = Array.Empty<CampaignBossRoute>();
         [SerializeField, Min(1)] private int _startingLevel = 1;
@@ -52,6 +53,17 @@ namespace Warblade.Managers
         /// Current active level number.
         /// </summary>
         public int CurrentLevel { get; private set; }
+
+        /// <summary>
+        /// Player-facing cycle number. Levels 1-100 are cycle 1, 101-200 are cycle 2.
+        /// </summary>
+        public int CurrentCycleNumber => CycleScalingData.GetCycleNumberForLevel(CurrentLevel);
+
+        /// <summary>
+        /// Authored campaign level reused for the current absolute level inside a 100-level cycle.
+        /// </summary>
+        public int CurrentCampaignLevel => CycleScalingData.GetCampaignLevelForCycle(CurrentLevel);
+
         public LevelChangedEvent OnLevelStarted => _onLevelStarted;
         public LevelChangedEvent OnLevelCompleted => _onLevelCompleted;
 
@@ -123,6 +135,12 @@ namespace Warblade.Managers
         /// </summary>
         public void PlayCurrentLevel()
         {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning($"[{nameof(LevelManager)}] Play Mode is required to start level flow.");
+                return;
+            }
+
             if (_waveRunner == null || _enemySpawner == null)
             {
                 Debug.LogError($"[{nameof(LevelManager)}] Missing required references.");
@@ -149,6 +167,8 @@ namespace Warblade.Managers
         {
             while (!_isGameOver)
             {
+                CycleScalingState cycleScaling = ResolveCurrentCycleScaling();
+                _enemySpawner.SetCycleScaling(cycleScaling);
                 _onLevelStarted?.Invoke(CurrentLevel);
                 _levelStarted?.Raise(CurrentLevel);
                 RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
@@ -158,19 +178,19 @@ namespace Warblade.Managers
                     Boss boss = ResolveCampaignBoss(CurrentLevel);
                     if (boss == null)
                     {
-                        Debug.LogError($"[{nameof(LevelManager)}] Level {CurrentLevel} is a boss level, but no campaign boss is assigned.");
+                        Debug.LogError($"[{nameof(LevelManager)}] Level {CurrentLevel} is a boss level, but no campaign boss is assigned for campaign level {CurrentCampaignLevel}.");
                         _levelRoutine = null;
                         yield break;
                     }
 
-                    yield return RunCampaignBossEncounterRoutine(boss);
+                    yield return RunCampaignBossEncounterRoutine(boss, cycleScaling);
                 }
                 else
                 {
                     LevelData levelData = ResolveCurrentLevelData();
                     if (levelData == null)
                     {
-                        Debug.LogError($"[{nameof(LevelManager)}] Failed to resolve data for level {CurrentLevel}.");
+                        Debug.LogError($"[{nameof(LevelManager)}] Failed to resolve data for level {CurrentLevel} using campaign level {CurrentCampaignLevel}.");
                         _levelRoutine = null;
                         yield break;
                     }
@@ -217,12 +237,24 @@ namespace Warblade.Managers
         [ContextMenu("Force Shop Entry")]
         public void ForceShopEntry()
         {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning($"[{nameof(LevelManager)}] Play Mode is required to force shop entry.");
+                return;
+            }
+
             GameManager.Instance?.EnterShop();
         }
 
         [ContextMenu("Dev/Play Current Or First Campaign Boss")]
         public void ForceCurrentCampaignBossEncounter()
         {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning($"[{nameof(LevelManager)}] Play Mode is required to force a boss encounter.");
+                return;
+            }
+
             int bossLevel = CurrentLevel;
             Boss boss = ResolveCampaignBoss(CurrentLevel);
             if (boss == null)
@@ -236,6 +268,9 @@ namespace Warblade.Managers
             }
 
             CurrentLevel = bossLevel;
+
+            _waveRunner?.StopWaves();
+            _enemySpawner?.ClearActiveEnemies();
 
             if (_levelRoutine != null)
             {
@@ -270,11 +305,23 @@ namespace Warblade.Managers
             PlayLevelForTesting(100);
         }
 
+        [ContextMenu("Dev/Play Cycle 2 Level 101")]
+        private void PlayCycle2Level101()
+        {
+            PlayLevelForTesting(101);
+        }
+
         /// <summary>
         /// Restarts level flow at a specific level for development testing.
         /// </summary>
         public void PlayLevelForTesting(int levelNumber)
         {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning($"[{nameof(LevelManager)}] Play Mode is required to jump to level {levelNumber}.");
+                return;
+            }
+
             CurrentLevel = Mathf.Max(1, levelNumber);
 
             if (_levelRoutine != null)
@@ -284,6 +331,8 @@ namespace Warblade.Managers
             }
 
             _waveRunner?.StopWaves();
+            _enemySpawner?.ClearActiveEnemies();
+            _enemySpawner?.SetCycleScaling(ResolveCurrentCycleScaling());
             PlayCurrentLevel();
         }
 
@@ -326,7 +375,7 @@ namespace Warblade.Managers
             for (int i = 0; i < _levels.Length; i++)
             {
                 LevelData candidate = _levels[i];
-                if (candidate != null && candidate.LevelNumber == CurrentLevel)
+                if (candidate != null && candidate.LevelNumber == CurrentCampaignLevel)
                 {
                     return candidate;
                 }
@@ -342,7 +391,7 @@ namespace Warblade.Managers
             for (int i = 0; i < _levels.Length; i++)
             {
                 LevelData candidate = _levels[i];
-                if (candidate != null && candidate.LevelNumber == levelNumber)
+                if (candidate != null && candidate.LevelNumber == CycleScalingData.GetCampaignLevelForCycle(levelNumber))
                 {
                     return true;
                 }
@@ -374,7 +423,7 @@ namespace Warblade.Managers
 
         private static bool IsCampaignBossLevel(int levelNumber)
         {
-            return levelNumber > 0 && levelNumber % 25 == 0;
+            return levelNumber > 0 && CycleScalingData.GetCampaignLevelForCycle(levelNumber) % 25 == 0;
         }
 
         private Boss ResolveCampaignBoss(int levelNumber)
@@ -384,10 +433,11 @@ namespace Warblade.Managers
                 return null;
             }
 
+            int campaignLevel = CycleScalingData.GetCampaignLevelForCycle(levelNumber);
             for (int i = 0; i < _campaignBosses.Length; i++)
             {
                 CampaignBossRoute route = _campaignBosses[i];
-                if (route != null && route.LevelNumber == levelNumber)
+                if (route != null && route.LevelNumber == campaignLevel)
                 {
                     return route.Boss;
                 }
@@ -417,7 +467,7 @@ namespace Warblade.Managers
             return null;
         }
 
-        private IEnumerator RunCampaignBossEncounterRoutine(Boss bossReference)
+        private IEnumerator RunCampaignBossEncounterRoutine(Boss bossReference, CycleScalingState cycleScaling)
         {
             bool createdInstance = false;
             Boss boss = PrepareBossInstance(bossReference, out createdInstance);
@@ -426,6 +476,7 @@ namespace Warblade.Managers
                 yield break;
             }
 
+            boss.SetCycleScaling(cycleScaling);
             _playerShooting?.SetShootingEnabled(true);
             if (!boss.IsEncounterRunning)
             {
@@ -471,8 +522,15 @@ namespace Warblade.Managers
 
         private IEnumerator RunForcedCampaignBossRoutine(Boss boss)
         {
-            yield return RunCampaignBossEncounterRoutine(boss);
+            yield return RunCampaignBossEncounterRoutine(boss, ResolveCurrentCycleScaling());
             _levelRoutine = null;
+        }
+
+        private CycleScalingState ResolveCurrentCycleScaling()
+        {
+            return _cycleScalingData == null
+                ? CycleScalingData.ResolveDefault(CurrentLevel)
+                : _cycleScalingData.Resolve(CurrentLevel);
         }
 
         private void ValidateCampaignBossRoutes()
@@ -550,6 +608,8 @@ namespace Warblade.Managers
             {
                 _waveRunner.StopWaves();
             }
+
+            _enemySpawner?.ClearActiveEnemies();
 
             if (ScoreManager.Instance != null)
             {
