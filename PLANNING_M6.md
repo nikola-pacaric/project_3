@@ -151,49 +151,58 @@ Follow-up decision:
 
 ## Phase 4 — Content Validation Safeguards
 
-Status: Pending.
+Status: Complete.
 
 Code:
-- Add validation/editor safeguards for scalable authoring:
+- [x] Add validation/editor safeguards for scalable authoring:
   - missing enemy data
   - empty wave lists
-  - missing formation data
-  - composition/loadout slot count mismatches
   - duplicate `LevelData.LevelNumber`
-  - missing level numbers in the 1-100 range
-  - missing boss data for boss levels
-- Prefer clear warnings/errors in `OnValidate` or editor-only validation helpers.
-- Do not add third-party validation packages.
+  - missing level numbers in the current authored range
+  - strict M6 gate check for missing level numbers in the 1-100 range
+  - missing boss data coverage for the M6 gate
+  - missing boss phases and attack pattern references
+  - suspicious WaveData path/motion settings
+- [x] Prefer clear warnings/errors in `OnValidate` or editor-only validation helpers.
+- [x] Do not add third-party validation packages.
 
 Editor:
-- Run validation against current assets.
-- Fix existing warnings before mass authoring.
+- [x] Add `Warblade/Validate Content` for current authored content.
+- [x] Add `Warblade/Validate M6 Gate (1-100)` for strict milestone validation.
+- [ ] Run validation from the Unity Editor against current assets.
+- [ ] Fix existing warnings before mass authoring.
 
 Acceptance:
-- Bad level assets fail loudly before Play Mode.
-- The project has a practical way to detect missing/duplicate authored levels before M6 gate.
+- [x] Bad level assets fail loudly before Play Mode.
+- [x] The project has a practical way to detect missing/duplicate authored levels before M6 gate.
+
+Follow-up note:
+- [x] The old missing-formation-data and composition-slot-mismatch checks were replaced by direct `WaveData` slot validation because Phase 2/3 moved active wave authoring away from `FormationData`.
 
 ---
 
 ## Phase 5 — Real Level Routing and Boss Placement
 
-Status: Pending.
+Status: Complete.
 
 Code:
-- Replace the level-5 boss test route with real boss routing:
-  - `currentLevel % 25 == 0` means boss encounter
-  - levels 25 / 50 / 75 / 100 map to the four M5 boss prefabs/data
-- Keep shop cadence compatible with boss levels.
-- Ensure level completion, score, pickups, player state, timed buffs, and game over still behave correctly around boss levels.
-- Keep the whole game state reconstructible from `currentLevel` + player upgrades + active timed buffs.
+- [x] Replace the level-5 boss test route with real boss routing:
+  - [x] `currentLevel % 25 == 0` means boss encounter
+  - [x] levels 25 / 50 / 75 / 100 map through explicit campaign boss routes
+- [x] Keep shop cadence compatible with boss levels.
+- [x] Ensure level completion, score, pickups, player state, timed buffs, and game over still behave correctly around boss levels.
+- [x] Keep the whole game state reconstructible from `currentLevel` + player upgrades + active timed buffs.
 
 Editor:
-- Assign boss routing data/references manually.
-- Confirm the four boss prefabs are available for campaign placement.
+- [x] Assign boss routing data/references manually on `LevelManager`.
+- [x] Confirm the four boss prefabs are available for campaign placement.
 
 Acceptance:
-- Levels 25, 50, 75, and 100 run boss encounters through normal level flow.
-- Boss test placement at level 5 is no longer part of the normal campaign route.
+- [x] Levels 25, 50, 75, and 100 run boss encounters through normal level flow.
+- [x] Boss test placement at level 5 is no longer part of the normal campaign route.
+
+Validation note:
+- [x] Manually playtested by setting `LevelManager.Starting Level` to 25, 50, 75, and 100; all four boss routes started correctly.
 
 ---
 

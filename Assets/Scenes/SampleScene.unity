@@ -871,6 +871,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 538551053}
   m_CullTransparentMesh: 1
+--- !u!114 &551825389 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7016789001534668398, guid: 14380b2fefd6b9e4b919b8a2a9072a55, type: 3}
+  m_PrefabInstance: {fileID: 587996901633137473}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c964ac0d2824121b7377d3962c8dc22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Boss
 --- !u!1 &580073763
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,6 +927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.Formation
   _data: {fileID: 11400000, guid: dcefeffa4be359142ab19b792658dbcb, type: 2}
+  _waveData: {fileID: 0}
   _drawGizmos: 0
 --- !u!1 &586435082
 GameObject:
@@ -3048,6 +3060,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1434712353 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
+  m_PrefabInstance: {fileID: 4835499303949444560}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c964ac0d2824121b7377d3962c8dc22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Boss
 --- !u!1 &1444049268
 GameObject:
   m_ObjectHideFlags: 0
@@ -3657,14 +3680,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fedcc7044e6036449a9a0332ec5648e6, type: 2}
   - {fileID: 11400000, guid: 646f1ddc0ad5fce48902dddcb01e011b, type: 2}
   - {fileID: 11400000, guid: d015631cfad22de4f849d868b29247ae, type: 2}
-  _startingLevel: 1
+  _campaignBosses:
+  - _levelNumber: 25
+    _boss: {fileID: 1434712353}
+  - _levelNumber: 50
+    _boss: {fileID: 551825389}
+  - _levelNumber: 75
+    _boss: {fileID: 1539885663}
+  - _levelNumber: 100
+    _boss: {fileID: 1734419065}
+  _startingLevel: 100
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
   _finalDiveRemainingRatio: 0.1
-  _enableTestBossAfterWaves: 1
-  _testBossLevel: 5
-  _testBoss: {fileID: 1539885663}
   _onLevelStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -4143,6 +4172,17 @@ MonoBehaviour:
   _messageFormat: Level {0} Complete
   _visibleDuration: 1.5
   _fadeDuration: 0.5
+--- !u!114 &1734419065 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4157962364096089207, guid: 50b9fa27d8437a749a99431652612044, type: 3}
+  m_PrefabInstance: {fileID: 8173747207156176671}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c964ac0d2824121b7377d3962c8dc22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Boss
 --- !u!1 &1834204014
 GameObject:
   m_ObjectHideFlags: 0
@@ -4730,6 +4770,7 @@ MonoBehaviour:
   _maxSize: 50
   _drawGizmos: 1
   _specialPerfectClearScoreMultiplier: 2
+  _concurrentDiveLimitRemainingRatio: 0.1
 --- !u!4 &2078825176
 Transform:
   m_ObjectHideFlags: 0

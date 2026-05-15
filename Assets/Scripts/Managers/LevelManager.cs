@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,21 +17,28 @@ namespace Warblade.Managers
         [System.Serializable]
         public class LevelChangedEvent : UnityEvent<int> { }
 
+        [Serializable]
+        private class CampaignBossRoute
+        {
+            [SerializeField, Min(1)] private int _levelNumber = 25;
+            [SerializeField] private Boss _boss;
+
+            public int LevelNumber => _levelNumber;
+            public Boss Boss => _boss;
+        }
+
         public static LevelManager Instance { get; private set; }
 
         [SerializeField] private WaveRunner _waveRunner;
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private PlayerShooting _playerShooting;
         [SerializeField] private LevelData[] _levels;
+        [SerializeField] private CampaignBossRoute[] _campaignBosses = Array.Empty<CampaignBossRoute>();
         [SerializeField, Min(1)] private int _startingLevel = 1;
         [SerializeField] private bool _playOnStart = true;
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
         [SerializeField, Min(1)] private int _shopInterval = 4;
         [SerializeField, Range(0f, 1f)] private float _finalDiveRemainingRatio = 0.1f;
-        [Header("M5 Boss Test")]
-        [SerializeField] private bool _enableTestBossAfterWaves;
-        [SerializeField, Min(1)] private int _testBossLevel = 5;
-        [SerializeField] private Boss _testBoss;
         [SerializeField] private LevelChangedEvent _onLevelStarted = new LevelChangedEvent();
         [SerializeField] private LevelChangedEvent _onLevelCompleted = new LevelChangedEvent();
         [Header("Event Channels")]
@@ -106,6 +114,8 @@ namespace Warblade.Managers
             {
                 Debug.LogWarning($"[{nameof(LevelManager)}] Assign {nameof(PlayerShooting)} on '{name}' so level transitions can disable shooting while bullets clear.");
             }
+
+            ValidateCampaignBossRoutes();
         }
 
         /// <summary>
@@ -119,9 +129,9 @@ namespace Warblade.Managers
                 return;
             }
 
-            if (_levels == null || _levels.Length == 0)
+            if (!HasAnyPlayableLevel())
             {
-                Debug.LogError($"[{nameof(LevelManager)}] No LevelData assets configured.");
+                Debug.LogError($"[{nameof(LevelManager)}] No LevelData or campaign boss routes configured.");
                 return;
             }
 
@@ -139,26 +149,36 @@ namespace Warblade.Managers
         {
             while (!_isGameOver)
             {
-                LevelData levelData = ResolveCurrentLevelData();
-                if (levelData == null)
-                {
-                    Debug.LogError($"[{nameof(LevelManager)}] Failed to resolve data for level {CurrentLevel}.");
-                    _levelRoutine = null;
-                    yield break;
-                }
-
                 _onLevelStarted?.Invoke(CurrentLevel);
                 _levelStarted?.Raise(CurrentLevel);
                 RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
-                _playerShooting?.SetShootingEnabled(true);
-                _enemySpawner.BeginLevelEnemyTracking();
-                _waveRunner.PlayWaves(levelData.Waves);
-                yield return WaitForLevelClearRoutine();
 
-                if (_isGameOver) break;
-                if (ShouldRunTestBossAfterWaves(CurrentLevel))
+                if (IsCampaignBossLevel(CurrentLevel))
                 {
-                    yield return RunTestBossEncounterRoutine();
+                    Boss boss = ResolveCampaignBoss(CurrentLevel);
+                    if (boss == null)
+                    {
+                        Debug.LogError($"[{nameof(LevelManager)}] Level {CurrentLevel} is a boss level, but no campaign boss is assigned.");
+                        _levelRoutine = null;
+                        yield break;
+                    }
+
+                    yield return RunCampaignBossEncounterRoutine(boss);
+                }
+                else
+                {
+                    LevelData levelData = ResolveCurrentLevelData();
+                    if (levelData == null)
+                    {
+                        Debug.LogError($"[{nameof(LevelManager)}] Failed to resolve data for level {CurrentLevel}.");
+                        _levelRoutine = null;
+                        yield break;
+                    }
+
+                    _playerShooting?.SetShootingEnabled(true);
+                    _enemySpawner.BeginLevelEnemyTracking();
+                    _waveRunner.PlayWaves(levelData.Waves);
+                    yield return WaitForLevelClearRoutine();
                 }
 
                 if (_isGameOver) break;
@@ -172,7 +192,7 @@ namespace Warblade.Managers
 
                 int completedLevel = CurrentLevel;
                 int nextLevel = CurrentLevel + 1;
-                if (!HasLevelData(nextLevel))
+                if (!HasPlayableLevel(nextLevel))
                 {
                     Debug.Log($"[{nameof(LevelManager)}] Completed authored levels at Level {CurrentLevel}. Waiting for restart.");
                     _levelRoutine = null;
@@ -200,16 +220,71 @@ namespace Warblade.Managers
             GameManager.Instance?.EnterShop();
         }
 
-        [ContextMenu("Force Test Boss Encounter")]
-        public void ForceTestBossEncounter()
+        [ContextMenu("Dev/Play Current Or First Campaign Boss")]
+        public void ForceCurrentCampaignBossEncounter()
         {
+            int bossLevel = CurrentLevel;
+            Boss boss = ResolveCampaignBoss(CurrentLevel);
+            if (boss == null)
+            {
+                boss = ResolveFirstCampaignBoss(out bossLevel);
+                if (boss == null)
+                {
+                    Debug.LogWarning($"[{nameof(LevelManager)}] Cannot force a campaign boss because no campaign boss routes are assigned.");
+                    return;
+                }
+            }
+
+            CurrentLevel = bossLevel;
+
             if (_levelRoutine != null)
             {
                 StopCoroutine(_levelRoutine);
             }
 
             _isGameOver = false;
-            _levelRoutine = StartCoroutine(RunForcedTestBossRoutine());
+            _levelRoutine = StartCoroutine(RunForcedCampaignBossRoutine(boss));
+        }
+
+        [ContextMenu("Dev/Play Boss Level 25")]
+        private void PlayBossLevel25()
+        {
+            PlayLevelForTesting(25);
+        }
+
+        [ContextMenu("Dev/Play Boss Level 50")]
+        private void PlayBossLevel50()
+        {
+            PlayLevelForTesting(50);
+        }
+
+        [ContextMenu("Dev/Play Boss Level 75")]
+        private void PlayBossLevel75()
+        {
+            PlayLevelForTesting(75);
+        }
+
+        [ContextMenu("Dev/Play Boss Level 100")]
+        private void PlayBossLevel100()
+        {
+            PlayLevelForTesting(100);
+        }
+
+        /// <summary>
+        /// Restarts level flow at a specific level for development testing.
+        /// </summary>
+        public void PlayLevelForTesting(int levelNumber)
+        {
+            CurrentLevel = Mathf.Max(1, levelNumber);
+
+            if (_levelRoutine != null)
+            {
+                StopCoroutine(_levelRoutine);
+                _levelRoutine = null;
+            }
+
+            _waveRunner?.StopWaves();
+            PlayCurrentLevel();
         }
 
         private IEnumerator WaitForLevelClearRoutine()
@@ -276,28 +351,88 @@ namespace Warblade.Managers
             return false;
         }
 
+        private bool HasAnyPlayableLevel()
+        {
+            return (_levels != null && _levels.Length > 0) ||
+                (_campaignBosses != null && _campaignBosses.Length > 0);
+        }
+
+        private bool HasPlayableLevel(int levelNumber)
+        {
+            if (IsCampaignBossLevel(levelNumber))
+            {
+                return ResolveCampaignBoss(levelNumber) != null;
+            }
+
+            return HasLevelData(levelNumber);
+        }
+
         private bool ShouldEnterShopAfterLevel(int completedLevel)
         {
             return _shopInterval > 0 && completedLevel % _shopInterval == 0;
         }
 
-        private bool ShouldRunTestBossAfterWaves(int levelNumber)
+        private static bool IsCampaignBossLevel(int levelNumber)
         {
-            return _enableTestBossAfterWaves && levelNumber == _testBossLevel;
+            return levelNumber > 0 && levelNumber % 25 == 0;
         }
 
-        private IEnumerator RunTestBossEncounterRoutine()
+        private Boss ResolveCampaignBoss(int levelNumber)
         {
-            if (_testBoss == null)
+            if (_campaignBosses == null)
             {
-                Debug.LogWarning($"[{nameof(LevelManager)}] Test boss is enabled for level {_testBossLevel}, but no boss reference is assigned.");
+                return null;
+            }
+
+            for (int i = 0; i < _campaignBosses.Length; i++)
+            {
+                CampaignBossRoute route = _campaignBosses[i];
+                if (route != null && route.LevelNumber == levelNumber)
+                {
+                    return route.Boss;
+                }
+            }
+
+            return null;
+        }
+
+        private Boss ResolveFirstCampaignBoss(out int levelNumber)
+        {
+            levelNumber = 0;
+            if (_campaignBosses == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < _campaignBosses.Length; i++)
+            {
+                CampaignBossRoute route = _campaignBosses[i];
+                if (route != null && route.Boss != null)
+                {
+                    levelNumber = route.LevelNumber;
+                    return route.Boss;
+                }
+            }
+
+            return null;
+        }
+
+        private IEnumerator RunCampaignBossEncounterRoutine(Boss bossReference)
+        {
+            bool createdInstance = false;
+            Boss boss = PrepareBossInstance(bossReference, out createdInstance);
+            if (boss == null)
+            {
                 yield break;
             }
 
             _playerShooting?.SetShootingEnabled(true);
-            _testBoss.Spawn();
+            if (!boss.IsEncounterRunning)
+            {
+                boss.Spawn();
+            }
 
-            while (!_isGameOver && !_testBoss.IsDefeated)
+            while (!_isGameOver && !boss.IsDefeated)
             {
                 yield return null;
             }
@@ -308,12 +443,66 @@ namespace Warblade.Managers
             {
                 yield return null;
             }
+
+            if (createdInstance && boss != null)
+            {
+                Destroy(boss.gameObject);
+            }
         }
 
-        private IEnumerator RunForcedTestBossRoutine()
+        private Boss PrepareBossInstance(Boss bossReference, out bool createdInstance)
         {
-            yield return RunTestBossEncounterRoutine();
+            createdInstance = false;
+            if (bossReference == null)
+            {
+                return null;
+            }
+
+            Boss boss = bossReference;
+            if (!bossReference.gameObject.scene.IsValid())
+            {
+                boss = Instantiate(bossReference);
+                createdInstance = true;
+            }
+
+            boss.SetPlayerTarget(_playerShooting == null ? null : _playerShooting.transform);
+            return boss;
+        }
+
+        private IEnumerator RunForcedCampaignBossRoutine(Boss boss)
+        {
+            yield return RunCampaignBossEncounterRoutine(boss);
             _levelRoutine = null;
+        }
+
+        private void ValidateCampaignBossRoutes()
+        {
+            if (_campaignBosses == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _campaignBosses.Length; i++)
+            {
+                CampaignBossRoute route = _campaignBosses[i];
+                if (route == null)
+                {
+                    Debug.LogWarning($"[{nameof(LevelManager)}] Campaign boss route {i} is empty on '{name}'.", this);
+                    continue;
+                }
+
+                if (!IsCampaignBossLevel(route.LevelNumber))
+                {
+                    Debug.LogWarning(
+                        $"[{nameof(LevelManager)}] Campaign boss route {i} uses level {route.LevelNumber}. Boss campaign levels should be 25, 50, 75, 100, etc.",
+                        this);
+                }
+
+                if (route.Boss == null)
+                {
+                    Debug.LogWarning($"[{nameof(LevelManager)}] Campaign boss route {i} has no boss assigned on '{name}'.", this);
+                }
+            }
         }
 
         private void AwardSpecialPerfectClearBonus()

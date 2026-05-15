@@ -166,6 +166,14 @@ namespace Warblade.Entities
             RaisePhaseChanged();
         }
 
+        /// <summary>
+        /// Assigns the current player target used by aimed boss attack patterns.
+        /// </summary>
+        public void SetPlayerTarget(Transform playerTransform)
+        {
+            _playerTransform = playerTransform;
+        }
+
         public void TakeDamage(int amount)
         {
             if (_state == State.Inactive || _state == State.Defeated || amount <= 0)
