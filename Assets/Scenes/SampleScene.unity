@@ -3674,6 +3674,7 @@ MonoBehaviour:
   _waveRunner: {fileID: 2104061202}
   _enemySpawner: {fileID: 2078825175}
   _playerShooting: {fileID: 1517309661}
+  _cycleScalingData: {fileID: 0}
   _levels:
   - {fileID: 11400000, guid: b9eab746945b49f286c8a971df89f715, type: 2}
   - {fileID: 11400000, guid: c455d78bd6d2c784697dc87cd5a222d2, type: 2}
@@ -4771,6 +4772,8 @@ MonoBehaviour:
   _drawGizmos: 1
   _specialPerfectClearScoreMultiplier: 2
   _concurrentDiveLimitRemainingRatio: 0.1
+  _limitedDiveCooldownMin: 2
+  _limitedDiveCooldownMax: 4
 --- !u!4 &2078825176
 Transform:
   m_ObjectHideFlags: 0

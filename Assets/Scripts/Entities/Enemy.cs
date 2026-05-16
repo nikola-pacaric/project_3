@@ -24,6 +24,12 @@ namespace Warblade.Entities
         private State _state = State.Entering;
         private int _currentHealth;
         private Vector2 _diveTarget;
+        private Vector2 _diveStart;
+        private Vector2 _diveControlPoint;
+        private float _diveElapsed;
+        private float _diveDuration;
+        private float _diveAimOffsetX;
+        private float _diveTargetVelocityX;
         private float _nextDiveTime;
         private float _nextFireTime;
         private float _lingerEndTime;
@@ -333,11 +339,7 @@ namespace Warblade.Entities
                     break;
 
                 case State.Diving:
-                    MoveToward(_diveTarget, ResolveDiveSpeed());
-                    if (Reached(_diveTarget))
-                    {
-                        StartLinger();
-                    }
+                    UpdateDive();
                     break;
 
                 case State.Lingering:
@@ -479,28 +481,82 @@ namespace Warblade.Entities
         {
             Vector2 enemyPos = transform.position;
 
+            _isPassThroughDive = Random.value < _data.PassThroughChance;
+            _diveAimOffsetX = Random.Range(_data.DiveAimOffsetXMin, _data.DiveAimOffsetXMax);
+            BuildDivePath(enemyPos, ResolveCurrentDiveTarget(enemyPos));
+            _state = State.Diving;
+        }
+
+        private Vector2 ResolveCurrentDiveTarget(Vector2 enemyPos)
+        {
             if (_playerTransform == null)
             {
-                _diveTarget = new Vector2(enemyPos.x, _data.DiveBottomY);
+                return new Vector2(enemyPos.x + _diveAimOffsetX, _data.DiveBottomY);
+            }
+
+            Vector2 playerPos = _playerTransform.position;
+            Vector2 direction = playerPos - enemyPos;
+            Vector2 target;
+
+            if (direction.y >= 0f)
+            {
+                target = new Vector2(playerPos.x, _data.DiveBottomY);
             }
             else
             {
-                Vector2 playerPos = _playerTransform.position;
-                Vector2 direction = playerPos - enemyPos;
-
-                if (direction.y >= 0f)
-                {
-                    _diveTarget = new Vector2(playerPos.x, _data.DiveBottomY);
-                }
-                else
-                {
-                    float t = (_data.DiveBottomY - enemyPos.y) / direction.y;
-                    _diveTarget = enemyPos + direction * t;
-                }
+                float t = (_data.DiveBottomY - enemyPos.y) / direction.y;
+                target = enemyPos + direction * t;
             }
 
-            _isPassThroughDive = Random.value < _data.PassThroughChance;
-            _state = State.Diving;
+            return new Vector2(target.x + _diveAimOffsetX, target.y);
+        }
+
+        private void BuildDivePath(Vector2 start, Vector2 target)
+        {
+            _diveStart = start;
+            _diveTarget = target;
+            _diveTargetVelocityX = 0f;
+
+            float upAmount = Random.Range(_data.DiveCurveUpMin, _data.DiveCurveUpMax);
+            float sideAmount = Random.Range(_data.DiveCurveSideMin, _data.DiveCurveSideMax);
+            float sideSign = Random.value < 0.5f ? -1f : 1f;
+            Vector2 midpoint = (_diveStart + _diveTarget) * 0.5f;
+            _diveControlPoint = new Vector2(
+                midpoint.x + sideAmount * sideSign,
+                _diveStart.y + upAmount);
+
+            float pathLength = BezierPath.ApproximateQuadraticLength(_diveStart, _diveControlPoint, _diveTarget);
+            _diveDuration = pathLength / Mathf.Max(ResolveDiveSpeed(), 0.01f);
+            _diveElapsed = 0f;
+        }
+
+        private void UpdateDive()
+        {
+            if (_diveDuration <= Mathf.Epsilon)
+            {
+                transform.position = _diveTarget;
+                StartLinger();
+                return;
+            }
+
+            _diveElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(_diveElapsed / _diveDuration);
+            if (t < _data.DiveTrackingPortion && _playerTransform != null)
+            {
+                Vector2 liveTarget = ResolveCurrentDiveTarget(transform.position);
+                _diveTarget.x = Mathf.SmoothDamp(
+                    _diveTarget.x,
+                    liveTarget.x,
+                    ref _diveTargetVelocityX,
+                    0.12f);
+            }
+
+            transform.position = BezierPath.EvaluateQuadratic(_diveStart, _diveControlPoint, _diveTarget, t);
+
+            if (t >= 1f)
+            {
+                StartLinger();
+            }
         }
 
         private void StartLinger()

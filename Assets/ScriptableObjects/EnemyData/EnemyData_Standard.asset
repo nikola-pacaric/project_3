@@ -21,7 +21,7 @@ MonoBehaviour:
   _diesAtDiveBottom: 0
   _canFire: 1
   _limitConcurrentDivesAboveFinalThreshold: 1
-  _passThroughChance: 0.15
+  _passThroughChance: 1
   _respawnTopY: 6
   _diveCooldownMin: 8
   _diveCooldownMax: 14
@@ -29,5 +29,11 @@ MonoBehaviour:
   _fireCooldownMax: 6
   _lingerDurationMin: 0.5
   _lingerDurationMax: 1.5
+  _diveCurveUpMin: 0.35
+  _diveCurveUpMax: 1.2
+  _diveCurveSideMin: 0.75
+  _diveCurveSideMax: 2.25
+  _diveAimOffsetXMin: -0.75
+  _diveAimOffsetXMax: 0.75
   _spriteColor: {r: 1, g: 1, b: 1, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

@@ -32,7 +32,10 @@ namespace Warblade.Systems
         [SerializeField] private int _maxSize = 50;
         [SerializeField] private bool _drawGizmos = true;
         [SerializeField, Min(1f)] private float _specialPerfectClearScoreMultiplier = 2f;
+        [Header("Dive Pacing")]
         [SerializeField, Range(0f, 1f)] private float _concurrentDiveLimitRemainingRatio = 0.1f;
+        [SerializeField, Min(0f)] private float _limitedDiveCooldownMin = 1.25f;
+        [SerializeField, Min(0f)] private float _limitedDiveCooldownMax = 3.5f;
 
         private readonly Dictionary<Enemy, IObjectPool<Enemy>> _pools =
             new Dictionary<Enemy, IObjectPool<Enemy>>();
@@ -45,6 +48,7 @@ namespace Warblade.Systems
         private bool _specialEnemyEscaped;
         private bool _specialPerfectClearBonusConsumed;
         private Enemy _limitedDiveEnemy;
+        private float _nextLimitedDiveAllowedTime;
         private CycleScalingState _cycleScaling = CycleScalingState.Default;
 
         public int ActiveEnemyCount => _activeEnemyCount;
@@ -378,6 +382,7 @@ namespace Warblade.Systems
             _specialEnemyEscaped = false;
             _specialPerfectClearBonusConsumed = false;
             _limitedDiveEnemy = null;
+            _nextLimitedDiveAllowedTime = 0f;
             _activeEnemies.Clear();
             _activeEnemyCount = 0;
         }
@@ -399,6 +404,7 @@ namespace Warblade.Systems
             _activeEnemies.Clear();
             _activeEnemyCount = 0;
             _limitedDiveEnemy = null;
+            _nextLimitedDiveAllowedTime = 0f;
         }
 
         /// <summary>
@@ -476,6 +482,11 @@ namespace Warblade.Systems
                 return false;
             }
 
+            if (_limitedDiveEnemy == null && Time.time < _nextLimitedDiveAllowedTime)
+            {
+                return false;
+            }
+
             _limitedDiveEnemy = enemy;
             return true;
         }
@@ -485,6 +496,7 @@ namespace Warblade.Systems
             if (_limitedDiveEnemy == enemy)
             {
                 _limitedDiveEnemy = null;
+                _nextLimitedDiveAllowedTime = Time.time + Random.Range(_limitedDiveCooldownMin, _limitedDiveCooldownMax);
             }
         }
 
@@ -513,6 +525,8 @@ namespace Warblade.Systems
             _maxSize = Mathf.Max(_defaultCapacity, _maxSize);
             _debugFormationIndex = Mathf.Max(0, _debugFormationIndex);
             _specialPerfectClearScoreMultiplier = Mathf.Max(1f, _specialPerfectClearScoreMultiplier);
+            _limitedDiveCooldownMin = Mathf.Max(0f, _limitedDiveCooldownMin);
+            _limitedDiveCooldownMax = Mathf.Max(_limitedDiveCooldownMin, _limitedDiveCooldownMax);
         }
 
         private int GetConcurrentDiveLimitThreshold()
