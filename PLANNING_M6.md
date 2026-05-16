@@ -247,7 +247,7 @@ Validation note:
 
 ## Phase 7 — Developer Progression Tools
 
-Status: Pending.
+Status: Complete.
 
 Scope note:
 - Phase 7 is not meant to become a full debug console before the 100-level authoring pass.
@@ -257,19 +257,23 @@ Scope note:
 Code:
 - Add dev-only tools needed to test the expanded game:
   - [x] level skip / jump to level
-  - [ ] cash grant, if shop/economy testing blocks authoring
-  - [ ] kill-all active enemies, if wave authoring iteration is too slow
+  - [x] cash grant deferred until shop/economy testing blocks authoring
+  - [x] kill-all active enemies deferred until wave authoring iteration is too slow
   - [x] force boss encounter
-  - [ ] force mini-game, after mini-game flow exists
-- Keep tools out of normal player UI.
-- Prefer context menu methods or clearly gated debug UI.
+  - [x] force mini-game deferred until mini-game flow exists
+- [x] Keep tools out of normal player UI.
+- [x] Prefer context menu methods or clearly gated debug UI.
 
 Editor:
-- Use the tools to jump to levels 25, 50, 75, 100, and 101.
+- [x] Use the tools to jump to levels 25, 50, 75, 100, and 101.
 
 Acceptance:
-- Testing level 100 and cycle 2 does not require manually playing 100 levels.
-- Debug tools do not affect normal gameplay unless explicitly invoked.
+- [x] Testing level 100 and cycle 2 does not require manually playing 100 levels.
+- [x] Debug tools do not affect normal gameplay unless explicitly invoked.
+
+Validation note:
+- [x] `Warblade/Validate Content` passed with 0 warnings.
+- [x] Dev boss tools were tested with `LevelManager.Play On Start` disabled; bosses spawned correctly, and defeating each boss completed the matching boss level number.
 
 ---
 

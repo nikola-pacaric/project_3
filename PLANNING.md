@@ -184,7 +184,7 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 - [ ] Mini-games: Meteor Storm (dodge round, gem pickups), Memory Match (flip cards)
 - [ ] Mini-game trigger logic in `LevelManager` — Meteor Storm / Memory Match are random popups only eligible after a wave completes
 - [ ] Mini-game scene flow (enter → play → reward → return)
-- [ ] Minimal dev-only authoring helpers: level jump exists; add cash grant / kill-all only when authoring or validation needs them.
+- [x] Minimal dev-only authoring helpers: level jump exists; cash grant / kill-all deferred until authoring or validation needs them.
 
 **Refactor**
 - [x] **Split formation shape from enemy composition before authoring all 100 levels.** Current M3 `FormationData` stores both slot layout/path data and `EnemyData` per slot, which makes reusable shapes unsafe: changing a V formation for Level 31 would also change Level 1. Refactor so reusable formation data owns the shape only — slot positions, entry control offsets, breathing — while each wave or a separate loadout/composition asset owns the enemy types for those slots.
