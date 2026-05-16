@@ -177,7 +177,7 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 **Goal:** scale from 5 levels to 100 + infinite. Mostly authoring, after the content model is made scalable.
 
 **Build**
-- [ ] `LevelManager` chapter logic: `level % 25 == 0` → boss; six 4-level enemy-set blocks fill the 24 normal levels before each boss
+- [x] `LevelManager` chapter logic: `level % 25 == 0` → boss; six 4-level enemy-set blocks fill the 24 normal levels before each boss
 - [ ] All 100 `LevelData` SOs authored — first-pass tuning
 - [x] Bosses placed at levels 25, 50, 75, 100
 - [x] Cycle scaling: `cycle = (currentLevel - 1) / 100` → health/speed multipliers + sprite color tint

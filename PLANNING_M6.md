@@ -169,8 +169,8 @@ Code:
 Editor:
 - [x] Add `Warblade/Validate Content` for current authored content.
 - [x] Add `Warblade/Validate M6 Gate (1-100)` for strict milestone validation.
-- [ ] Run validation from the Unity Editor against current assets.
-- [ ] Fix existing warnings before mass authoring.
+- [x] Run validation from the Unity Editor against current assets.
+- [x] Fix existing validation warnings before mass authoring.
 
 Acceptance:
 - [x] Bad level assets fail loudly before Play Mode.
@@ -228,8 +228,8 @@ Code:
 
 Editor:
 - [x] Provide code fallback placeholder tint/scaling values when no `CycleScalingData` asset is assigned.
-- [ ] Optionally create/assign a project-specific `CycleScalingData` asset for tuning.
-- [ ] Test cycle 2 through dev tools.
+- [x] Defer creating/assigning a project-specific `CycleScalingData` asset until tuning needs values different from the code fallback.
+- [x] Test cycle 2 through dev tools.
 
 Acceptance:
 - [x] Level 101 resolves to campaign level 1 as cycle 2 in code.
@@ -241,6 +241,7 @@ Validation note:
 - [x] Static implementation pass complete.
 - [x] Unity Play Mode validation completed by testing the level-101 cycle path.
 - [x] Runtime `Enemy(Clone)` scene pollution from out-of-Play-Mode context menu use was cleaned up, and dev helpers are now Play Mode guarded.
+- [x] A project-specific `CycleScalingData` asset was intentionally deferred; code fallback values are the current placeholder tuning until a real balance pass needs an asset.
 
 ---
 
