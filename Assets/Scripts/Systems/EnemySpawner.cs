@@ -53,6 +53,7 @@ namespace Warblade.Systems
 
         public int ActiveEnemyCount => _activeEnemyCount;
         public int SpawnedEnemyCount => _spawnedEnemyCount;
+        public bool IsFinalDivePressureActive => _finalDiveTriggered;
 
         private void Start()
         {

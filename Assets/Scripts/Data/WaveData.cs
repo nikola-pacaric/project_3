@@ -24,6 +24,13 @@ namespace Warblade.Data
             HorizontalSway = 1
         }
 
+        public enum NextWaveTrigger
+        {
+            StartNextImmediately = 0,
+            WaitUntilEnemiesCleared = 1,
+            WaitUntilThisWaveFinishedSpawning = 2
+        }
+
         [System.Serializable]
         public struct WaveSlot
         {
@@ -48,7 +55,10 @@ namespace Warblade.Data
         [SerializeField, Min(0f)] private float _formationSwayAmplitude = 0.5f;
         [SerializeField, Min(0f)] private float _formationSwaySpeed = 1f;
         [SerializeField] private float _formationSwayPhase;
+        [Header("Sequencing")]
         [SerializeField, Min(0f)] private float _spawnDelay = 0f;
+        [Tooltip("Controls when the next wave in the level may start after this wave begins.")]
+        [SerializeField] private NextWaveTrigger _nextWaveTrigger = NextWaveTrigger.StartNextImmediately;
         [SerializeField] private EntrySide _entrySide = EntrySide.Top;
         [SerializeField, Min(0f)] private float _entryDistance = 8f;
         [Tooltip("When disabled, entry start is derived from formation anchor, entry side, and entry distance.")]
@@ -71,6 +81,7 @@ namespace Warblade.Data
         public float FormationSwaySpeed => _formationSwaySpeed;
         public float FormationSwayPhase => _formationSwayPhase;
         public float SpawnDelay => _spawnDelay;
+        public NextWaveTrigger NextWaveStartTrigger => _nextWaveTrigger;
         public EntrySide Side => _entrySide;
         public float EntryDistance => _entryDistance;
         public bool UseCustomEntryStartCenter => _useCustomEntryStartCenter;

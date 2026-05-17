@@ -898,7 +898,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &580073764
 Transform:
   m_ObjectHideFlags: 0
@@ -2723,7 +2723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1318416732
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3346,7 +3346,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -4, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -3677,10 +3677,6 @@ MonoBehaviour:
   _cycleScalingData: {fileID: 0}
   _levels:
   - {fileID: 11400000, guid: b9eab746945b49f286c8a971df89f715, type: 2}
-  - {fileID: 11400000, guid: c455d78bd6d2c784697dc87cd5a222d2, type: 2}
-  - {fileID: 11400000, guid: fedcc7044e6036449a9a0332ec5648e6, type: 2}
-  - {fileID: 11400000, guid: 646f1ddc0ad5fce48902dddcb01e011b, type: 2}
-  - {fileID: 11400000, guid: d015631cfad22de4f849d868b29247ae, type: 2}
   _campaignBosses:
   - _levelNumber: 25
     _boss: {fileID: 1434712353}
@@ -4117,6 +4113,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1703492204}
   m_CullTransparentMesh: 1
+--- !u!1 &1731442901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1731442902}
+  - component: {fileID: 1731442903}
+  m_Layer: 0
+  m_Name: LevelRunner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1731442902
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731442901}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1731442903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731442901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5045ea05b9e6eb140942a73fd5d415f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.LevelRunner
+  _levelData: {fileID: 11400000, guid: b9eab746945b49f286c8a971df89f715, type: 2}
+  _drawGizmos: 1
+  _drawLabels: 1
+  _gizmoCurveSamples: 24
 --- !u!1 &1732983145
 GameObject:
   m_ObjectHideFlags: 0
@@ -4763,8 +4807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.EnemySpawner
   _playerTransform: {fileID: 1517309659}
   _enemyPrefabs:
-  - {fileID: 4704408080886951517, guid: 8aa3b15bf87865e4eaf22d1c18480956, type: 3}
-  - {fileID: 2528458533209315102, guid: d6fcf2b9496d5f24391b9c5af97734aa, type: 3}
+  - {fileID: 929243961530249405, guid: ace71e81a6b7c70419466b6018779fae, type: 3}
   _testFormationSpawns: []
   _debugFormationIndex: 0
   _defaultCapacity: 10
@@ -4985,11 +5028,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.WaveRunner
   _enemySpawner: {fileID: 2078825175}
-  _waves:
-  - {fileID: 11400000, guid: 3f8546f551c64fe4857d11bfb9db3107, type: 2}
-  - {fileID: 11400000, guid: 265dd5005dd855e46b9ff17accecdc0a, type: 2}
-  _playOnStart: 1
-  _drawGizmos: 1
+  _waves: []
+  _playOnStart: 0
+  _drawGizmos: 0
   _gizmoCurveSamples: 24
 --- !u!1001 &587996901633137473
 PrefabInstance:
@@ -5257,3 +5298,4 @@ SceneRoots:
   - {fileID: 8173747207156176671}
   - {fileID: 587996901633137473}
   - {fileID: 7075021966627818591}
+  - {fileID: 1731442902}

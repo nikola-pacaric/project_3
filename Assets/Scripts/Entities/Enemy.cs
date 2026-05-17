@@ -226,6 +226,7 @@ namespace Warblade.Entities
                 : null;
             _currentHealth = ResolveMaxHealth();
             _isReturningToSpawnForDespawn = false;
+            ScheduleNextFire();
             ApplyVisualsFromData();
             BeginEntry();
         }
@@ -294,6 +295,8 @@ namespace Warblade.Entities
             switch (_state)
             {
                 case State.Entering:
+                    TickEnemyFiring(requireStandardFormationBehavior: true);
+
                     if (_entryDuration <= Mathf.Epsilon)
                     {
                         EnterFormation();
@@ -328,10 +331,7 @@ namespace Warblade.Entities
 
                 case State.InFormation:
                     transform.position = _formationPosition;
-                    if (_data.CanFire && Time.time >= _nextFireTime)
-                    {
-                        FireBullet();
-                    }
+                    TickEnemyFiring(requireStandardFormationBehavior: false);
                     if (Time.time >= _nextDiveTime)
                     {
                         TryStartDive();
@@ -453,7 +453,24 @@ namespace Warblade.Entities
             _spawner?.EndLimitedDive(this);
             _state = State.InFormation;
             _nextDiveTime = Time.time + Random.Range(_data.DiveCooldownMin, _data.DiveCooldownMax);
-            _nextFireTime = Time.time + Random.Range(_data.FireCooldownMin, _data.FireCooldownMax);
+
+            if (_spawner != null && _spawner.IsFinalDivePressureActive)
+            {
+                TryStartDive();
+            }
+        }
+
+        private void TickEnemyFiring(bool requireStandardFormationBehavior)
+        {
+            if (_data == null ||
+                !_data.CanFire ||
+                (requireStandardFormationBehavior && _data.BehaviorMode != EnemyBehaviorMode.Formation) ||
+                Time.time < _nextFireTime)
+            {
+                return;
+            }
+
+            FireBullet();
         }
 
         private void FireBullet()
@@ -463,6 +480,16 @@ namespace Warblade.Entities
                 Bullet bullet = _bulletPool.Get();
                 bullet.Spawn(transform.position);
             }
+            ScheduleNextFire();
+        }
+
+        private void ScheduleNextFire()
+        {
+            if (_data == null)
+            {
+                return;
+            }
+
             _nextFireTime = Time.time + Random.Range(_data.FireCooldownMin, _data.FireCooldownMax);
         }
 

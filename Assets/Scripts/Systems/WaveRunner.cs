@@ -190,12 +190,28 @@ namespace Warblade.Systems
                 Vector2 entryStartCenter = wave.EntryStartCenter;
                 Vector2 entrySpacingStep = wave.EntrySpacingStep;
 
-                _enemySpawner.SpawnFormation(
+                Coroutine spawnRoutine = _enemySpawner.SpawnFormation(
                     wave,
                     entryStartCenter,
                     entrySpacingStep,
                     wave.PerSlotDelay,
                     runtimeFormation: runtimeFormation);
+
+                bool hasNextWave = waveIndex < waves.Count - 1;
+                bool isLastWave = !hasNextWave;
+                if (isLastWave || wave.NextWaveStartTrigger == WaveData.NextWaveTrigger.WaitUntilThisWaveFinishedSpawning)
+                {
+                    yield return spawnRoutine;
+                }
+
+                if (hasNextWave && wave.NextWaveStartTrigger == WaveData.NextWaveTrigger.WaitUntilEnemiesCleared)
+                {
+                    yield return spawnRoutine;
+                    while (_enemySpawner.ActiveEnemyCount > 0)
+                    {
+                        yield return null;
+                    }
+                }
             }
 
             _runRoutine = null;

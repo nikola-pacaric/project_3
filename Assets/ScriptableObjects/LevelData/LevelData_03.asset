@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.LevelData
   _levelNumber: 3
   _waves:
-  - {fileID: 11400000, guid: 2b2489dc2d578f348bed1d352d578e8c, type: 2}
+  - {fileID: 11400000, guid: 43f52e74e5d7467458fbeb95d3b6a6b5, type: 2}
   - {fileID: 11400000, guid: c0adf8fbae91894498b48982096cfbd2, type: 2}
-  - {fileID: 11400000, guid: 7fa14c8fa7f7e0747a5598e514b44083, type: 2}

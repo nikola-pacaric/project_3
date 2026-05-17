@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37777848def89bc44bfa241dbbcc28b0, type: 3}
-  m_Name: EnemyData_Standard
+  m_Name: EnemyData_Tier2
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.EnemyData
-  _maxHealth: 1
+  _maxHealth: 2
   _scoreValue: 100
   _entrySpeed: 3
   _diveSpeed: 5.5
@@ -35,5 +35,6 @@ MonoBehaviour:
   _diveCurveSideMax: 2.25
   _diveAimOffsetXMin: -0.75
   _diveAimOffsetXMax: 0.75
+  _diveTrackingPortion: 0.6
   _spriteColor: {r: 1, g: 1, b: 1, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

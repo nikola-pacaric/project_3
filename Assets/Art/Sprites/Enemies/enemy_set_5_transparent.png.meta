@@ -1,0 +1,494 @@
+fileFormatVersion: 2
+guid: 3cef32ebcf4db324d95ac56a462b9889
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2681704306822533266
+    second: enemy_set_5_transparent_0
+  - first:
+      213: 9212572771754624585
+    second: enemy_set_5_transparent_1
+  - first:
+      213: -5830210400389475354
+    second: enemy_set_5_transparent_2
+  - first:
+      213: 43114142348817826
+    second: enemy_set_5_transparent_3
+  - first:
+      213: -6887584626274086667
+    second: enemy_set_5_transparent_4
+  - first:
+      213: 869899660251592174
+    second: enemy_set_5_transparent_5
+  - first:
+      213: -3773447064623634653
+    second: enemy_set_5_transparent_6
+  - first:
+      213: -7562788835201163599
+    second: enemy_set_5_transparent_7
+  - first:
+      213: -7927981897450294629
+    second: enemy_set_5_transparent_8
+  - first:
+      213: 1052563255998690056
+    second: enemy_set_5_transparent_9
+  - first:
+      213: 6083890607295398164
+    second: enemy_set_5_transparent_10
+  - first:
+      213: 734394430377736927
+    second: enemy_set_5_transparent_11
+  - first:
+      213: 6666593932721577129
+    second: enemy_set_5_transparent_12
+  - first:
+      213: -4661422045939693264
+    second: enemy_set_5_transparent_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_0
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 296
+        width: 264
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 290dac8dbd3573520800000000000000
+      internalID: 2681704306822533266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_1
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 294
+        width: 242
+        height: 139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 946ced72022a9df70800000000000000
+      internalID: 9212572771754624585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_2
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 282
+        width: 193
+        height: 151
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e35ff6d78ee61fa0800000000000000
+      internalID: -5830210400389475354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_3
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 285
+        width: 187
+        height: 167
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a53f73851c299000800000000000000
+      internalID: 43114142348817826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_4
+      rect:
+        serializedVersion: 2
+        x: 1213
+        y: 284
+        width: 214
+        height: 154
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f0dd7e36426a60a0800000000000000
+      internalID: -6887584626274086667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_5
+      rect:
+        serializedVersion: 2
+        x: 1480
+        y: 292
+        width: 254
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee5778fc121821c00800000000000000
+      internalID: 869899660251592174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_6
+      rect:
+        serializedVersion: 2
+        x: 1773
+        y: 294
+        width: 236
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3272e5623e502abc0800000000000000
+      internalID: -3773447064623634653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_7
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 47
+        width: 276
+        height: 180
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1be5b8eaf939b0790800000000000000
+      internalID: -7562788835201163599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_8
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 46
+        width: 264
+        height: 176
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b927fb0f7762af190800000000000000
+      internalID: -7927981897450294629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_9
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 47
+        width: 229
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8033e6164b47b9e00800000000000000
+      internalID: 1052563255998690056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_10
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 49
+        width: 208
+        height: 185
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4118d2406425e6450800000000000000
+      internalID: 6083890607295398164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_11
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 49
+        width: 239
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdab0bbe7d7113a00800000000000000
+      internalID: 734394430377736927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_12
+      rect:
+        serializedVersion: 2
+        x: 1482
+        y: 49
+        width: 249
+        height: 177
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9acd4a55cdf748c50800000000000000
+      internalID: 6666593932721577129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemy_set_5_transparent_13
+      rect:
+        serializedVersion: 2
+        x: 1763
+        y: 49
+        width: 256
+        height: 177
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0390793b85d4f4fb0800000000000000
+      internalID: -4661422045939693264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      enemy_set_5_transparent_0: 2681704306822533266
+      enemy_set_5_transparent_1: 9212572771754624585
+      enemy_set_5_transparent_10: 6083890607295398164
+      enemy_set_5_transparent_11: 734394430377736927
+      enemy_set_5_transparent_12: 6666593932721577129
+      enemy_set_5_transparent_13: -4661422045939693264
+      enemy_set_5_transparent_2: -5830210400389475354
+      enemy_set_5_transparent_3: 43114142348817826
+      enemy_set_5_transparent_4: -6887584626274086667
+      enemy_set_5_transparent_5: 869899660251592174
+      enemy_set_5_transparent_6: -3773447064623634653
+      enemy_set_5_transparent_7: -7562788835201163599
+      enemy_set_5_transparent_8: -7927981897450294629
+      enemy_set_5_transparent_9: 1052563255998690056
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

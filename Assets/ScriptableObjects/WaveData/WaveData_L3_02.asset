@@ -35,10 +35,18 @@ MonoBehaviour:
     EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   _formationAnchorPosition: {x: 0, y: -1}
+  _formationMotionMode: 1
+  _formationSwayAmplitude: 0.5
+  _formationSwaySpeed: 1
+  _formationSwayPhase: 0
   _spawnDelay: 3
+  _nextWaveTrigger: 0
   _entrySide: 1
-  _entryDistance: 11
+  _entryDistance: 0
   _useCustomEntryStartCenter: 0
   _entryStartCenter: {x: -11, y: -1}
   _entrySpacing: 0
   _perSlotDelay: 0.3
+  _entryPathMode: 0
+  _entryPathWaypoints: []
+  _entryPathFinalControlOffset: {x: 0, y: 0}

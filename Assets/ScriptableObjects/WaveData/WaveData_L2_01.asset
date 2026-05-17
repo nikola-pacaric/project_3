@@ -13,20 +13,65 @@ MonoBehaviour:
   m_Name: WaveData_L2_01
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
-  - LocalPosition: {x: -5, y: -5}
+  - LocalPosition: {x: -7, y: -4}
     EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
-    EntryControlOffset: {x: 2.8, y: -15}
-  - LocalPosition: {x: -3, y: -5}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -6, y: -4}
     EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
-    EntryControlOffset: {x: 1.6, y: -15}
-  - LocalPosition: {x: -1, y: -5}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -5, y: -4}
     EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
-    EntryControlOffset: {x: 0.2, y: -15}
-  _formationAnchorPosition: {x: -1, y: 7}
-  _spawnDelay: 3
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -4, y: -4}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -3, y: -4}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -2, y: -4}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -1, y: -4}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -7, y: -6}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -6, y: -6}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -5, y: -6}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -4, y: -6}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -3, y: -6}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -2, y: -6}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -1, y: -6}
+    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  _formationAnchorPosition: {x: 0, y: 7}
+  _formationMotionMode: 1
+  _formationSwayAmplitude: 0.5
+  _formationSwaySpeed: 1
+  _formationSwayPhase: 0
+  _spawnDelay: 1
+  _nextWaveTrigger: 0
   _entrySide: 0
   _entryDistance: 0
   _useCustomEntryStartCenter: 0
   _entryStartCenter: {x: -1, y: 7}
   _entrySpacing: 0
   _perSlotDelay: 0.3
+  _entryPathMode: 1
+  _entryPathWaypoints:
+  - LocalPosition: {x: 0, y: -10}
+    ControlOffsetFromPrevious: {x: 0, y: 0}
+  - LocalPosition: {x: -3, y: -10}
+    ControlOffsetFromPrevious: {x: 0, y: -1}
+  _entryPathFinalControlOffset: {x: 0, y: 0}
