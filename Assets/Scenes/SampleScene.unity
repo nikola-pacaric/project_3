@@ -3677,6 +3677,8 @@ MonoBehaviour:
   _cycleScalingData: {fileID: 0}
   _levels:
   - {fileID: 11400000, guid: b9eab746945b49f286c8a971df89f715, type: 2}
+  - {fileID: 11400000, guid: c455d78bd6d2c784697dc87cd5a222d2, type: 2}
+  - {fileID: 11400000, guid: fedcc7044e6036449a9a0332ec5648e6, type: 2}
   _campaignBosses:
   - _levelNumber: 25
     _boss: {fileID: 1434712353}
@@ -3686,7 +3688,7 @@ MonoBehaviour:
     _boss: {fileID: 1539885663}
   - _levelNumber: 100
     _boss: {fileID: 1734419065}
-  _startingLevel: 1
+  _startingLevel: 3
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
@@ -4157,7 +4159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5045ea05b9e6eb140942a73fd5d415f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.LevelRunner
-  _levelData: {fileID: 11400000, guid: b9eab746945b49f286c8a971df89f715, type: 2}
+  _levelData: {fileID: 11400000, guid: fedcc7044e6036449a9a0332ec5648e6, type: 2}
   _drawGizmos: 1
   _drawLabels: 1
   _gizmoCurveSamples: 24

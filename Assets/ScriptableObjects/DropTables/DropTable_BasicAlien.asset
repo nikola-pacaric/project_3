@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c30ae2881fd24da4b693efcbde14af81, type: 3}
   m_Name: DropTable_BasicAlien
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.DropTable
-  _dropChance: 0.38
+  _dropChance: 0.28
   _weightedPickups:
   - _pickupData: {fileID: 11400000, guid: ee1bda829505c4a4b9171b2843a56ee9, type: 2}
     _weight: 30
