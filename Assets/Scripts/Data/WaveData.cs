@@ -52,7 +52,7 @@ namespace Warblade.Data
         [SerializeField] private WaveSlot[] _slots;
         [Header("Enemy")]
         [Tooltip("Prefab used for every enemy in this wave. Slot EnemyData controls stats and behavior.")]
-        [SerializeField] private Enemy _enemyPrefab;
+        [SerializeField] private GameObject _enemyPrefab;
         [SerializeField] private Vector2 _formationAnchorPosition = new Vector2(0f, 0f);
         [Header("Formation Motion")]
         [SerializeField] private FormationMotionMode _formationMotionMode = FormationMotionMode.HorizontalSway;
@@ -79,7 +79,7 @@ namespace Warblade.Data
         [SerializeField] private Vector2 _entryPathFinalControlOffset;
 
         public int SlotCount => _slots == null ? 0 : _slots.Length;
-        public Enemy EnemyPrefab => _enemyPrefab;
+        public Enemy EnemyPrefab => _enemyPrefab != null ? _enemyPrefab.GetComponent<Enemy>() : null;
         public Vector2 FormationAnchorPosition => _formationAnchorPosition;
         public FormationMotionMode MotionMode => _formationMotionMode;
         public float FormationSwayAmplitude => _formationSwayAmplitude;
@@ -225,6 +225,10 @@ namespace Warblade.Data
             if (_enemyPrefab == null)
             {
                 Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' has no enemy prefab.");
+            }
+            else if (_enemyPrefab.GetComponent<Enemy>() == null)
+            {
+                Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' enemy prefab has no {nameof(Enemy)} component.");
             }
 
             if (_slots == null || _slots.Length == 0)

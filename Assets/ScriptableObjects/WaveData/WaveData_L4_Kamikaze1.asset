@@ -28,7 +28,7 @@ MonoBehaviour:
   - LocalPosition: {x: 1.6, y: -9}
     EnemyData: {fileID: 11400000, guid: 90d09db9e30f982438e49bab4ee9223d, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  _enemyPrefab: {fileID: 929243961530249405, guid: c1651b36679465e43bd613453d35af49, type: 3}
+  _enemyPrefab: {fileID: 6595619327578328252, guid: c1651b36679465e43bd613453d35af49, type: 3}
   _formationAnchorPosition: {x: -6, y: 6}
   _formationMotionMode: 1
   _formationSwayAmplitude: 0.5
