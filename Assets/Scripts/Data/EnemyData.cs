@@ -45,6 +45,13 @@ namespace Warblade.Data
         [SerializeField] private float _diveAimOffsetXMax = 0.75f;
         [SerializeField, Range(0f, 1f)] private float _diveTrackingPortion = 0.7f;
 
+        [Header("Mother Movement")]
+        [SerializeField, Min(0.01f)] private float _motherRoamSpeed = 2.5f;
+        [SerializeField] private Vector2 _motherRoamBoundsMin = new Vector2(-10.75f, 1.25f);
+        [SerializeField] private Vector2 _motherRoamBoundsMax = new Vector2(10.75f, 4.75f);
+        [SerializeField, Min(0f)] private float _motherRoamRetargetIntervalMin = 1.25f;
+        [SerializeField, Min(0f)] private float _motherRoamRetargetIntervalMax = 3f;
+
         [Header("Visual")]
         [SerializeField] private Color _spriteColor = Color.white;
 
@@ -78,6 +85,11 @@ namespace Warblade.Data
         public float DiveAimOffsetXMin => _diveAimOffsetXMin;
         public float DiveAimOffsetXMax => _diveAimOffsetXMax;
         public float DiveTrackingPortion => _diveTrackingPortion;
+        public float MotherRoamSpeed => _motherRoamSpeed;
+        public Vector2 MotherRoamBoundsMin => _motherRoamBoundsMin;
+        public Vector2 MotherRoamBoundsMax => _motherRoamBoundsMax;
+        public float MotherRoamRetargetIntervalMin => _motherRoamRetargetIntervalMin;
+        public float MotherRoamRetargetIntervalMax => _motherRoamRetargetIntervalMax;
         public Color SpriteColor => _spriteColor;
         public DropTable DropTable => _dropTable;
 
@@ -95,6 +107,10 @@ namespace Warblade.Data
             _diveCurveSideMax = Mathf.Max(_diveCurveSideMin, _diveCurveSideMax);
             _diveAimOffsetXMax = Mathf.Max(_diveAimOffsetXMin, _diveAimOffsetXMax);
             _diveTrackingPortion = Mathf.Clamp01(_diveTrackingPortion);
+            _motherRoamSpeed = Mathf.Max(0.01f, _motherRoamSpeed);
+            _motherRoamBoundsMax = Vector2.Max(_motherRoamBoundsMin, _motherRoamBoundsMax);
+            _motherRoamRetargetIntervalMin = Mathf.Max(0f, _motherRoamRetargetIntervalMin);
+            _motherRoamRetargetIntervalMax = Mathf.Max(_motherRoamRetargetIntervalMin, _motherRoamRetargetIntervalMax);
         }
     }
 }

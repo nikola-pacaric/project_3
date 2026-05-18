@@ -17,6 +17,7 @@ namespace Warblade.Systems
         public struct TestFormationSpawn
         {
             public Formation Formation;
+            public Enemy EnemyPrefab;
             public EnemyData[] EnemyComposition;
             public Vector2 EntryStartCenter;
             [Min(0f)] public float EntryStartSpacingX;
@@ -25,7 +26,6 @@ namespace Warblade.Systems
         }
 
         [SerializeField] private Transform _playerTransform;
-        [SerializeField] private Enemy[] _enemyPrefabs;
         [SerializeField] private TestFormationSpawn[] _testFormationSpawns;
         [SerializeField, Min(0)] private int _debugFormationIndex;
         [SerializeField] private int _defaultCapacity = 10;
@@ -57,8 +57,6 @@ namespace Warblade.Systems
 
         private void Start()
         {
-            PrewarmConfiguredPools();
-
             if (_testFormationSpawns == null) return;
 
             for (int i = 0; i < _testFormationSpawns.Length; i++)
@@ -122,12 +120,36 @@ namespace Warblade.Systems
             Vector2[] entryPathPoints,
             Vector2[] entryPathControlPoints)
         {
+            return Spawn(
+                prefab,
+                null,
+                startPosition,
+                formationPosition,
+                formation,
+                formationSlotIndex,
+                entryControlOffset,
+                entryPathPoints,
+                entryPathControlPoints);
+        }
+
+        public Enemy Spawn(
+            Enemy prefab,
+            EnemyData enemyData,
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset,
+            Vector2[] entryPathPoints,
+            Vector2[] entryPathControlPoints)
+        {
             if (prefab == null) return null;
 
             IObjectPool<Enemy> pool = GetOrCreatePool(prefab);
             Enemy enemy = pool.Get();
             _spawnedEnemyCount++;
-            if (enemy.Data != null && enemy.Data.CountsForPerfectClearBonus)
+            EnemyData resolvedEnemyData = enemyData != null ? enemyData : prefab.Data;
+            if (resolvedEnemyData != null && resolvedEnemyData.CountsForPerfectClearBonus)
             {
                 _specialEnemyCount++;
             }
@@ -141,6 +163,7 @@ namespace Warblade.Systems
                 entryControlOffset,
                 entryPathPoints,
                 entryPathControlPoints,
+                resolvedEnemyData,
                 _cycleScaling);
             return enemy;
         }
@@ -178,6 +201,7 @@ namespace Warblade.Systems
             TestFormationSpawn debugSpawn = _testFormationSpawns[clampedIndex];
             StartCoroutine(SpawnFormationRoutine(
                 debugSpawn.Formation,
+                debugSpawn.EnemyPrefab,
                 debugSpawn.EnemyComposition,
                 debugSpawn.EntryStartCenter,
                 Vector2.right * debugSpawn.EntryStartSpacingX,
@@ -189,6 +213,7 @@ namespace Warblade.Systems
             if (spawn.Delay > 0f) yield return new WaitForSeconds(spawn.Delay);
             yield return SpawnFormationRoutine(
                 spawn.Formation,
+                spawn.EnemyPrefab,
                 spawn.EnemyComposition,
                 spawn.EntryStartCenter,
                 Vector2.right * spawn.EntryStartSpacingX,
@@ -226,6 +251,13 @@ namespace Warblade.Systems
                 yield break;
             }
 
+            Enemy prefab = wave.EnemyPrefab;
+            if (prefab == null)
+            {
+                Debug.LogError($"[{nameof(EnemySpawner)}] Wave '{wave.name}' has no enemy prefab.");
+                yield break;
+            }
+
             float halfSpan = (wave.SlotCount - 1) * 0.5f;
             for (int slotIndex = 0; slotIndex < wave.SlotCount; slotIndex++)
             {
@@ -239,16 +271,6 @@ namespace Warblade.Systems
                     continue;
                 }
 
-                Enemy prefab = FindPrefabForData(enemyData);
-                if (prefab == null)
-                {
-                    Debug.LogError(
-                        $"[{nameof(EnemySpawner)}] No prefab found for EnemyData '{enemyData.name}'. " +
-                        "Assign matching prefabs in _enemyPrefabs.");
-                    if (perSlotDelay > 0f) yield return new WaitForSeconds(perSlotDelay);
-                    continue;
-                }
-
                 Vector2 spacedStartPosition = entryStartCenter + entryStartSpacingStep * (slotIndex - halfSpan);
                 Vector2 startPosition = wave.UsesWaypointEntryPath ? entryStartCenter : spacedStartPosition;
                 Vector2 formationPosition = runtimeFormation != null && runtimeFormation.HasSlot(slotIndex)
@@ -258,7 +280,7 @@ namespace Warblade.Systems
                 Vector2[] entryPathPoints = wave.BuildEntryPathWorldPoints(startPosition, formationPosition);
                 Vector2[] entryPathControlPoints = wave.BuildEntryPathWorldControlPoints(entryPathPoints);
 
-                Spawn(prefab, startPosition, formationPosition, runtimeFormation, slotIndex, entryControlOffset, entryPathPoints, entryPathControlPoints);
+                Spawn(prefab, enemyData, startPosition, formationPosition, runtimeFormation, slotIndex, entryControlOffset, entryPathPoints, entryPathControlPoints);
 
                 if (perSlotDelay > 0f)
                 {
@@ -269,6 +291,7 @@ namespace Warblade.Systems
 
         private IEnumerator SpawnFormationRoutine(
             Formation formation,
+            Enemy prefab,
             EnemyData[] enemyComposition,
             Vector2 entryStartCenter,
             Vector2 entryStartSpacingStep,
@@ -278,6 +301,12 @@ namespace Warblade.Systems
             if (formation.SlotCount <= 0)
             {
                 Debug.LogWarning($"[{nameof(EnemySpawner)}] Formation '{formation.name}' has no slots.");
+                yield break;
+            }
+
+            if (prefab == null)
+            {
+                Debug.LogError($"[{nameof(EnemySpawner)}] Formation '{formation.name}' has no enemy prefab.");
                 yield break;
             }
 
@@ -300,41 +329,17 @@ namespace Warblade.Systems
                     continue;
                 }
 
-                Enemy prefab = FindPrefabForData(enemyData);
-                if (prefab == null)
-                {
-                    Debug.LogError(
-                        $"[{nameof(EnemySpawner)}] No prefab found for EnemyData '{enemyData.name}'. " +
-                        "Assign matching prefabs in _enemyPrefabs.");
-                    if (perSlotDelay > 0f) yield return new WaitForSeconds(perSlotDelay);
-                    continue;
-                }
-
                 Vector2 startPosition = entryStartCenter + entryStartSpacingStep * (slotIndex - halfSpan);
                 Vector2 formationPosition = formation.GetSlotWorldPosition(slotIndex);
                 Vector2 entryControlOffset = formation.GetSlotEntryControlOffset(slotIndex);
 
-                Spawn(prefab, startPosition, formationPosition, formation, slotIndex, entryControlOffset);
+                Spawn(prefab, enemyData, startPosition, formationPosition, formation, slotIndex, entryControlOffset, null, null);
 
                 if (perSlotDelay > 0f)
                 {
                     yield return new WaitForSeconds(perSlotDelay);
                 }
             }
-        }
-
-        private Enemy FindPrefabForData(EnemyData enemyData)
-        {
-            if (enemyData == null || _enemyPrefabs == null) return null;
-
-            for (int i = 0; i < _enemyPrefabs.Length; i++)
-            {
-                Enemy prefab = _enemyPrefabs[i];
-                if (prefab == null) continue;
-                if (prefab.Data == enemyData) return prefab;
-            }
-
-            return null;
         }
 
         private IObjectPool<Enemy> GetOrCreatePool(Enemy prefab)
@@ -498,25 +503,6 @@ namespace Warblade.Systems
             {
                 _limitedDiveEnemy = null;
                 _nextLimitedDiveAllowedTime = Time.time + Random.Range(_limitedDiveCooldownMin, _limitedDiveCooldownMax);
-            }
-        }
-
-        private void PrewarmConfiguredPools()
-        {
-            if (_enemyPrefabs == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < _enemyPrefabs.Length; i++)
-            {
-                Enemy prefab = _enemyPrefabs[i];
-                if (prefab == null)
-                {
-                    continue;
-                }
-
-                PoolPrewarmer.Prewarm(GetOrCreatePool(prefab), _defaultCapacity);
             }
         }
 

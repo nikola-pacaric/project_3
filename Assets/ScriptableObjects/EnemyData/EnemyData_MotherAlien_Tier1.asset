@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37777848def89bc44bfa241dbbcc28b0, type: 3}
-  m_Name: EnemyData_MotherAlien
+  m_Name: EnemyData_MotherAlien_Tier1
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.EnemyData
   _maxHealth: 4
   _scoreValue: 500
-  _entrySpeed: 2.25
+  _entrySpeed: 1.5
   _diveSpeed: 3.5
   _diveBottomY: -6
   _behaviorMode: 3
   _diesAtDiveBottom: 0
   _canFire: 1
+  _limitConcurrentDivesAboveFinalThreshold: 0
   _passThroughChance: 0
   _respawnTopY: 6
   _diveCooldownMin: 999
@@ -28,5 +29,17 @@ MonoBehaviour:
   _fireCooldownMax: 3
   _lingerDurationMin: 0.75
   _lingerDurationMax: 1.5
-  _spriteColor: {r: 0.8, g: 0.35, b: 1, a: 1}
+  _diveCurveUpMin: 0.35
+  _diveCurveUpMax: 1.2
+  _diveCurveSideMin: 0.75
+  _diveCurveSideMax: 2.25
+  _diveAimOffsetXMin: -0.75
+  _diveAimOffsetXMax: 0.75
+  _diveTrackingPortion: 0.7
+  _motherRoamSpeed: 1.5
+  _motherRoamBoundsMin: {x: -10.75, y: 1.25}
+  _motherRoamBoundsMax: {x: 10.75, y: 4.75}
+  _motherRoamRetargetIntervalMin: 4
+  _motherRoamRetargetIntervalMax: 8
+  _spriteColor: {r: 1, g: 1, b: 1, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

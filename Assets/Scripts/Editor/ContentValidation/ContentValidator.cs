@@ -66,6 +66,11 @@ namespace Warblade.Editor.ContentValidation
                     continue;
                 }
 
+                if (wave.EnemyPrefab == null)
+                {
+                    report.Error("Wave has no enemy prefab.", wave);
+                }
+
                 for (int slotIndex = 0; slotIndex < wave.SlotCount; slotIndex++)
                 {
                     WaveData.WaveSlot slot = wave.GetSlot(slotIndex);

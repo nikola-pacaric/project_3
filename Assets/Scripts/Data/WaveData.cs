@@ -1,4 +1,5 @@
 using UnityEngine;
+using Warblade.Entities;
 
 namespace Warblade.Data
 {
@@ -49,6 +50,9 @@ namespace Warblade.Data
         }
 
         [SerializeField] private WaveSlot[] _slots;
+        [Header("Enemy")]
+        [Tooltip("Prefab used for every enemy in this wave. Slot EnemyData controls stats and behavior.")]
+        [SerializeField] private Enemy _enemyPrefab;
         [SerializeField] private Vector2 _formationAnchorPosition = new Vector2(0f, 0f);
         [Header("Formation Motion")]
         [SerializeField] private FormationMotionMode _formationMotionMode = FormationMotionMode.HorizontalSway;
@@ -75,6 +79,7 @@ namespace Warblade.Data
         [SerializeField] private Vector2 _entryPathFinalControlOffset;
 
         public int SlotCount => _slots == null ? 0 : _slots.Length;
+        public Enemy EnemyPrefab => _enemyPrefab;
         public Vector2 FormationAnchorPosition => _formationAnchorPosition;
         public FormationMotionMode MotionMode => _formationMotionMode;
         public float FormationSwayAmplitude => _formationSwayAmplitude;
@@ -217,6 +222,11 @@ namespace Warblade.Data
 
         private void OnValidate()
         {
+            if (_enemyPrefab == null)
+            {
+                Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' has no enemy prefab.");
+            }
+
             if (_slots == null || _slots.Length == 0)
             {
                 Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' has no slots.");

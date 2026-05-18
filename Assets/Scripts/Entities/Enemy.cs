@@ -8,8 +8,9 @@ namespace Warblade.Entities
 {
     public class Enemy : MonoBehaviour, IDamageable
     {
-        private enum State { Entering, InFormation, Diving, Lingering, Returning }
+        private enum State { Entering, InFormation, MotherRoaming, Diving, Lingering, Returning }
 
+        [Tooltip("Default stats used when this enemy is spawned directly. WaveData can override this per spawn.")]
         [SerializeField] private EnemyData _data;
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private int _contactDamage = 1;
@@ -47,11 +48,15 @@ namespace Warblade.Entities
         private Vector2[] _entryPathPoints;
         private Vector2[] _entryPathControlPoints;
         private Vector2[] _entryPathControlOffsets;
+        private EnemyData _defaultData;
         private Vector2 _defaultEntryControlOffset;
         private CycleScalingState _cycleScaling = CycleScalingState.Default;
         private float _entryElapsed;
         private float _entryDuration;
         private bool _isReturningToSpawnForDespawn;
+        private Vector2 _motherRoamVelocity;
+        private Vector2 _motherRoamTarget;
+        private float _motherNextRetargetTime;
 
         public Vector2 EntryControlOffset => _entryControlOffset;
         public EnemyData Data => _data;
@@ -70,6 +75,7 @@ namespace Warblade.Entities
             }
 
             _defaultEntryControlOffset = _entryControlOffset;
+            _defaultData = _data;
 
             if (_data == null)
             {
@@ -198,7 +204,33 @@ namespace Warblade.Entities
             Vector2[] entryPathControlPoints,
             CycleScalingState cycleScaling)
         {
+            Spawn(
+                startPosition,
+                formationPosition,
+                playerTransform,
+                formation,
+                formationSlotIndex,
+                entryControlOffset,
+                entryPathPoints,
+                entryPathControlPoints,
+                null,
+                cycleScaling);
+        }
+
+        public void Spawn(
+            Vector2 startPosition,
+            Vector2 formationPosition,
+            Transform playerTransform,
+            Formation formation,
+            int formationSlotIndex,
+            Vector2 entryControlOffset,
+            Vector2[] entryPathPoints,
+            Vector2[] entryPathControlPoints,
+            EnemyData dataOverride,
+            CycleScalingState cycleScaling)
+        {
             _hasDespawned = false;
+            _data = dataOverride != null ? dataOverride : _defaultData;
 
             if (_data == null)
             {
@@ -338,6 +370,11 @@ namespace Warblade.Entities
                     }
                     break;
 
+                case State.MotherRoaming:
+                    TickEnemyFiring(requireStandardFormationBehavior: false);
+                    UpdateMotherRoam();
+                    break;
+
                 case State.Diving:
                     UpdateDive();
                     break;
@@ -350,15 +387,15 @@ namespace Warblade.Entities
                     break;
 
                 case State.Returning:
+                    if (_isReturningToSpawnForDespawn)
+                    {
+                        UpdateReturnToSpawnForDespawn();
+                        break;
+                    }
+
                     MoveToward(_formationPosition, ResolveDiveSpeed());
                     if (Reached(_formationPosition))
                     {
-                        if (_isReturningToSpawnForDespawn)
-                        {
-                            Release(killed: false);
-                            break;
-                        }
-
                         EnterFormation();
                     }
                     break;
@@ -421,6 +458,11 @@ namespace Warblade.Entities
             return _data.DiveSpeed * _cycleScaling.EnemySpeedMultiplier;
         }
 
+        private float ResolveMotherRoamSpeed()
+        {
+            return Mathf.Max(0.01f, _data.MotherRoamSpeed * _cycleScaling.EnemySpeedMultiplier);
+        }
+
         private bool Reached(Vector2 target) => (Vector2)transform.position == target;
 
         private void EnterFormation()
@@ -430,8 +472,11 @@ namespace Warblade.Entities
             switch (_data.BehaviorMode)
             {
                 case EnemyBehaviorMode.Formation:
-                case EnemyBehaviorMode.Mother:
                     StartFormationIdle();
+                    break;
+
+                case EnemyBehaviorMode.Mother:
+                    StartMotherRoam();
                     break;
 
                 case EnemyBehaviorMode.KamikazeReturn:
@@ -448,6 +493,14 @@ namespace Warblade.Entities
             }
         }
 
+        private void StartMotherRoam()
+        {
+            _spawner?.EndLimitedDive(this);
+            _state = State.MotherRoaming;
+            ClampPositionToMotherRoamBounds();
+            ScheduleMotherRoamRetarget(immediate: true);
+        }
+
         private void StartFormationIdle()
         {
             _spawner?.EndLimitedDive(this);
@@ -458,6 +511,63 @@ namespace Warblade.Entities
             {
                 TryStartDive();
             }
+        }
+
+        private void UpdateMotherRoam()
+        {
+            if (Time.time >= _motherNextRetargetTime || _motherRoamVelocity.sqrMagnitude <= 0.0001f)
+            {
+                ScheduleMotherRoamRetarget(immediate: false);
+            }
+
+            Vector2 nextPosition = (Vector2)transform.position + _motherRoamVelocity * ResolveMotherRoamSpeed() * Time.deltaTime;
+            Vector2 boundsMin = _data.MotherRoamBoundsMin;
+            Vector2 boundsMax = _data.MotherRoamBoundsMax;
+
+            if (nextPosition.x < boundsMin.x || nextPosition.x > boundsMax.x)
+            {
+                nextPosition.x = Mathf.Clamp(nextPosition.x, boundsMin.x, boundsMax.x);
+                _motherRoamVelocity.x *= -1f;
+            }
+
+            if (nextPosition.y < boundsMin.y || nextPosition.y > boundsMax.y)
+            {
+                nextPosition.y = Mathf.Clamp(nextPosition.y, boundsMin.y, boundsMax.y);
+                _motherRoamVelocity.y *= -1f;
+            }
+
+            transform.position = nextPosition;
+        }
+
+        private void ClampPositionToMotherRoamBounds()
+        {
+            Vector2 boundsMin = _data.MotherRoamBoundsMin;
+            Vector2 boundsMax = _data.MotherRoamBoundsMax;
+            transform.position = new Vector2(
+                Mathf.Clamp(transform.position.x, boundsMin.x, boundsMax.x),
+                Mathf.Clamp(transform.position.y, boundsMin.y, boundsMax.y));
+        }
+
+        private void ScheduleMotherRoamRetarget(bool immediate)
+        {
+            Vector2 currentPosition = transform.position;
+            Vector2 targetPosition = new Vector2(
+                Random.Range(_data.MotherRoamBoundsMin.x, _data.MotherRoamBoundsMax.x),
+                Random.Range(_data.MotherRoamBoundsMin.y, _data.MotherRoamBoundsMax.y));
+            Vector2 direction = targetPosition - currentPosition;
+            _motherRoamTarget = targetPosition;
+
+            if (direction.sqrMagnitude <= 0.0001f)
+            {
+                float angle = Random.Range(0f, Mathf.PI * 2f);
+                direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            }
+
+            _motherRoamVelocity = direction.normalized;
+            float retargetDelay = immediate
+                ? 0f
+                : Random.Range(_data.MotherRoamRetargetIntervalMin, _data.MotherRoamRetargetIntervalMax);
+            _motherNextRetargetTime = Time.time + retargetDelay;
         }
 
         private void TickEnemyFiring(bool requireStandardFormationBehavior)
@@ -624,7 +734,36 @@ namespace Warblade.Entities
         {
             _formationPosition = _entryStart;
             _isReturningToSpawnForDespawn = true;
+            _entryElapsed = 0f;
+
+            _entryDuration = _entryPathPoints != null
+                ? BezierPath.ApproximateSegmentedQuadraticPathLength(_entryPathPoints, _entryPathControlPoints) / Mathf.Max(ResolveEntrySpeed(), 0.01f)
+                : BezierPath.ApproximateQuadraticLength(_entryStart, _entryControlPoint, _entryEnd) / Mathf.Max(ResolveEntrySpeed(), 0.01f);
+
             _state = State.Returning;
+        }
+
+        private void UpdateReturnToSpawnForDespawn()
+        {
+            if (_entryDuration <= Mathf.Epsilon)
+            {
+                transform.position = _entryStart;
+                Release(killed: false);
+                return;
+            }
+
+            _entryElapsed += Time.deltaTime;
+            float t = 1f - Mathf.Clamp01(_entryElapsed / _entryDuration);
+
+            transform.position = _entryPathPoints != null
+                ? BezierPath.EvaluateSegmentedQuadraticPath(_entryPathPoints, _entryPathControlPoints, t)
+                : BezierPath.EvaluateQuadratic(_entryStart, _entryControlPoint, _entryEnd, t);
+
+            if (t <= 0f)
+            {
+                transform.position = _entryStart;
+                Release(killed: false);
+            }
         }
 
         private void Die()
@@ -660,6 +799,8 @@ namespace Warblade.Entities
 
         private void OnDrawGizmosSelected()
         {
+            DrawMotherMovementGizmos();
+
             Vector2 start;
             Vector2 control;
             Vector2 end;
@@ -721,6 +862,44 @@ namespace Warblade.Entities
             Gizmos.DrawWireSphere(control, 0.12f);
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(end, 0.15f);
+        }
+
+        private void DrawMotherMovementGizmos()
+        {
+            if (_data == null || _data.BehaviorMode != EnemyBehaviorMode.Mother)
+            {
+                return;
+            }
+
+            Vector2 boundsMin = _data.MotherRoamBoundsMin;
+            Vector2 boundsMax = _data.MotherRoamBoundsMax;
+            Vector2 boundsCenter = (boundsMin + boundsMax) * 0.5f;
+            Vector2 boundsSize = boundsMax - boundsMin;
+
+            Gizmos.color = new Color(1f, 0.35f, 1f, 0.9f);
+            Gizmos.DrawWireCube(boundsCenter, boundsSize);
+
+            Gizmos.color = new Color(1f, 0.35f, 1f, 0.35f);
+            Gizmos.DrawLine(new Vector2(boundsMin.x, boundsCenter.y), new Vector2(boundsMax.x, boundsCenter.y));
+            Gizmos.DrawLine(new Vector2(boundsCenter.x, boundsMin.y), new Vector2(boundsCenter.x, boundsMax.y));
+
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(_motherRoamTarget, 0.18f);
+            Gizmos.DrawLine(transform.position, _motherRoamTarget);
+
+            if (_motherRoamVelocity.sqrMagnitude > 0.0001f)
+            {
+                Vector2 position = transform.position;
+                Vector2 directionEnd = position + _motherRoamVelocity.normalized * 0.85f;
+                Gizmos.color = Color.white;
+                Gizmos.DrawLine(position, directionEnd);
+                Gizmos.DrawWireSphere(directionEnd, 0.08f);
+            }
         }
 
         private static void DrawSegmentedQuadraticGizmo(Vector2[] points, Vector2[] controlPoints, int samples)

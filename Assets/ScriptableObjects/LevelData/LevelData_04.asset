@@ -15,5 +15,7 @@ MonoBehaviour:
   _levelNumber: 4
   _waves:
   - {fileID: 11400000, guid: 516f4a7ae215ce44f8906539ee65e3ff, type: 2}
-  - {fileID: 11400000, guid: 2e111a1a3293d174294587cc9ae87107, type: 2}
-  - {fileID: 11400000, guid: 3502b3e1f8e5a2a4e9be4375ba4758c7, type: 2}
+  - {fileID: 11400000, guid: c8abf26df6d8dcf41af761b5ab8f0a62, type: 2}
+  - {fileID: 11400000, guid: d5289921901682e4b8031152119a574a, type: 2}
+  - {fileID: 11400000, guid: 2b92abd410054d642b40d0bb3aae8b42, type: 2}
+  - {fileID: 11400000, guid: 58ece789b892bbb48834bc47aab03826, type: 2}
