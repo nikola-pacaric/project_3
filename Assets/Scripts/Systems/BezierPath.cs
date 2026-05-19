@@ -8,6 +8,8 @@ namespace Warblade.Systems
     /// </summary>
     public static class BezierPath
     {
+        private const int DefaultSamplesPerSegment = 12;
+
         /// <summary>
         /// Quadratic Bezier: B(t) = (1-t)^2 * p0 + 2(1-t)t * p1 + t^2 * p2.
         /// </summary>
@@ -40,9 +42,14 @@ namespace Warblade.Systems
         }
 
         /// <summary>
-        /// Evaluates a chain of quadratic Bezier segments. Midpoint controls produce straight lines.
+        /// Evaluates a chain of quadratic Bezier segments by normalized distance along the full path.
+        /// Midpoint controls produce straight lines.
         /// </summary>
-        public static Vector2 EvaluateSegmentedQuadraticPath(Vector2[] points, Vector2[] controlPoints, float t)
+        public static Vector2 EvaluateSegmentedQuadraticPath(
+            Vector2[] points,
+            Vector2[] controlPoints,
+            float t,
+            int samplesPerSegment = DefaultSamplesPerSegment)
         {
             if (points == null || points.Length == 0)
             {
@@ -61,21 +68,67 @@ namespace Warblade.Systems
 
             float clampedT = Mathf.Clamp01(t);
             int segmentCount = Mathf.Min(points.Length - 1, controlPoints.Length);
-            float scaledT = clampedT * segmentCount;
-            int segmentIndex = Mathf.Min(Mathf.FloorToInt(scaledT), segmentCount - 1);
-            float segmentT = scaledT - segmentIndex;
+            if (segmentCount <= 0)
+            {
+                return points[points.Length - 1];
+            }
 
-            return EvaluateQuadratic(
-                points[segmentIndex],
-                controlPoints[segmentIndex],
-                points[segmentIndex + 1],
-                segmentT);
+            if (clampedT <= 0f)
+            {
+                return points[0];
+            }
+
+            if (clampedT >= 1f)
+            {
+                return points[segmentCount];
+            }
+
+            int clampedSamples = Mathf.Max(1, samplesPerSegment);
+            float totalLength = ApproximateSegmentedQuadraticPathLength(points, controlPoints, clampedSamples);
+            if (totalLength <= Mathf.Epsilon)
+            {
+                return points[segmentCount];
+            }
+
+            float targetDistance = totalLength * clampedT;
+            float accumulatedDistance = 0f;
+            for (int segmentIndex = 0; segmentIndex < segmentCount; segmentIndex++)
+            {
+                Vector2 previousPoint = points[segmentIndex];
+                for (int sampleIndex = 1; sampleIndex <= clampedSamples; sampleIndex++)
+                {
+                    float sampleT = sampleIndex / (float)clampedSamples;
+                    Vector2 samplePoint = EvaluateQuadratic(
+                        points[segmentIndex],
+                        controlPoints[segmentIndex],
+                        points[segmentIndex + 1],
+                        sampleT);
+                    float sampleDistance = Vector2.Distance(previousPoint, samplePoint);
+
+                    if (accumulatedDistance + sampleDistance >= targetDistance)
+                    {
+                        float distanceIntoSample = targetDistance - accumulatedDistance;
+                        float sampleBlend = sampleDistance > Mathf.Epsilon
+                            ? distanceIntoSample / sampleDistance
+                            : 0f;
+                        return Vector2.Lerp(previousPoint, samplePoint, sampleBlend);
+                    }
+
+                    accumulatedDistance += sampleDistance;
+                    previousPoint = samplePoint;
+                }
+            }
+
+            return points[segmentCount];
         }
 
         /// <summary>
         /// Approximates the total length of a segmented quadratic path.
         /// </summary>
-        public static float ApproximateSegmentedQuadraticPathLength(Vector2[] points, Vector2[] controlPoints, int samplesPerSegment = 12)
+        public static float ApproximateSegmentedQuadraticPathLength(
+            Vector2[] points,
+            Vector2[] controlPoints,
+            int samplesPerSegment = DefaultSamplesPerSegment)
         {
             if (points == null || points.Length < 2 || controlPoints == null || controlPoints.Length == 0)
             {

@@ -14,66 +14,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 0, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  _enemyPrefab: {fileID: 6595619327578328252, guid: 7476fadb23450274888bf2b45a660fa9, type: 3}
+  _enemyPrefab: {fileID: 6595619327578328252, guid: b97c551f44e845b478cffe6345e3193c, type: 3}
   _formationAnchorPosition: {x: 0, y: 6}
   _formationMotionMode: 1
   _formationSwayAmplitude: 0.5

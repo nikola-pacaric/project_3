@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37777848def89bc44bfa241dbbcc28b0, type: 3}
-  m_Name: EnemyData_BonusStyle
+  m_Name: EnemyData_BonusSnake_Tier1
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.EnemyData
   _maxHealth: 1
   _scoreValue: 200
-  _entrySpeed: 4
+  _entrySpeed: 6
   _diveSpeed: 7
   _diveBottomY: -6
   _behaviorMode: 2
   _diesAtDiveBottom: 1
   _canFire: 0
+  _limitConcurrentDivesAboveFinalThreshold: 0
   _passThroughChance: 1
   _respawnTopY: 6
   _diveCooldownMin: 0.15
@@ -28,5 +29,17 @@ MonoBehaviour:
   _fireCooldownMax: 999
   _lingerDurationMin: 0
   _lingerDurationMax: 0
-  _spriteColor: {r: 1, g: 0.9, b: 0.25, a: 1}
+  _diveCurveUpMin: 0.35
+  _diveCurveUpMax: 1.2
+  _diveCurveSideMin: 0.75
+  _diveCurveSideMax: 2.25
+  _diveAimOffsetXMin: -0.75
+  _diveAimOffsetXMax: 0.75
+  _diveTrackingPortion: 0.7
+  _motherRoamSpeed: 2.5
+  _motherRoamBoundsMin: {x: -10.75, y: 1.25}
+  _motherRoamBoundsMax: {x: 10.75, y: 4.75}
+  _motherRoamRetargetIntervalMin: 1.25
+  _motherRoamRetargetIntervalMax: 3
+  _spriteColor: {r: 1, g: 0.9803922, b: 0.9803922, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

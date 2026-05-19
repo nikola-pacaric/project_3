@@ -3683,6 +3683,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d015631cfad22de4f849d868b29247ae, type: 2}
   - {fileID: 11400000, guid: 1fb43c4fc37c8f842bc818f3fe7502e5, type: 2}
   - {fileID: 11400000, guid: 15d61f720c24379418525e3ec8732d3b, type: 2}
+  - {fileID: 11400000, guid: 894f88a64d5c1be46863d9891d0ddc44, type: 2}
   _campaignBosses:
   - _levelNumber: 25
     _boss: {fileID: 1434712353}
@@ -3692,7 +3693,7 @@ MonoBehaviour:
     _boss: {fileID: 1539885663}
   - _levelNumber: 100
     _boss: {fileID: 1734419065}
-  _startingLevel: 5
+  _startingLevel: 8
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
