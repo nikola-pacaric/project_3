@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: WaveData_L7_Mother_02
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
-  - LocalPosition: {x: -6.45, y: -4.68}
+  - LocalPosition: {x: -1.71, y: 1.6}
     EnemyData: {fileID: 11400000, guid: 8ccfc651a8a94df9827911c0140349dc, type: 2}
     EntryControlOffset: {x: 3.76, y: -1}
   _enemyPrefab: {fileID: 8812367059781503115, guid: fbf795e764400854183515633b80d85a, type: 3}
+  _slotPositionMode: 1
   _formationAnchorPosition: {x: 4.74, y: 6.28}
   _formationMotionMode: 1
   _formationSwayAmplitude: 0.5

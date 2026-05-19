@@ -94,7 +94,8 @@ namespace Warblade.Systems
 
             if (_waveData != null)
             {
-                return (Vector2)transform.position + _waveData.GetSlot(slotIndex).LocalPosition;
+                Vector2 motionOffset = (Vector2)transform.position - (Vector2)_anchorPosition;
+                return _waveData.GetSlotWorldPosition(slotIndex) + motionOffset;
             }
 
             return (Vector2)transform.position + _data.GetSlot(slotIndex).LocalPosition;

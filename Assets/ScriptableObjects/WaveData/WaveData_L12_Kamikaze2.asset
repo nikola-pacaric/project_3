@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8a2f3f5f9d24ac89f6f3b19a2d7c4e1, type: 3}
-  m_Name: WaveData_L4_Kamikaze2
+  m_Name: WaveData_L12_Kamikaze2
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
   - LocalPosition: {x: -4.6, y: -3}
@@ -28,7 +28,7 @@ MonoBehaviour:
   - LocalPosition: {x: -1.4, y: -3}
     EnemyData: {fileID: 11400000, guid: 90d09db9e30f982438e49bab4ee9223d, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  _enemyPrefab: {fileID: 6595619327578328252, guid: c1651b36679465e43bd613453d35af49, type: 3}
+  _enemyPrefab: {fileID: 6595619327578328252, guid: e6d1acb206f7973498c5a9fd4dc35a61, type: 3}
   _slotPositionMode: 1
   _formationAnchorPosition: {x: -3, y: 6}
   _formationMotionMode: 1

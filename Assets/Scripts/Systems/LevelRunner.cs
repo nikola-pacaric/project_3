@@ -77,7 +77,7 @@ namespace Warblade.Systems
             {
                 WaveData.WaveSlot slot = wave.GetSlot(slotIndex);
                 Vector2 start = entryStartCenter + entrySpacingStep * (slotIndex - halfSpan);
-                Vector2 end = anchor + slot.LocalPosition;
+                Vector2 end = wave.GetSlotWorldPosition(slotIndex);
 
                 if (wave.UsesWaypointEntryPath)
                 {

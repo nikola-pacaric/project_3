@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37777848def89bc44bfa241dbbcc28b0, type: 3}
+  m_Name: EnemyData_Kamikaze_Tier2
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.EnemyData
+  _maxHealth: 2
+  _scoreValue: 100
+  _entrySpeed: 2.5
+  _diveSpeed: 0
+  _diveBottomY: -6
+  _behaviorMode: 1
+  _diesAtDiveBottom: 0
+  _canFire: 1
+  _limitConcurrentDivesAboveFinalThreshold: 0
+  _passThroughChance: 0
+  _respawnTopY: 6
+  _diveCooldownMin: 0.25
+  _diveCooldownMax: 0.75
+  _fireCooldownMin: 0.5
+  _fireCooldownMax: 4
+  _lingerDurationMin: 0
+  _lingerDurationMax: 0
+  _diveCurveUpMin: 0.35
+  _diveCurveUpMax: 1.2
+  _diveCurveSideMin: 0.75
+  _diveCurveSideMax: 2.25
+  _diveAimOffsetXMin: -0.75
+  _diveAimOffsetXMax: 0.75
+  _diveTrackingPortion: 0.7
+  _motherRoamSpeed: 2.5
+  _motherRoamBoundsMin: {x: -10.75, y: 1.25}
+  _motherRoamBoundsMax: {x: 10.75, y: 4.75}
+  _motherRoamRetargetIntervalMin: 1.25
+  _motherRoamRetargetIntervalMax: 3
+  _spriteColor: {r: 1, g: 0.9803922, b: 0.9803922, a: 1}
+  _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

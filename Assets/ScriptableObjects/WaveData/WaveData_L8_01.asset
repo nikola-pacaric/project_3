@@ -13,67 +13,68 @@ MonoBehaviour:
   m_Name: WaveData_L8_01
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: 6}
     EnemyData: {fileID: 11400000, guid: 7b6a67b0c61c437da3399414fbe11458, type: 2}
     EntryControlOffset: {x: 0, y: 0}
   _enemyPrefab: {fileID: 6595619327578328252, guid: b97c551f44e845b478cffe6345e3193c, type: 3}
+  _slotPositionMode: 1
   _formationAnchorPosition: {x: 0, y: 6}
   _formationMotionMode: 1
   _formationSwayAmplitude: 0.5

@@ -25,6 +25,12 @@ namespace Warblade.Data
             HorizontalSway = 1
         }
 
+        public enum SlotPositionMode
+        {
+            AnchorRelative = 0,
+            World = 1
+        }
+
         public enum NextWaveTrigger
         {
             StartNextImmediately = 0,
@@ -35,7 +41,9 @@ namespace Warblade.Data
         [System.Serializable]
         public struct WaveSlot
         {
+            [Tooltip("Final formation position. Interpreted by Slot Position Mode.")]
             public Vector2 LocalPosition;
+            [Tooltip("Optional per-slot override. Leave empty to use the EnemyData assigned on the wave enemy prefab.")]
             public EnemyData EnemyData;
             [Tooltip("Added to the midpoint of (spawn start -> slot world) for Bezier entry shape.")]
             public Vector2 EntryControlOffset;
@@ -51,8 +59,10 @@ namespace Warblade.Data
 
         [SerializeField] private WaveSlot[] _slots;
         [Header("Enemy")]
-        [Tooltip("Prefab used for every enemy in this wave. Slot EnemyData controls stats and behavior.")]
+        [Tooltip("Prefab used for every enemy in this wave. Its EnemyData is the default; slot EnemyData can override it.")]
         [SerializeField] private GameObject _enemyPrefab;
+        [Tooltip("Anchor Relative keeps slot positions offset from Formation Anchor. World keeps slot positions fixed when Formation Anchor moves.")]
+        [SerializeField] private SlotPositionMode _slotPositionMode = SlotPositionMode.AnchorRelative;
         [SerializeField] private Vector2 _formationAnchorPosition = new Vector2(0f, 0f);
         [Header("Formation Motion")]
         [SerializeField] private FormationMotionMode _formationMotionMode = FormationMotionMode.HorizontalSway;
@@ -80,6 +90,8 @@ namespace Warblade.Data
 
         public int SlotCount => _slots == null ? 0 : _slots.Length;
         public Enemy EnemyPrefab => _enemyPrefab != null ? _enemyPrefab.GetComponent<Enemy>() : null;
+        public EnemyData DefaultEnemyData => EnemyPrefab != null ? EnemyPrefab.Data : null;
+        public SlotPositionMode SlotPositions => _slotPositionMode;
         public Vector2 FormationAnchorPosition => _formationAnchorPosition;
         public FormationMotionMode MotionMode => _formationMotionMode;
         public float FormationSwayAmplitude => _formationSwayAmplitude;
@@ -126,7 +138,9 @@ namespace Warblade.Data
                 return _formationAnchorPosition;
             }
 
-            return _formationAnchorPosition + _slots[slotIndex].LocalPosition;
+            return _slotPositionMode == SlotPositionMode.World
+                ? _slots[slotIndex].LocalPosition
+                : _formationAnchorPosition + _slots[slotIndex].LocalPosition;
         }
 
         public EnemyData GetEnemyDataForSlot(int slotIndex)
@@ -137,7 +151,7 @@ namespace Warblade.Data
                 return null;
             }
 
-            return _slots[slotIndex].EnemyData;
+            return _slots[slotIndex].EnemyData != null ? _slots[slotIndex].EnemyData : DefaultEnemyData;
         }
 
         public Vector2 GetEntryPathWaypointWorldPosition(int waypointIndex)
@@ -230,6 +244,10 @@ namespace Warblade.Data
             {
                 Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' enemy prefab has no {nameof(Enemy)} component.");
             }
+            else if (DefaultEnemyData == null)
+            {
+                Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' enemy prefab has no default {nameof(EnemyData)}.");
+            }
 
             if (_slots == null || _slots.Length == 0)
             {
@@ -239,9 +257,9 @@ namespace Warblade.Data
 
             for (int i = 0; i < _slots.Length; i++)
             {
-                if (_slots[i].EnemyData != null) continue;
+                if (_slots[i].EnemyData != null || DefaultEnemyData != null) continue;
 
-                Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' has missing EnemyData at slot {i}.");
+                Debug.LogError($"[{nameof(WaveData)}] Wave '{name}' slot {i} has no EnemyData and the prefab has no default.");
             }
         }
 

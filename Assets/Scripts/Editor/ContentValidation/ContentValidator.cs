@@ -66,17 +66,26 @@ namespace Warblade.Editor.ContentValidation
                     continue;
                 }
 
+                EnemyData defaultEnemyData = null;
                 if (wave.EnemyPrefab == null)
                 {
                     report.Error("Wave has no enemy prefab.", wave);
+                }
+                else
+                {
+                    defaultEnemyData = wave.DefaultEnemyData;
+                    if (defaultEnemyData == null)
+                    {
+                        report.Error("Wave enemy prefab has no default EnemyData.", wave);
+                    }
                 }
 
                 for (int slotIndex = 0; slotIndex < wave.SlotCount; slotIndex++)
                 {
                     WaveData.WaveSlot slot = wave.GetSlot(slotIndex);
-                    if (slot.EnemyData == null)
+                    if (slot.EnemyData == null && defaultEnemyData == null)
                     {
-                        report.Error($"Wave slot {slotIndex} has no EnemyData.", wave);
+                        report.Error($"Wave slot {slotIndex} has no EnemyData and the prefab has no default.", wave);
                     }
                 }
 

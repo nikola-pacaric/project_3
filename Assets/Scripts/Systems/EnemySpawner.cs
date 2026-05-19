@@ -262,11 +262,11 @@ namespace Warblade.Systems
             for (int slotIndex = 0; slotIndex < wave.SlotCount; slotIndex++)
             {
                 WaveData.WaveSlot slot = wave.GetSlot(slotIndex);
-                EnemyData enemyData = slot.EnemyData;
+                EnemyData enemyData = wave.GetEnemyDataForSlot(slotIndex);
                 if (enemyData == null)
                 {
                     Debug.LogError(
-                        $"[{nameof(EnemySpawner)}] Slot {slotIndex} in wave '{wave.name}' has no EnemyData.");
+                        $"[{nameof(EnemySpawner)}] Slot {slotIndex} in wave '{wave.name}' has no EnemyData and the prefab has no default.");
                     if (perSlotDelay > 0f) yield return new WaitForSeconds(perSlotDelay);
                     continue;
                 }
