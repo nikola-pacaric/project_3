@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8a2f3f5f9d24ac89f6f3b19a2d7c4e1, type: 3}
+  m_Name: WaveData_L11_01
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
+  _slots:
+  - LocalPosition: {x: 8, y: -2}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: 8, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: 6, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: 4, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: 2, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: 0, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -2, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -4, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -6, y: -3}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -6, y: -2}
+    EnemyData: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+    EntryControlOffset: {x: 0, y: 0}
+  _enemyPrefab: {fileID: 6595619327578328252, guid: 30833b6d47eac8849952c3fa525b8819, type: 3}
+  _formationAnchorPosition: {x: -1, y: 6}
+  _formationMotionMode: 1
+  _formationSwayAmplitude: 0.5
+  _formationSwaySpeed: 1
+  _formationSwayPhase: 0
+  _spawnDelay: 2
+  _nextWaveTrigger: 0
+  _entrySide: 0
+  _entryDistance: 0
+  _useCustomEntryStartCenter: 0
+  _entryStartCenter: {x: 0, y: 8}
+  _entrySpacing: 0
+  _perSlotDelay: 0.5
+  _entryPathMode: 1
+  _entryPathWaypoints:
+  - LocalPosition: {x: -2, y: -8}
+    ControlOffsetFromPrevious: {x: 0, y: 0}
+  - LocalPosition: {x: 3, y: -7}
+    ControlOffsetFromPrevious: {x: 0, y: 0}
+  - LocalPosition: {x: 6, y: -8}
+    ControlOffsetFromPrevious: {x: 0, y: 0}
+  - LocalPosition: {x: 8, y: -6}
+    ControlOffsetFromPrevious: {x: 0, y: 0}
+  _entryPathFinalControlOffset: {x: 0, y: 0}
