@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37777848def89bc44bfa241dbbcc28b0, type: 3}
   m_Name: EnemyData_MotherAlien_Tier2
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.EnemyData
-  _maxHealth: 6
+  _maxHealth: 7
   _scoreValue: 500
   _entrySpeed: 1.5
   _diveSpeed: 3.5

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b2c2ad11297438f8a75d94ac5f690fd, type: 3}
   m_Name: LevelData_12
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.LevelData
-  _levelNumber: 11
+  _levelNumber: 12
   _waves:
   - {fileID: 11400000, guid: e7829256bed4b75408f58268dc38e81e, type: 2}
   - {fileID: 11400000, guid: c1fff9d8d22b705479d3d61009492bbe, type: 2}

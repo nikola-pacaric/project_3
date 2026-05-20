@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8a2f3f5f9d24ac89f6f3b19a2d7c4e1, type: 3}
+  m_Name: WaveData_L17_01
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
+  _slots:
+  - LocalPosition: {x: -7, y: 3}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -6, y: 3}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -5, y: 3}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -4, y: 3}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -3, y: 3}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -2, y: 3}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -7, y: 1}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -6, y: 1}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -5, y: 1}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -4, y: 1}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -3, y: 1}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -2, y: 1}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  - LocalPosition: {x: -1, y: 1}
+    EnemyData: {fileID: 0}
+    EntryControlOffset: {x: 0, y: 0}
+  _enemyPrefab: {fileID: 6595619327578328252, guid: 19fe0060e2822be49b2a595228304848, type: 3}
+  _slotPositionMode: 1
+  _formationAnchorPosition: {x: -7, y: -6}
+  _formationMotionMode: 1
+  _formationSwayAmplitude: 0.5
+  _formationSwaySpeed: 1
+  _formationSwayPhase: 0
+  _spawnDelay: 2
+  _nextWaveTrigger: 0
+  _entrySide: 0
+  _entryDistance: 0
+  _useCustomEntryStartCenter: 0
+  _entryStartCenter: {x: 0, y: 8}
+  _entrySpacing: 0
+  _perSlotDelay: 0.5
+  _entryPathMode: 1
+  _entryPathWaypoints:
+  - LocalPosition: {x: 0, y: 9}
+    ControlOffsetFromPrevious: {x: 0, y: 0}
+  - LocalPosition: {x: 3, y: 10}
+    ControlOffsetFromPrevious: {x: -0.5, y: 0.5}
+  - LocalPosition: {x: 6, y: 9}
+    ControlOffsetFromPrevious: {x: 0.5, y: 0.5}
+  - LocalPosition: {x: 6, y: 5}
+    ControlOffsetFromPrevious: {x: 1, y: 0}
+  - LocalPosition: {x: 3, y: 5}
+    ControlOffsetFromPrevious: {x: 0, y: -1}
+  _entryPathFinalControlOffset: {x: 0, y: 0}
