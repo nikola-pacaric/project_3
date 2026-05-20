@@ -2723,7 +2723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1318416732
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3687,6 +3687,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 077818035f23b7c4b8bcbe06da2a9089, type: 2}
   - {fileID: 11400000, guid: bc1f5bddf2179294b9b078c399e638cd, type: 2}
   - {fileID: 11400000, guid: c657d84817121164aa39c7caa32840e3, type: 2}
+  - {fileID: 11400000, guid: 906d9def584146a47a520a63c70935bb, type: 2}
+  - {fileID: 11400000, guid: 7749b6731a30c15429dc0c4ab9402812, type: 2}
+  - {fileID: 11400000, guid: 5c4cb59d9d76e01478f25e9e288d88e8, type: 2}
+  - {fileID: 11400000, guid: fa5715488cb850d42a3f1ff409679dde, type: 2}
+  - {fileID: 11400000, guid: 15a7bb89cdfe452429040d0d06ccf67e, type: 2}
+  - {fileID: 11400000, guid: c504a8df8043cf14f9473b607004d4d6, type: 2}
+  - {fileID: 11400000, guid: 0d7683f5b2dde5641994945a5a1645c0, type: 2}
+  - {fileID: 11400000, guid: e01900fc0ca85124a829257852b9b43a, type: 2}
+  - {fileID: 11400000, guid: 136d3e45666ada243b863fa31fe747ac, type: 2}
   _campaignBosses:
   - _levelNumber: 25
     _boss: {fileID: 1434712353}

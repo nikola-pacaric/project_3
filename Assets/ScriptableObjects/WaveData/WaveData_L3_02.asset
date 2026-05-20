@@ -50,7 +50,7 @@ MonoBehaviour:
   _formationSwayAmplitude: 0.5
   _formationSwaySpeed: 1
   _formationSwayPhase: 0
-  _spawnDelay: 2
+  _spawnDelay: 0
   _nextWaveTrigger: 2
   _entrySide: 1
   _entryDistance: 0

@@ -10,44 +10,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8a2f3f5f9d24ac89f6f3b19a2d7c4e1, type: 3}
-  m_Name: WaveData_L15_04
+  m_Name: WaveData_L20_Kamikaze5
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
-  - LocalPosition: {x: 1.5, y: 0}
+  - LocalPosition: {x: 4.4, y: -3}
     EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 2.5, y: 0}
+  - LocalPosition: {x: 5.2, y: -3}
     EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 3.5, y: 0}
+  - LocalPosition: {x: 6, y: -3}
     EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 4.5, y: 0}
+  - LocalPosition: {x: 6.8, y: -3}
     EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 5.5, y: 0}
+  - LocalPosition: {x: 7.6, y: -3}
     EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 6.5, y: 0}
-    EnemyData: {fileID: 0}
-    EntryControlOffset: {x: 0, y: 0}
-  _enemyPrefab: {fileID: 6595619327578328252, guid: e77aab94195b3644eb43b7de6172e669, type: 3}
+  _enemyPrefab: {fileID: 6595619327578328252, guid: e543595379d14634ab3781a12cf43f06, type: 3}
   _slotPositionMode: 1
-  _formationAnchorPosition: {x: 11, y: 2}
+  _formationAnchorPosition: {x: 6, y: 6}
   _formationMotionMode: 1
   _formationSwayAmplitude: 0.5
   _formationSwaySpeed: 1
   _formationSwayPhase: 0
-  _spawnDelay: 0
-  _nextWaveTrigger: 0
+  _spawnDelay: 3
+  _nextWaveTrigger: 2
   _entrySide: 0
   _entryDistance: 0
   _useCustomEntryStartCenter: 0
-  _entryStartCenter: {x: 0, y: 8}
+  _entryStartCenter: {x: 0, y: 0}
   _entrySpacing: 0
-  _perSlotDelay: 0.5
+  _perSlotDelay: 0
   _entryPathMode: 1
   _entryPathWaypoints:
-  - LocalPosition: {x: -4.5, y: -2}
+  - LocalPosition: {x: 0, y: -1}
     ControlOffsetFromPrevious: {x: 0, y: 0}
-  _entryPathFinalControlOffset: {x: 0, y: 0}
+  _entryPathFinalControlOffset: {x: 0, y: -3.5}
