@@ -2,7 +2,7 @@
 
 ## Summary
 
-M6 scales the game from the current five-level vertical slice into the full content structure: 100 authored levels, bosses at levels 25 / 50 / 75 / 100, infinite cycle scaling after level 100, two placeholder mini-games, and developer tools for testing the expanded progression.
+M6 scales the game from the current five-level vertical slice into the full core campaign structure: 100 authored levels, bosses at levels 25 / 50 / 75 / 100, infinite cycle scaling after level 100, and developer tools for testing the expanded progression.
 
 This milestone is mostly content-model and authoring work. The important risk is not writing 100 assets; it is making sure the content model is safe before authoring those assets. Formation shape/composition separation, level routing, validation, and dev tools happen before the large authoring pass.
 
@@ -21,8 +21,7 @@ Key decisions locked:
   - block level 3: mother-alien bug encounter
   - block level 4: kamikaze / fast snake bonus-risk wave
 - Level 4 of each enemy-set block can award a score bonus if the player kills every kamikaze/fast-moving enemy before they leave.
-- Mini-games are functional placeholder gameplay, not polished presentation.
-- Meteor Storm and Memory Match are random popups, only eligible after a wave has completed.
+- Mini-games are deferred to v1.1 so v1.0 can focus on the playable 100-level campaign, polish, tuning, and WebGL stability.
 - The 100 levels are first-pass authored and playable, not final balanced.
 - Infinite cycles after level 100 must be reconstructible from `currentLevel`.
 - No mobile/touch-specific input, UI, or architecture.
@@ -40,7 +39,6 @@ Code:
 - [x] Decide the runtime routing model before code changes:
   - normal wave level
   - boss level
-  - mini-game level/event
   - shop transition
 - [x] Define how `currentLevel` maps to:
   - boss levels: `currentLevel % 25 == 0`
@@ -55,7 +53,7 @@ Code:
   - step 2: harder version
   - step 3: mother-alien bug encounter
   - step 4: kamikaze / fast snake bonus-risk wave
-- [x] Define mini-game eligibility: Meteor Storm and Memory Match can randomly trigger only after a wave has completed.
+- [x] Defer mini-game routing to v1.1.
 - Keep the existing M5 test boss path until the real boss routing is ready, then remove or demote it to a dev-only helper.
 
 Editor:
@@ -252,7 +250,7 @@ Status: Complete.
 Scope note:
 - Phase 7 is not meant to become a full debug console before the 100-level authoring pass.
 - Build only the minimum dev-only helpers needed to make level authoring and validation practical.
-- The level-jump pieces already added during Phase 5/6 count toward this phase; add cash grant, kill-all, or force mini-game only when the next authoring/testing step actually needs them.
+- The level-jump pieces already added during Phase 5/6 count toward this phase; add cash grant or kill-all only when the next authoring/testing step actually needs them.
 
 Code:
 - Add dev-only tools needed to test the expanded game:
@@ -260,7 +258,6 @@ Code:
   - [x] cash grant deferred until shop/economy testing blocks authoring
   - [x] kill-all active enemies deferred until wave authoring iteration is too slow
   - [x] force boss encounter
-  - [x] force mini-game deferred until mini-game flow exists
 - [x] Keep tools out of normal player UI.
 - [x] Prefer context menu methods or clearly gated debug UI.
 
@@ -279,130 +276,75 @@ Validation note:
 
 ## Phase 8 — 100-Level Authoring Pass
 
-Status: Pending.
+Status: Complete.
 
 Code:
-- Add only the code support needed for scalable level authoring.
-- Avoid tuning-specific one-off code branches.
+- [x] Add only the code support needed for scalable level authoring.
+- [x] Avoid tuning-specific one-off code branches.
 
 Editor:
-- Author all 100 `LevelData` assets.
-- Use reusable formation shapes plus wave composition/loadouts.
-- Place boss levels at 25, 50, 75, and 100.
-- Create first-pass difficulty progression across the full set.
-- Keep assets placeholder and readable.
+- [x] Author the full 100-level campaign route: 96 normal `LevelData` assets plus 4 boss encounters.
+- [x] Use reusable formation shapes plus wave composition/loadouts.
+- [x] Place boss levels at 25, 50, 75, and 100.
+- [x] Create first-pass difficulty progression across the full set.
+- [x] Keep assets placeholder and readable.
 
 Acceptance:
-- Levels 1-100 all resolve through `LevelManager`.
-- No missing level numbers.
-- No duplicate level numbers.
-- Boss levels are present at 25 / 50 / 75 / 100.
+- [x] Levels 1-100 all resolve through `LevelManager`.
+- [x] No missing level numbers.
+- [x] No duplicate level numbers.
+- [x] Boss levels are present at 25 / 50 / 75 / 100.
+
+Validation note:
+- [x] `Warblade/Validate Content` passed with 0 warnings.
+- [x] `Warblade/Validate M6 Gate (1-100)` passed with 0 warnings.
+- [x] Manually tested chapter boundaries 24 -> 25 -> 26, 49 -> 50 -> 51, 74 -> 75 -> 76, and 99 -> 100 -> 101.
+- [x] Pickups spawned, applied correctly, and level completion continued into the next level.
+- [x] First-pass content is playable but intentionally not final-balanced; final difficulty and economy tuning remain deferred to M9.
 
 ---
 
-## Phase 9 — Mini-Game Flow Foundation
+## Phase 9 — M6 Gate Cleanup and Validation
 
-Status: Pending.
-
-Code:
-- Add mini-game trigger logic in `LevelManager`.
-- Add generic mini-game scene/flow support:
-  - enter mini-game
-  - run mini-game
-  - award reward
-  - return to normal progression
-- Keep mini-game state separate from normal wave/boss state.
-- Preserve score, cash, lives, upgrades, and active run state correctly.
-
-Editor:
-- Create placeholder mini-game scene(s) or in-scene containers manually.
-- Wire scene/build settings manually if needed.
-
-Acceptance:
-- The game can enter a placeholder mini-game, complete it, award a reward, and return to level progression.
-
----
-
-## Phase 10 — Meteor Storm Mini-Game
-
-Status: Pending.
+Status: Complete.
 
 Code:
-- Implement Meteor Storm as placeholder gameplay:
-  - player dodges falling meteors
-  - gem pickups appear during the round
-  - reward is granted at the end
-- Reuse existing pooling patterns for meteors/pickups if they spawn repeatedly.
-- Keep controls desktop keyboard only.
+- [x] Remove noisy temporary logs.
+- [x] Keep useful context-menu debug helpers.
+- [x] Fix obvious null-reference and missing-reference warnings.
+- [x] Keep placeholder visuals.
 
 Editor:
-- Create placeholder meteor and gem visuals manually.
-- Tune first-pass round duration and spawn rates.
-
-Acceptance:
-- Meteor Storm can trigger, be played, and return a reward.
-- Player can survive/fail through normal damage/life rules or a clear mini-game-specific rule.
-
----
-
-## Phase 11 — Memory Match Mini-Game
-
-Status: Pending.
-
-Code:
-- Implement Memory Match as placeholder gameplay:
-  - card grid
-  - reveal cards
-  - match pairs
-  - reward on completion
-- Use keyboard/mouse desktop interaction only.
-- Keep the UI simple and unpolished until M8.
-
-Editor:
-- Create placeholder card visuals manually.
-- Tune first-pass card count and reward.
-
-Acceptance:
-- Memory Match can trigger, be completed, award a reward, and return to normal progression.
-
----
-
-## Phase 12 — M6 Gate Cleanup and Validation
-
-Status: Pending.
-
-Code:
-- Remove noisy temporary logs.
-- Keep useful context-menu debug helpers.
-- Fix obvious null-reference and missing-reference warnings.
-- Keep placeholder visuals.
-
-Editor:
-- Use dev tools to reach level 100.
-- Play into cycle 2.
-- Test all boss levels.
-- Test both mini-games.
-- Run a WebGL build manually.
+- [x] Use dev tools to reach level 100.
+- [x] Play into cycle 2.
+- [x] Test all boss levels.
+- [x] Run a WebGL build manually.
 
 Acceptance:
 - M6 milestone gate:
-  - level 100 is reachable through normal progression or dev tools
-  - cycle 2 begins after level 100
-  - cycle tinting and increased difficulty are visible
-  - bosses appear at 25 / 50 / 75 / 100
-  - all 100 `LevelData` assets resolve without missing/duplicate numbers
-  - Meteor Storm triggers, plays, rewards, and returns
-  - Memory Match triggers, plays, rewards, and returns
-  - shop/loot/run-state systems still work
-  - WebGL build runs in browser
+  - [x] level 100 is reachable through normal progression or dev tools
+  - [x] cycle 2 begins after level 100
+  - [x] cycle tinting and increased difficulty are visible
+  - [x] bosses appear at 25 / 50 / 75 / 100
+  - [x] all 100 `LevelData` assets resolve without missing/duplicate numbers
+  - [x] shop/loot/run-state systems still work
+  - [x] WebGL build runs in browser
+
+Validation note:
+- [x] `Warblade/Validate Content` passed with 0 warnings.
+- [x] `Warblade/Validate M6 Gate (1-100)` passed with 0 warnings.
+- [x] Boss levels played correctly.
+- [x] Level 101 cycle scaling worked after creating and assigning a `CycleScalingData` asset to `LevelManager`; enemies were visibly darker and stronger.
+- [x] M6 is complete for now. Final tuning, art, SFX, VFX, leaderboard integration, and mini-games are outside this milestone.
 
 ---
 
 ## Cut / Defer From M6
 
-- Final difficulty balance stays in M9.
-- Final economy/drop-rate tuning stays in M9.
-- Real art, generated sprite sheets, VFX, lighting, particles, audio, and screen shake stay in M8.
-- UGS Authentication and Leaderboards stay in M7.
-- Main menu, settings, pause polish, and animated transitions stay in M8.
+- Final difficulty balance stays in M8.
+- Final economy/drop-rate tuning stays in M8.
+- Real art, generated sprite sheets, VFX, lighting, particles, audio, and screen shake stay in M7.
+- Mini-games are deferred to v1.1.
+- UGS Authentication and Leaderboards stay in M9.
+- Main menu, settings, pause polish, and animated transitions stay in M7.
 - Mobile/touch support remains out of scope.

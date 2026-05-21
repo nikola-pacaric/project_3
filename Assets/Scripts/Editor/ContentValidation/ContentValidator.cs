@@ -169,14 +169,24 @@ namespace Warblade.Editor.ContentValidation
             int requiredMaxLevel = strictCampaignGate ? CampaignLevelCount : highestLevel;
             for (int levelNumber = 1; levelNumber <= requiredMaxLevel; levelNumber++)
             {
+                if (IsCampaignBossLevel(levelNumber))
+                {
+                    continue;
+                }
+
                 if (!levelsByNumber.ContainsKey(levelNumber))
                 {
                     string message = strictCampaignGate
-                        ? $"Missing LevelData for campaign level {levelNumber}."
-                        : $"Missing LevelData inside authored range at level {levelNumber}.";
+                        ? $"Missing LevelData for normal campaign level {levelNumber}."
+                        : $"Missing LevelData inside authored normal-level range at level {levelNumber}.";
                     report.Error(message, null);
                 }
             }
+        }
+
+        private static bool IsCampaignBossLevel(int levelNumber)
+        {
+            return levelNumber > 0 && CycleScalingData.GetCampaignLevelForCycle(levelNumber) % 25 == 0;
         }
 
         private static void ValidateLevelWaves(LevelData level, ValidationReport report)

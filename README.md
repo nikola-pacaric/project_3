@@ -17,11 +17,11 @@ The project currently has the core shooter loop, M4 reward loop, M5 boss archite
 - ScriptableObject-driven enemy, wave, formation, and level data
 - Run stats, lives, armour, weapon tiers, and event-channel foundations
 - Pickup drops, timed buffs, cash rewards, stat upgrades, and the shop overlay
-- Four campaign boss routes at levels 25, 50, 75, and 100
+- First-pass 100-level campaign route: 96 normal levels plus boss routes at 25, 50, 75, and 100
 - M6 wave-authoring safeguards and content validation tools
 - Cycle scaling code for levels 101+ using repeated campaign content, runtime health/speed multipliers, and placeholder tinting
 
-The current milestone is **M6: Content Fill**. Detailed phase tracking lives in `PLANNING_M6.md`.
+The current milestone is **M7: Game Feel**. M6 Content Fill is complete; detailed M6 phase history lives in `PLANNING_M6.md`.
 
 ## Target Platform
 

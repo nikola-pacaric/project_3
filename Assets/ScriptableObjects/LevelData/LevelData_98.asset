@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b2c2ad11297438f8a75d94ac5f690fd, type: 3}
+  m_Name: LevelData_98
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.LevelData
+  _levelNumber: 98
+  _waves:
+  - {fileID: 11400000, guid: a341d915e69dcb94ba5a4d832d4238bf, type: 2}
+  - {fileID: 11400000, guid: 2e287a6fe88b3954fa726a9626c9d8e6, type: 2}
+  - {fileID: 11400000, guid: 521732e1275cc5c42ba7bddcbca8db55, type: 2}
+  - {fileID: 11400000, guid: 959fb7f16276232478597a52a59dfff4, type: 2}
+  - {fileID: 11400000, guid: fe8a6282470066d4fb72c89d496071ab, type: 2}

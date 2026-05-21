@@ -64,6 +64,6 @@ MonoBehaviour:
   _entryStartCenter: {x: 0, y: 8}
   _entrySpacing: 0
   _perSlotDelay: 0.5
-  _entryPathMode: 1
+  _entryPathMode: 0
   _entryPathWaypoints: []
   _entryPathFinalControlOffset: {x: 0, y: 0}

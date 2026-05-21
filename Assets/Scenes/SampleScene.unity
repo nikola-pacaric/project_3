@@ -871,17 +871,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 538551053}
   m_CullTransparentMesh: 1
---- !u!114 &551825389 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7016789001534668398, guid: 14380b2fefd6b9e4b919b8a2a9072a55, type: 3}
-  m_PrefabInstance: {fileID: 587996901633137473}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c964ac0d2824121b7377d3962c8dc22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Boss
 --- !u!1 &580073763
 GameObject:
   m_ObjectHideFlags: 0
@@ -3498,17 +3487,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1539885663 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7993087358558206410, guid: c8757be1931566448b2360867950e99f, type: 3}
-  m_PrefabInstance: {fileID: 7075021966627818591}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c964ac0d2824121b7377d3962c8dc22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Boss
 --- !u!1 &1578145141
 GameObject:
   m_ObjectHideFlags: 0
@@ -3674,7 +3652,7 @@ MonoBehaviour:
   _waveRunner: {fileID: 2104061202}
   _enemySpawner: {fileID: 2078825175}
   _playerShooting: {fileID: 1517309661}
-  _cycleScalingData: {fileID: 0}
+  _cycleScalingData: {fileID: 11400000, guid: e91b47c303cf8e142b54626220323d08, type: 2}
   _levels:
   - {fileID: 11400000, guid: b9eab746945b49f286c8a971df89f715, type: 2}
   - {fileID: 11400000, guid: c455d78bd6d2c784697dc87cd5a222d2, type: 2}
@@ -3700,16 +3678,88 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d4c82944a20b52b44bd31138a2d0e313, type: 2}
   - {fileID: 11400000, guid: db35fd5851a0c0445816b63cee880ecb, type: 2}
   - {fileID: 11400000, guid: 41a85a5654026234881e081d97888b93, type: 2}
+  - {fileID: 11400000, guid: fe2192bf73802a54cb34bcbb66eec93e, type: 2}
+  - {fileID: 11400000, guid: f59b0c5dc37f158469638950825158b6, type: 2}
+  - {fileID: 11400000, guid: 34c7dbd802b191e4db4cb90eb6cb847f, type: 2}
+  - {fileID: 11400000, guid: 482ac84ea9aa88448b489e5978f5d0b8, type: 2}
+  - {fileID: 11400000, guid: 82e2ea32ad8289d4a98d94add2beb1b5, type: 2}
+  - {fileID: 11400000, guid: da185146b565c2341b8d15037a963e95, type: 2}
+  - {fileID: 11400000, guid: 2730e68c6aa445e42ac2ee1e5cfe8d57, type: 2}
+  - {fileID: 11400000, guid: 15c8050a903b6c348a84cea1a3ef91ca, type: 2}
+  - {fileID: 11400000, guid: 9982915b1a8eca948ae819b233cc90b3, type: 2}
+  - {fileID: 11400000, guid: 2f75a11853170f2479f07729f97de623, type: 2}
+  - {fileID: 11400000, guid: e8f0928d2160aa6489850d42c5b7fee2, type: 2}
+  - {fileID: 11400000, guid: 6ab8b9fe9e72e1042a91a3fe436b2f22, type: 2}
+  - {fileID: 11400000, guid: f0724d79f0e06cc47ae8cbd724a95935, type: 2}
+  - {fileID: 11400000, guid: 39045a83149baa4409adcb5aeb89e347, type: 2}
+  - {fileID: 11400000, guid: 4526f54fc9b4ac94fa63e7ad8ff897f6, type: 2}
+  - {fileID: 11400000, guid: d1bbaccb8fef0064d88084167d9fcd27, type: 2}
+  - {fileID: 11400000, guid: 4938cbbae08151a4daf2cf726a8def75, type: 2}
+  - {fileID: 11400000, guid: 2811f0ac8d430f549ac863ca33f325ab, type: 2}
+  - {fileID: 11400000, guid: df7094e0c5bfeb2489678b9b94563209, type: 2}
+  - {fileID: 11400000, guid: 37a4a43bc56dbd9499608e481d722642, type: 2}
+  - {fileID: 11400000, guid: d55ddc99d6a6cdf4aa872bfbad31b1f2, type: 2}
+  - {fileID: 11400000, guid: 55e6140553780e34cb2989b7bfa931c6, type: 2}
+  - {fileID: 11400000, guid: 1555122491e130e42ada0df79eeb23ff, type: 2}
+  - {fileID: 11400000, guid: 8e7309cabf002c64195ba40fe93fdffd, type: 2}
+  - {fileID: 11400000, guid: 88849af628f001a45b81c7f2dd821fda, type: 2}
+  - {fileID: 11400000, guid: 3a6e27877d6efd1478e23a8652162d6d, type: 2}
+  - {fileID: 11400000, guid: 3cb2fc08cb21e8a488d55afa03a62bfa, type: 2}
+  - {fileID: 11400000, guid: a136cff13fb26f149b712002f8ea9c77, type: 2}
+  - {fileID: 11400000, guid: c4a4a1215648e5648b9414ff9d8c33f2, type: 2}
+  - {fileID: 11400000, guid: d826935b9dc93d74293f3167df31b4b2, type: 2}
+  - {fileID: 11400000, guid: 673fce5719bf8ee4ca7de88d7ad64ec9, type: 2}
+  - {fileID: 11400000, guid: 2d44040f5d6b1f7489b7059d53169a9b, type: 2}
+  - {fileID: 11400000, guid: 777cce8d68ea4cb4f8dc6535dba896f2, type: 2}
+  - {fileID: 11400000, guid: 889ac6557cc96794fa235d302e644673, type: 2}
+  - {fileID: 11400000, guid: 66e34dafa97417d4cb3e5f6b7fa2b0df, type: 2}
+  - {fileID: 11400000, guid: a63ab3026d90d7f41bf39fe41985981c, type: 2}
+  - {fileID: 11400000, guid: d61502999bd6cc045913b722d30f3e91, type: 2}
+  - {fileID: 11400000, guid: 35019a2d8b21cd546b316e024ac2be06, type: 2}
+  - {fileID: 11400000, guid: 3895b2b7c1daf494d87d54a5f3d54065, type: 2}
+  - {fileID: 11400000, guid: 80080d23fcd42bf4381a7453dd7d3c41, type: 2}
+  - {fileID: 11400000, guid: 6eb39800a2808eb4ea0cecfaac14d4ef, type: 2}
+  - {fileID: 11400000, guid: 47917e2c069df0a4486563dead095e75, type: 2}
+  - {fileID: 11400000, guid: 13492082fb676054eb8b99b657c9e008, type: 2}
+  - {fileID: 11400000, guid: 9a4e6991ba4ed064187bc4cbe83e7619, type: 2}
+  - {fileID: 11400000, guid: 8fb35e448ad624341b20cfb883f1e35a, type: 2}
+  - {fileID: 11400000, guid: ed14f4e2fdf85e34293a5f2a179ece78, type: 2}
+  - {fileID: 11400000, guid: 4f65e9db102dccb4abad257c007dfabe, type: 2}
+  - {fileID: 11400000, guid: b70e9d86b9419fd4094c6e2a5c731508, type: 2}
+  - {fileID: 11400000, guid: 4da6a0617d2550a489b4968f97cedc44, type: 2}
+  - {fileID: 11400000, guid: 40ad0596828aafa45aa4140f5560ebac, type: 2}
+  - {fileID: 11400000, guid: a27e236dece676546b060d14022d10c7, type: 2}
+  - {fileID: 11400000, guid: 683843b1b73c175449c25321a7ab80b4, type: 2}
+  - {fileID: 11400000, guid: d7b195cdd416b664eb62709685ffe267, type: 2}
+  - {fileID: 11400000, guid: 7a24fd5cbfead9343a06767b0d6639dc, type: 2}
+  - {fileID: 11400000, guid: ec7ebcfdb4153ce4e965d67408de0467, type: 2}
+  - {fileID: 11400000, guid: 33e1c11cbb2faeb489c2b3067790a527, type: 2}
+  - {fileID: 11400000, guid: e27ade7c149c16e469f0d1d7731af8e3, type: 2}
+  - {fileID: 11400000, guid: 992e9460f09b16043b3da306fd48b6e4, type: 2}
+  - {fileID: 11400000, guid: ea3b99484f8f3bd4997fe65ef9b6bef8, type: 2}
+  - {fileID: 11400000, guid: de6ee382bcdad354c958ee9720d34acb, type: 2}
+  - {fileID: 11400000, guid: f5e2f236ed0697446b014f934b831f41, type: 2}
+  - {fileID: 11400000, guid: 60b0b9650b8479247bb5f8e007cedb49, type: 2}
+  - {fileID: 11400000, guid: 40252ff8fcdc69e409b630f3729f9ed2, type: 2}
+  - {fileID: 11400000, guid: 34f1becabec42244da45600bd5ff5230, type: 2}
+  - {fileID: 11400000, guid: 2dbd9bef6fe92c24e8c1375c196f922e, type: 2}
+  - {fileID: 11400000, guid: 46c7c215fbc70ba42ba9234766f9cd1f, type: 2}
+  - {fileID: 11400000, guid: 90403d4fb93bb24489d2c2acffb0a887, type: 2}
+  - {fileID: 11400000, guid: b96204182b3175f40a73c18b0ff5cc1c, type: 2}
+  - {fileID: 11400000, guid: e9864467c5d01d04088cd7cfbf3c8712, type: 2}
+  - {fileID: 11400000, guid: 894109c12bf7d4c418f15e06b94d600a, type: 2}
+  - {fileID: 11400000, guid: 5a154ff36ff58cb4e95094ed9cf87738, type: 2}
+  - {fileID: 11400000, guid: b05022b67b09e974a9911d228c3932fb, type: 2}
   _campaignBosses:
   - _levelNumber: 25
     _boss: {fileID: 1434712353}
   - _levelNumber: 50
-    _boss: {fileID: 551825389}
+    _boss: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
   - _levelNumber: 75
-    _boss: {fileID: 1539885663}
+    _boss: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
   - _levelNumber: 100
-    _boss: {fileID: 1734419065}
-  _startingLevel: 25
+    _boss: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
+  _startingLevel: 99
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
@@ -4180,8 +4230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5045ea05b9e6eb140942a73fd5d415f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.LevelRunner
-  _levelData: {fileID: 11400000, guid: 41a85a5654026234881e081d97888b93, type: 2}
-  _drawGizmos: 0
+  _levelData: {fileID: 11400000, guid: d4c82944a20b52b44bd31138a2d0e313, type: 2}
+  _drawGizmos: 1
   _drawLabels: 1
   _gizmoCurveSamples: 24
 --- !u!1 &1732983145
@@ -4240,17 +4290,6 @@ MonoBehaviour:
   _messageFormat: Level {0} Complete
   _visibleDuration: 1.5
   _fadeDuration: 0.5
---- !u!114 &1734419065 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4157962364096089207, guid: 50b9fa27d8437a749a99431652612044, type: 3}
-  m_PrefabInstance: {fileID: 8173747207156176671}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c964ac0d2824121b7377d3962c8dc22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Boss
 --- !u!1 &1834204014
 GameObject:
   m_ObjectHideFlags: 0

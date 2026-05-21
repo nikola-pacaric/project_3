@@ -11,7 +11,7 @@ Vertical-slice milestones, not a phased waterfall. Three rules:
 
 1. **Every milestone ends with a working WebGL build**, played start to finish.
 2. **No abstractions without two concrete use cases.** Architecture earns its place by being needed twice.
-3. **Placeholders are sacred.** Colored boxes and beeps until M8.
+3. **Placeholders are sacred.** Colored boxes and beeps until M7.
 
 Each milestone has four sections: **Build** (what gets made), **Refactor** (cleanup of earlier work now that we understand it better), **Cut / Defer** (explicitly *not* this milestone), **Acceptance** (what the build at the end demonstrates).
 
@@ -19,9 +19,9 @@ Each milestone has four sections: **Build** (what gets made), **Refactor** (clea
 
 ## Current Milestone
 
-**M6** *(in progress)*
+**M7** *(next: Game Feel)*
 
-Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of truth for the current Content Fill implementation plan.
+M6 Content Fill is complete. The next milestone is M7 Game Feel: sprites, VFX, SFX, UI polish, and presentation cleanup before final tuning.
 
 ---
 
@@ -157,8 +157,8 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 - [x] `BossData` SO — health, phases, attack patterns, drops
 - [x] Bullet pattern systems — radial, aimed, sweep (data-driven)
 - [x] First boss test object + data — get the architecture right here
-- [x] Boss intro flow — entry, intro delay/event, boss name/HUD; warning visuals stay placeholder until M8
-- [x] Boss death sequence — stop attacks, award score/drop, clear encounter; polished explosion stays in M8
+- [x] Boss intro flow — entry, intro delay/event, boss name/HUD; warning visuals stay placeholder until M7
+- [x] Boss death sequence — stop attacks, award score/drop, clear encounter; polished explosion stays in M7
 - [x] Test at level 5 (renumber to 25 in M6)
 - [x] Three more boss prefabs + data once architecture is proven — placeholder attacks/movement accepted for M5; tuning continues later
 
@@ -178,12 +178,9 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 
 **Build**
 - [x] `LevelManager` chapter logic: `level % 25 == 0` → boss; six 4-level enemy-set blocks fill the 24 normal levels before each boss
-- [ ] All 100 `LevelData` SOs authored — first-pass tuning
+- [x] Full 100-level campaign route authored — 96 normal `LevelData` SOs plus 4 boss encounters, first-pass tuning only
 - [x] Bosses placed at levels 25, 50, 75, 100
 - [x] Cycle scaling: `cycle = (currentLevel - 1) / 100` → health/speed multipliers + sprite color tint
-- [ ] Mini-games: Meteor Storm (dodge round, gem pickups), Memory Match (flip cards)
-- [ ] Mini-game trigger logic in `LevelManager` — Meteor Storm / Memory Match are random popups only eligible after a wave completes
-- [ ] Mini-game scene flow (enter → play → reward → return)
 - [x] Minimal dev-only authoring helpers: level jump exists; cash grant / kill-all deferred until authoring or validation needs them.
 
 **Refactor**
@@ -191,37 +188,13 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 - [x] **Separate final formation placement from entry spawn placement if needed for Warblade-style paths.** Current `WaveData` anchor affects both final slot positions and entry start center. For hand-authored side dives, the designer should be able to place "where enemies start" and "where they settle" independently instead of compensating with local slot offsets.
 - [x] Add validation/editor safeguards for scalable level authoring: warn on missing enemy data, slot/loadout count mismatches, empty wave lists, missing boss levels, and duplicate/missing `LevelData` numbers.
 
-**Cut / Defer:** final balance pass (M9), real art (M8).
+**Cut / Defer:** final balance pass (M8), real art (M7), mini-games (v1.1).
 
-**Acceptance:** reach level 100 via dev tool, play into cycle 2, confirm tinting and increased difficulty. Mini-games trigger and reward correctly.
-
----
-
-## M7 — Online
-
-**Goal:** leaderboards. The game persists past the game over screen.
-
-**Build**
-- [ ] Install UGS Authentication and Leaderboards packages
-- [ ] Link Unity project to Unity Cloud dashboard
-- [ ] Initialize UGS on game boot
-- [ ] Anonymous Authentication — silent sign-in, persisted player ID
-- [ ] `LeaderboardService` wrapper (submit, fetch top N, fetch player rank)
-- [ ] Submit score on game over
-- [ ] Leaderboard view UI — top entries, player's rank highlighted
-- [ ] Offline / network failure handling — cache pending score, retry on next launch
-- [ ] Connecting / failed / no-scores UI states
-
-**Refactor**
-- [ ] Game over screen — Submit Score / View Leaderboard / Restart
-
-**Cut / Defer:** Cloud Save, Analytics, social features.
-
-**Acceptance:** play, die, submit, see your score on the board. Confirm in a different browser session.
+**Acceptance:** reach level 100 via dev tool, play into cycle 2, confirm tinting and increased difficulty.
 
 ---
 
-## M8 — Game Feel
+## M7 — Game Feel
 
 **Goal:** juice. Stops looking like a prototype.
 
@@ -237,27 +210,27 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 
 **Build — Audio**
 - [ ] `AudioManager` singleton, separate SFX/music mixer channels
-- [ ] SFX library: shoot, hit, explosion, pickup, shop, UI, boss roar, mini-game, level start
-- [ ] Music: menu, gameplay, boss, mini-game
+- [ ] SFX library: shoot, hit, explosion, pickup, shop, UI, boss roar, level start
+- [ ] Music: menu, gameplay, boss
 
 **Build — UI / UX**
-- [ ] Main menu (Start, Leaderboard, Settings)
+- [ ] Main menu (Start, Settings)
 - [ ] Settings (master / SFX / music volume)
 - [ ] First-run controls hint overlay
 - [ ] Pause menu, animated screen transitions
 
 **Refactor**
-- [ ] Final under-the-hood cleanup pass before M9
+- [ ] Final under-the-hood cleanup pass before tuning
 
-**Cut / Defer:** difficulty tuning (M9), localization, control rebinding.
+**Cut / Defer:** difficulty tuning (M8), leaderboard integration (M9), mini-game audio/music (v1.1), localization, control rebinding.
 
 **Acceptance:** show a friend without telling them you made it. They should not assume it's a prototype.
 
 ---
 
-## M9 — Ship It
+## M8 — Tune and Ship Core
 
-**Goal:** the build that goes on a portfolio.
+**Goal:** make the 100-level core game playable, stable, and worth scoring before online services are connected.
 
 **Tuning**
 - [ ] First 10 levels difficulty curve (most important for retention)
@@ -283,7 +256,46 @@ Detailed M6 phase tracking lives in `PLANNING_M6.md`. That file is the source of
 - [ ] Short postmortem — what worked, what didn't, what you'd change
 - [ ] Link added to portfolio site / CV / LinkedIn
 
-**Acceptance:** public URL, starts within 5s, 60fps, plays end-to-end, live leaderboard, no crashes. Linkable in a job application without flinching.
+**Acceptance:** public URL, starts within 5s, 60fps, plays end-to-end locally, no crashes. Linkable in a job application without flinching.
+
+---
+
+## M9 — Online Leaderboard
+
+**Goal:** add online scoring after the core game is playable, polished, and tuned enough for submitted scores to mean something.
+
+**Build**
+- [ ] Install UGS Authentication and Leaderboards packages
+- [ ] Link Unity project to Unity Cloud dashboard
+- [ ] Initialize UGS on game boot
+- [ ] Anonymous Authentication — silent sign-in, persisted player ID
+- [ ] `LeaderboardService` wrapper (submit, fetch top N, fetch player rank)
+- [ ] Submit score on game over
+- [ ] Leaderboard view UI — top entries, player's rank highlighted
+- [ ] Offline / network failure handling — cache pending score, retry on next launch
+- [ ] Connecting / failed / no-scores UI states
+
+**Refactor**
+- [ ] Game over screen — Submit Score / View Leaderboard / Restart
+- [ ] Main menu — add Leaderboard entry after the service is working
+
+**Cut / Defer:** Cloud Save, Analytics, social features.
+
+**Acceptance:** play, die, submit, see your score on the board, and confirm in a different browser session.
+
+---
+
+## v1.1 — Mini-Games
+
+**Goal:** add optional bonus rounds after the core 100-level game is playable, polished, tuned, and released.
+
+**Scope**
+- [ ] Mini-game flow foundation: trigger, enter, reward, and return to campaign progression
+- [ ] Meteor Storm: dodge falling meteors and collect gem rewards
+- [ ] Memory Match: flip cards, match pairs, and award a completion reward
+- [ ] Mini-game SFX and music hooks
+
+**Cut / Defer:** v1.0 release polish, core tuning, leaderboard integration, and WebGL stability are higher priority.
 
 ---
 
