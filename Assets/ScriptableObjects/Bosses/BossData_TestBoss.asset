@@ -13,40 +13,58 @@ MonoBehaviour:
   m_Name: BossData_TestBoss
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossData
   _displayName: Test Boss
-  _maxHealth: 10
+  _maxHealth: 21
   _scoreValue: 5000
   _entryStartPosition: {x: 0, y: 7}
-  _entryTargetPosition: {x: 0, y: 2.75}
-  _entrySpeed: 3
+  _entryTargetPosition: {x: 0, y: 2}
+  _entrySpeed: 4
   _contactDamage: 1
   _phases:
   - _phaseName: Opening
     _healthThreshold: 1
-    _movementBehavior: 0
-    _movementAmplitude: 1.5
-    _movementSpeed: 1.5
-    _attackCooldownMin: 1.2
+    _transitionDuration: 0
+    _transitionTarget: 1
+    _movementBehavior: 1
+    _movementAmplitude: 6
+    _verticalMovementAmplitude: 0.75
+    _movementSpeed: 3
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
+    _attackCooldownMin: 1
     _attackCooldownMax: 2
     _attackPatterns:
     - {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
+    - {fileID: 11400000, guid: 154ab312a99a4208a9316a1a67b58246, type: 2}
   - _phaseName: Pressure
     _healthThreshold: 0.66
-    _movementBehavior: 1
-    _movementAmplitude: 1.75
-    _movementSpeed: 1.75
+    _transitionDuration: 1.25
+    _transitionTarget: 1
+    _movementBehavior: 8
+    _movementAmplitude: 6.06
+    _verticalMovementAmplitude: 1.5
+    _movementSpeed: 2
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
     _attackCooldownMin: 1
     _attackCooldownMax: 1.6
     _attackPatterns:
-    - {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
-    - {fileID: 11400000, guid: 154ab312a99a4208a9316a1a67b58246, type: 2}
+    - {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
   - _phaseName: Last Stand
     _healthThreshold: 0.33
-    _movementBehavior: 2
-    _movementAmplitude: 1.5
-    _movementSpeed: 2
+    _transitionDuration: 1.25
+    _transitionTarget: 1
+    _movementBehavior: 3
+    _movementAmplitude: 7
+    _verticalMovementAmplitude: 2
+    _movementSpeed: 1.5
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.6
     _attackCooldownMin: 0.8
     _attackCooldownMax: 1.3
     _attackPatterns:
     - {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
-    - {fileID: 11400000, guid: 154ab312a99a4208a9316a1a67b58246, type: 2}
+    - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
   _rewardDropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}
