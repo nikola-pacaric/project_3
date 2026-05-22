@@ -3759,7 +3759,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
-  _startingLevel: 99
+  _startingLevel: 1
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
