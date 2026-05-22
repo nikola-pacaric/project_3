@@ -11,9 +11,9 @@ Vertical-slice milestones, not a phased waterfall. Three rules:
 
 1. **Every milestone ends with a working WebGL build**, played start to finish.
 2. **No abstractions without two concrete use cases.** Architecture earns its place by being needed twice.
-3. **Placeholders are sacred.** Colored boxes and beeps until M7.
+3. **Placeholders are sacred through M6.** Colored boxes and beeps until the M7 polish pass.
 
-Each milestone has four sections: **Build** (what gets made), **Refactor** (cleanup of earlier work now that we understand it better), **Cut / Defer** (explicitly *not* this milestone), **Acceptance** (what the build at the end demonstrates).
+Completed milestones are kept as short summaries. Active and future milestones keep detailed sections: **Build** (what gets made), **Refactor** (cleanup of earlier work now that we understand it better), **Cut / Defer** (explicitly *not* this milestone), **Acceptance** (what the build at the end demonstrates).
 
 ---
 
@@ -27,170 +27,47 @@ M6 Content Fill is complete. The next milestone is M7 Game Feel: sprites, VFX, S
 
 ## M0 — It Builds
 
-**Goal:** clean Unity project that compiles to WebGL and runs in a browser.
-
-**Build**
-- [x] Install Unity 6.3 LTS, create project from URP 2D template
-- [x] Git repo with Unity `.gitignore`, first commit
-- [x] Game view set to 1920×1080 reference resolution
-- [x] Build target: WebGL
-- [x] Drop a sprite into a test scene, run a WebGL build, confirm it loads in the browser
-
-**Cut / Defer:** folder structure, namespaces, asmdefs, extra packages.
-
-**Acceptance:** blank scene with one sprite, opened in a browser via WebGL build output.
+M0 established the project foundation: a Unity 6.3 LTS URP 2D project, Git repository, Unity `.gitignore`, 1920x1080 reference Game view, and WebGL build target. A minimal scene was built and loaded in a browser to prove the project could compile and run on the intended platform before any architecture or gameplay work was added.
 
 ---
 
 ## M1 — I Can Shoot
 
-**Goal:** prove the core feel. If shooting doesn't feel right with squares, it won't feel right with art.
-
-**Build**
-- [x] Player sprite (placeholder), bottom of screen
-- [x] Horizontal movement with arrow keys (legacy `Input.GetAxis` is fine — refactored in M2)
-- [x] Hard left/right `Mathf.Clamp` boundaries
-- [x] Bullet prefab, Ctrl to fire, single-press = single shot
-- [x] Bullets self-destruct off-screen
-- [x] Hardcoded values everywhere
-
-**Cut / Defer:** pooling, SOs, New Input System, event channels, GameManager, audio, folder structure, namespaces.
-
-**Acceptance:** drive the ship side to side and fire bullets into the void. Decide if it feels good. If not, fix the feel before M2.
+M1 proved the basic player feel with placeholder visuals: a bottom-locked ship, horizontal movement, clamped screen boundaries, single-press shooting, and bullets that clean themselves up off-screen. Values were intentionally hardcoded so movement and firing could be judged before introducing data assets, pooling, input abstraction, or broader architecture.
 
 ---
 
 ## M2 — Things Shoot Back
 
-**Goal:** an actual fight loop. Enemies attack, you can die, you can restart.
-
-**Build**
-- [x] One enemy type: flies in along a path, sits in formation, occasionally dives, returns
-- [x] Enemy bullets + firing logic
-- [x] Layer setup: Player, PlayerBullet, Enemy, EnemyBullet (collision matrix configured)
-- [x] Player damage, lives counter, death + respawn
-- [x] Game Over screen with Restart
-- [x] Score counter on enemy kill
-- [x] Replace `Input.GetAxis` with **New Input System** — Input Actions asset, `InputReader` SO
-- [x] Folder structure under `Assets/Scripts/` per `AGENTS.md`
-
-**Refactor**
-- [x] **Object pooling for bullets** — both player and enemy bullets use `UnityEngine.Pool.ObjectPool<T>`
-- [x] Move magic numbers into `[SerializeField]` fields (still no SOs)
-
-**Cut / Defer:** multiple enemy types, fancy Bezier paths, SOs, event channels, formations of many enemies, audio.
-
-**Acceptance:** an enemy flies in, dives at you, you shoot it down. If it kills you, game over. Restart works.
+M2 turned the prototype into a playable combat loop. One enemy type could enter, hold formation, dive, shoot, and return; the player could take damage, lose lives, respawn, reach game over, and restart. Scoring, collision layers, the New Input System, the project script folder structure, and bullet pooling with `UnityEngine.Pool.ObjectPool<T>` were introduced, while tunable values moved into serialized fields.
 
 ---
 
 ## M3 — It's a Game
 
-**Goal:** waves, levels, multiple enemy types. The shape of a real game emerges.
-
-**Build**
-- [x] 2 more enemy types (3 total) — distinct sprites and movement
-- [x] Bezier path utility for entries and dives
-- [x] Sin/Cos formation breathing
-- [x] At least 4 reusable formations (V, line sweep, snake, dual flank)
-- [x] Wave system — a level is a sequence of formations spawning over time
-- [x] 5 hand-tuned levels with progression
-- [x] "Level Complete" → next level transition
-- [x] Score persists across levels; game over → level 1
-- [x] Level number on HUD
-
-**Refactor**
-- [x] **Extract data into ScriptableObjects:** `EnemyData`, `FormationData`, `LevelData`
-- [x] Promote ad-hoc spawning into a real `LevelManager` singleton
-- [x] Pooling extended to enemies
-
-**Cut / Defer:** all 100 levels, boss/modulo logic, cycle scaling, loot, shop, event channels.
-
-**Acceptance:** play through 5 levels of escalating waves with 3 enemy types in 4+ formations.
+M3 added the first real level structure. The game gained three enemy types, Bezier entry and dive paths, formation breathing, reusable formation shapes, a wave system, five hand-tuned levels, level-complete transitions, persistent score across levels, and level display in the HUD. Enemy, formation, and level tuning moved into ScriptableObjects, spawning became the responsibility of `LevelManager`, and enemy pooling was added.
 
 ---
 
 ## M4 — Risk and Reward
 
-**Goal:** the loot loop. The thing that makes Warblade Warblade.
+M4 built the reward loop. The game gained run state, ScriptableObject event channels, stat-driven shooting and movement, armour and shield hooks, pooled pickups, drop tables, timed buffs, cash rewards, HUD support for stats and buffs, and an in-scene shop after every fourth level. Pickup coverage included cash, weapon tiers, stat upgrades, timed autofire/rapid-fire/shield effects, armour, extra life, and sucker downgrades. The `GameManager` state machine was formalized around Playing, Paused, Shop, and GameOver states, while pickup, buff, HUD, and shop systems were connected through event channels.
 
-**Status**
-- [x] Phase 1: Run state and GameManager state foundation
-- [x] Phase 2: ScriptableObject event channels
-- [x] Phase 3: Stat-driven player shooting
-- [x] Phase 4: Stat-driven movement, damage, armour, and shield hooks
-- [x] Phase 5: Enemy drop pickups
-- [x] Phase 6: BuffManager and timed buff HUD foundation
-- [x] Phase 7: Drop table tuning pass
-- [x] Phase 8: Cash, stat, lives, armour, weapon, and buff HUD
-- [x] Phase 9: Shop items and shop overlay
-- [x] Phase 10: Four-level shop cadence
-- [x] Phase 11: M4 content pass
+Bosses, mini-games, UGS, final economy balance, and art/audio polish were deferred. Deep original-Warblade profile and secret-unlock mechanics remain permanently out of scope for this project version.
 
-**Build**
-- [x] Pickup base class (pooled), `PickupData` SO, shared basic-alien `DropTable` SO, enemy-death drop path
-- [x] Pickups: $10/$50/$100/$200 cash, exact weapon pickups (Single/Double/Triple/Quad), Speed/Bullets/Time upgrades, autofire (timed), rapid fire (timed), shield (timed), armour, extra life, red/green/blue sucker downgrades
-- [x] `BuffManager` for active timed effects
-- [x] Currency system + cash/stat HUD
-- [x] In-scene shop overlay after every 4th level
-- [x] `ShopItem` SO, shop UI (grid, cash, buy/leave)
-- [x] Run-only shop upgrades: Speed, Bullets, Time, armour, extra life, weapon tier, timed Autofire
-- [x] Weapon tier purchases only change shot pattern; duplicate active-tier weapon pickups still convert into +1 Bullets
-
-**Refactor**
-- [x] **Event channels** — managers now broadcast state changes through SO event channels for HUD/shop/pickup/buff wiring.
-- [x] **GameManager state machine** — formalized Playing / Paused / Shop / GameOver states.
-- [x] Connect pickup, buff, HUD, and shop systems to the completed run-state/event-channel foundation.
-
-**Cut / Defer:** bosses, mini-games, UGS, final economy balance, art/audio polish.
-
-**Permanently Out of Scope:** Warblade-style shop profile saves, Clear Shields / God Badge reset economy, purchasable secrets, rank-marker secret chains, Alien Lock, Rocket Pack, Super Autofire, and other deep original-Warblade profile/secret unlock mechanics.
-
-**Acceptance:** play several levels, collect pickups, dodge suckers, accumulate cash, hit the shop after level 4, buy upgrades, and feel them in level 5.
+---
 
 ## M5 — Boss Fights
 
-**Goal:** the spectacle. One good boss, then duplicate to four.
-
-**Build**
-- [x] `Boss` MonoBehaviour with multi-phase FSM
-- [x] `BossData` SO — health, phases, attack patterns, drops
-- [x] Bullet pattern systems — radial, aimed, sweep (data-driven)
-- [x] First boss test object + data — get the architecture right here
-- [x] Boss intro flow — entry, intro delay/event, boss name/HUD; warning visuals stay placeholder until M7
-- [x] Boss death sequence — stop attacks, award score/drop, clear encounter; polished explosion stays in M7
-- [x] Test at level 5 (renumber to 25 in M6)
-- [x] Three more boss prefabs + data once architecture is proven — placeholder attacks/movement accepted for M5; tuning continues later
-
-**Refactor**
-- [x] Formalize the enemy FSM if it was ad-hoc — audited; existing enum FSM is clear enough for M5, no shared abstraction needed yet
-- [x] Audit collision layers and pool capacities for bullet-storm scenarios — layer matrix verified, pools now prewarm before gameplay
-
-**Cut / Defer:** real level placement (M6), boss-rush modes.
-
-**Acceptance:** play to the test boss. Multi-phase fight. Bullet patterns readable but threatening. Verify all 4 bosses fight differently.
+M5 added boss architecture and the first spectacle layer. Bosses use a `Boss` MonoBehaviour with a multi-phase FSM, `BossData` ScriptableObjects for health/phases/patterns/drops, and data-driven radial, aimed, and sweep bullet patterns. The milestone proved the flow with a test boss, then expanded to four distinct boss prefabs and data sets. Boss intro, boss HUD/name display, boss death cleanup, score/drop rewards, collision-layer auditing, and bullet-pool prewarming were also added; final boss placement and polish were left for later milestones.
 
 ---
 
 ## M6 — Content Fill
 
-**Goal:** scale from 5 levels to 100 + infinite. Mostly authoring, after the content model is made scalable.
+M6 scaled the game from the early level set to the full campaign route. `LevelManager` now handles chapter logic, boss levels at 25/50/75/100, six 4-level enemy-set blocks before each boss, and infinite cycle scaling after level 100 using health/speed multipliers and visual tinting. The campaign route contains 96 normal `LevelData` assets plus 4 boss encounters, with first-pass tuning only.
 
-**Build**
-- [x] `LevelManager` chapter logic: `level % 25 == 0` → boss; six 4-level enemy-set blocks fill the 24 normal levels before each boss
-- [x] Full 100-level campaign route authored — 96 normal `LevelData` SOs plus 4 boss encounters, first-pass tuning only
-- [x] Bosses placed at levels 25, 50, 75, 100
-- [x] Cycle scaling: `cycle = (currentLevel - 1) / 100` → health/speed multipliers + sprite color tint
-- [x] Minimal dev-only authoring helpers: level jump exists; cash grant / kill-all deferred until authoring or validation needs them.
-
-**Refactor**
-- [x] **Split formation shape from enemy composition before authoring all 100 levels.** Current M3 `FormationData` stores both slot layout/path data and `EnemyData` per slot, which makes reusable shapes unsafe: changing a V formation for Level 31 would also change Level 1. Refactor so reusable formation data owns the shape only — slot positions, entry control offsets, breathing — while each wave or a separate loadout/composition asset owns the enemy types for those slots.
-- [x] **Separate final formation placement from entry spawn placement if needed for Warblade-style paths.** Current `WaveData` anchor affects both final slot positions and entry start center. For hand-authored side dives, the designer should be able to place "where enemies start" and "where they settle" independently instead of compensating with local slot offsets.
-- [x] Add validation/editor safeguards for scalable level authoring: warn on missing enemy data, slot/loadout count mismatches, empty wave lists, missing boss levels, and duplicate/missing `LevelData` numbers.
-
-**Cut / Defer:** final balance pass (M8), real art (M7), mini-games (v1.1).
-
-**Acceptance:** reach level 100 via dev tool, play into cycle 2, confirm tinting and increased difficulty.
+The content model was refactored for safer authoring: reusable formation shape data was separated from enemy composition, final formation placement was separated from entry spawn placement where needed, and validation/editor safeguards were added for missing data, slot/loadout mismatches, empty waves, missing boss levels, and duplicate or missing level numbers. Final balance moved to M8, real art and presentation polish moved to M7, and mini-games moved to v1.1.
 
 ---
 

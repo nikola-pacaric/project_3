@@ -8,7 +8,7 @@ This is a solo portfolio project focused on clean Unity architecture, responsive
 
 ## Current State
 
-The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, and early M6 content-fill foundations in place:
+The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, and completed M6 content-fill foundation in place:
 
 - Player movement and shooting
 - Enemy waves, formations, and level progression
@@ -21,7 +21,7 @@ The project currently has the core shooter loop, M4 reward loop, M5 boss archite
 - M6 wave-authoring safeguards and content validation tools
 - Cycle scaling code for levels 101+ using repeated campaign content, runtime health/speed multipliers, and placeholder tinting
 
-The current milestone is **M7: Game Feel**. M6 Content Fill is complete; detailed M6 phase history lives in `PLANNING_M6.md`.
+The current milestone is **M7: Game Feel**. M6 Content Fill is complete, and the current polish plan lives in `PLANNING_M7.md`.
 
 ## Target Platform
 
@@ -50,9 +50,10 @@ Placeholder art and simple effects are intentional for now. Visual polish, audio
 - **M3:** Core wave shooter loop - complete
 - **M4:** Pickups, buffs, cash, and shop loop - complete
 - **M5:** Boss fights - complete
-- **M6:** Content fill and mini-games - in progress
-- **M7:** Online leaderboard
-- **M8:** Game feel, art, and audio polish
-- **M9:** Final tuning and WebGL release pass
+- **M6:** Content fill - complete
+- **M7:** Game feel, art, audio, and UI polish
+- **M8:** Tune and ship core
+- **M9:** Online leaderboard
+- **v1.1:** Mini-games
 
 More detailed planning lives in `PLANNING.md` and milestone-specific planning files.

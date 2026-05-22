@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d7e4c638284e148a03f1af68a6e325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Enemy
-  _data: {fileID: 11400000, guid: 8ccfc651a8a94df9827911c0140349dc, type: 2}
+  _data: {fileID: 11400000, guid: 775534406e6d7054b9f6670b4dff4a20, type: 2}
   _spriteRenderer: {fileID: 7326347440899457792}
   _contactDamage: 1
   _formationPosition: {x: 0, y: 0}

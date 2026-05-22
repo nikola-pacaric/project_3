@@ -18,6 +18,7 @@ namespace Warblade.Systems
         [SerializeField] private InputActionAsset _inputActions;
 
         private InputActionMap _playerMap;
+        private InputActionMap _uiMap;
         private InputAction _moveAction;
         private InputAction _fireAction;
         private InputAction _pauseAction;
@@ -39,13 +40,15 @@ namespace Warblade.Systems
             }
 
             _playerMap = _inputActions.FindActionMap("Player", throwIfNotFound: true);
+            _uiMap = _inputActions.FindActionMap("UI", throwIfNotFound: false);
             _moveAction = _playerMap.FindAction("Move", throwIfNotFound: true);
             _fireAction = _playerMap.FindAction("Fire", throwIfNotFound: true);
             _pauseAction = _playerMap.FindAction("Pause", throwIfNotFound: true);
-            _navigateAction = _playerMap.FindAction("Navigate", throwIfNotFound: false);
+            _navigateAction = _uiMap?.FindAction("Navigate", throwIfNotFound: false);
 
             _pauseAction.performed += OnPausePerformed;
             _playerMap.Enable();
+            _uiMap?.Enable();
         }
 
         private void OnDisable()
@@ -55,35 +58,14 @@ namespace Warblade.Systems
                 _pauseAction.performed -= OnPausePerformed;
             }
             _playerMap?.Disable();
+            _uiMap?.Disable();
         }
 
         private void OnPausePerformed(InputAction.CallbackContext _) => PausePressed?.Invoke();
 
         private float ReadShopNavigateAxis()
         {
-            if (_navigateAction != null)
-            {
-                return _navigateAction.ReadValue<Vector2>().y;
-            }
-
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard == null)
-            {
-                return 0f;
-            }
-
-            float axis = 0f;
-            if (keyboard.upArrowKey.isPressed)
-            {
-                axis += 1f;
-            }
-
-            if (keyboard.downArrowKey.isPressed)
-            {
-                axis -= 1f;
-            }
-
-            return axis;
+            return _navigateAction?.ReadValue<Vector2>().y ?? 0f;
         }
     }
 }

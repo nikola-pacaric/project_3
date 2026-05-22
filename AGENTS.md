@@ -166,6 +166,6 @@ I switch between desktop and laptop frequently — **the working tree must never
 - **Always `git add .`** — stage everything in the working tree, never selective adds. The `.gitignore` is the source of truth for what gets excluded; if something shouldn't be tracked, fix the `.gitignore`, don't skip files at the staging step.
 - **Always push to `main`** immediately after committing — no local-only commits, no feature branches without explicit instruction.
 - **Detailed commit messages** — multi-line, written so reading the log on the other machine is enough to catch up. Lead with a one-line summary, then a body that lists what changed and why. Don't be terse just to save keystrokes.
-- **Never `--no-verify`, never `--force`, never amend pushed commits.**
+- **Never `--no-verify`, never `--force`, never amend pushed commits, never do add -> commit -> push without asking me or me telling you to do it.**
 
 ---
