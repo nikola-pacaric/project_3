@@ -144,7 +144,7 @@ namespace Warblade.Editor
         {
             Handles.color = new Color(1f, 0.85f, 0.2f, 0.95f);
 
-            switch (ResolveMovementBehavior(phase.MovementBehavior))
+            switch (BossMovement.ResolveMovementBehavior(phase.MovementBehavior))
             {
                 case BossMovementBehavior.HorizontalPatrol:
                     DrawHorizontalPatrol(center, phase);
@@ -307,21 +307,6 @@ namespace Warblade.Editor
         private static void DrawDisc(Vector2 position, float radius)
         {
             Handles.DrawWireDisc(position, Vector3.forward, radius);
-        }
-
-        private static BossMovementBehavior ResolveMovementBehavior(BossMovementBehavior movementBehavior)
-        {
-            if (movementBehavior == BossMovementBehavior.HoldPosition)
-            {
-                return BossMovementBehavior.HorizontalPatrol;
-            }
-
-            if (movementBehavior == BossMovementBehavior.SineDrift)
-            {
-                return BossMovementBehavior.FigureEight;
-            }
-
-            return movementBehavior;
         }
     }
 }

@@ -17,5 +17,5 @@ MonoBehaviour:
   _bossHealthIncreasePerCompletedCycle: 0.5
   _bossPressureIncreasePerCompletedCycle: 0.25
   _cycleTint: {r: 0, g: 0, b: 0, a: 1}
-  _tintStrengthPerCompletedCycle: 0.2
-  _maxTintStrength: 0.6
+  _tintStrengthPerCompletedCycle: 0.25
+  _maxTintStrength: 0.75
