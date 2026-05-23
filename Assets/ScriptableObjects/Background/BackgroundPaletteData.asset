@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d1fc2815a65dd34d94fe0c75003b295, type: 3}
+  m_Name: BackgroundPaletteData
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BackgroundPaletteData
+  _chapterPalettes:
+  - _name: Chapter 1 - Deep Blue
+    _gradientTint: {r: 0.035, g: 0.055, b: 0.145, a: 1}
+    _farNebulaTint: {r: 0.1, g: 0.2, b: 0.4, a: 0.22}
+    _nearNebulaTint: {r: 0.2, g: 0.46, b: 0.82, a: 0.15}
+    _farStarTint: {r: 0.7, g: 0.86, b: 1, a: 0.5}
+    _nearStarTint: {r: 1, g: 1, b: 1, a: 0.8}
+    _farStarEmissionRate: 14
+    _nearStarEmissionRate: 7
+    _farStarSimulationSpeed: 0.35
+    _nearStarSimulationSpeed: 0.75
+    _farNebulaDriftDirection: {x: 1, y: 0.18}
+    _farNebulaDriftDistance: 0.16
+    _farNebulaDriftSeconds: 36
+    _nearNebulaDriftDirection: {x: -0.7, y: 0.25}
+    _nearNebulaDriftDistance: 0.28
+    _nearNebulaDriftSeconds: 24
+  - _name: Chapter 2 - Violet Rift
+    _gradientTint: {r: 0.055, g: 0.035, b: 0.13, a: 1}
+    _farNebulaTint: {r: 0.22, g: 0.1, b: 0.38, a: 0.21}
+    _nearNebulaTint: {r: 0.48, g: 0.22, b: 0.78, a: 0.14}
+    _farStarTint: {r: 0.86, g: 0.74, b: 1, a: 0.48}
+    _nearStarTint: {r: 1, g: 0.95, b: 1, a: 0.78}
+    _farStarEmissionRate: 14
+    _nearStarEmissionRate: 7
+    _farStarSimulationSpeed: 0.35
+    _nearStarSimulationSpeed: 0.75
+    _farNebulaDriftDirection: {x: 1, y: 0.18}
+    _farNebulaDriftDistance: 0.16
+    _farNebulaDriftSeconds: 36
+    _nearNebulaDriftDirection: {x: -0.7, y: 0.25}
+    _nearNebulaDriftDistance: 0.28
+    _nearNebulaDriftSeconds: 24
+  - _name: Chapter 3 - Green Sector
+    _gradientTint: {r: 0.025, g: 0.07, b: 0.075, a: 1}
+    _farNebulaTint: {r: 0.08, g: 0.26, b: 0.2, a: 0.2}
+    _nearNebulaTint: {r: 0.2, g: 0.62, b: 0.48, a: 0.13}
+    _farStarTint: {r: 0.72, g: 1, b: 0.9, a: 0.46}
+    _nearStarTint: {r: 0.92, g: 1, b: 0.96, a: 0.76}
+    _farStarEmissionRate: 14
+    _nearStarEmissionRate: 7
+    _farStarSimulationSpeed: 0.35
+    _nearStarSimulationSpeed: 0.75
+    _farNebulaDriftDirection: {x: 1, y: 0.18}
+    _farNebulaDriftDistance: 0.16
+    _farNebulaDriftSeconds: 36
+    _nearNebulaDriftDirection: {x: -0.7, y: 0.25}
+    _nearNebulaDriftDistance: 0.28
+    _nearNebulaDriftSeconds: 24
+  - _name: Chapter 4 - Red Alert
+    _gradientTint: {r: 0.09, g: 0.035, b: 0.045, a: 1}
+    _farNebulaTint: {r: 0.32, g: 0.09, b: 0.12, a: 0.19}
+    _nearNebulaTint: {r: 0.82, g: 0.2, b: 0.18, a: 0.12}
+    _farStarTint: {r: 1, g: 0.76, b: 0.68, a: 0.44}
+    _nearStarTint: {r: 1, g: 0.95, b: 0.88, a: 0.74}
+    _farStarEmissionRate: 14
+    _nearStarEmissionRate: 7
+    _farStarSimulationSpeed: 0.35
+    _nearStarSimulationSpeed: 0.75
+    _farNebulaDriftDirection: {x: 1, y: 0.18}
+    _farNebulaDriftDistance: 0.16
+    _farNebulaDriftSeconds: 36
+    _nearNebulaDriftDirection: {x: -0.7, y: 0.25}
+    _nearNebulaDriftDistance: 0.28
+    _nearNebulaDriftSeconds: 24
