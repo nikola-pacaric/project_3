@@ -15,27 +15,60 @@ Key decisions:
 
 ---
 
-## Phase 1 — Presentation Audit
-
-Status: Pending.
+## Phase 0 — Presentation Direction — Done
 
 Goal:
-- Decide what visual/audio work is actually needed before producing assets.
+- Lock the M7 visual, audio, UI, and tuning rules before production work begins.
 
-Checklist:
-- List all visible placeholder sprites in gameplay, boss fights, pickups, shop, HUD, and menus.
-- List missing feedback moments: shoot, hit, death, pickup, shop, boss intro, boss death, level complete, game over.
-- Lock one visual direction: readable arcade sci-fi, strong silhouettes, clear colors.
-- Lock one audio direction: short arcade SFX, non-fatiguing music, clear UI sounds.
+Locked direction:
+- Visual style: Neon Arcade.
+- Sprite source: generated bitmap sprite sheets.
+- Audio style: Punchy Arcade.
+- Readability: player, enemies, bullets, pickups, VFX, and UI must remain instantly distinguishable.
+- Tuning: presentation values for color, alpha, intensity, timing, speed, frequency, and volume must be Inspector-tunable through serialized fields or ScriptableObjects.
+
+Deliverable:
+- A short presentation spec used by Phases 1-11. Actual production checklists stay in those working phases.
 
 Acceptance:
-- M7 has a concrete asset/feedback checklist.
+- The look, sound, UI language, and tuning model are decided.
+- No gameplay tuning, economy, level balance, or leaderboard scope is added.
+
+---
+
+## Phase 1 — Background Pass
+
+Goal:
+- Replace the flat/empty gameplay backdrop with a readable arcade starfield that adds motion and atmosphere without competing with bullets, pickups, enemies, or boss attacks.
+
+Direction:
+- Visual style: restrained arcade starfield.
+- Implementation: hybrid built-in Unity setup with SpriteRenderers for gradient/nebula layers and Particle Systems for stars.
+- Asset source: generated bitmap assets, no third-party dependencies.
+- Variation: subtle chapter palette shifts for levels 1-25, 26-50, 51-75, 76-100, plus cycle tint support for level 101+.
+- Scene setup: code and assets are okay, but Unity scene/prefab setup should be done through explicit Editor steps unless direct YAML edits are explicitly approved.
+
+Checklist:
+- [ ] Generate background assets: soft star dot, soft nebula/wisp, and 16:9 vertical space gradient.
+- [ ] Add `BackgroundPaletteData` ScriptableObject for four chapter palettes.
+- [ ] Add `SpaceBackgroundController` that listens to `LevelStarted` and applies chapter/cycle visuals.
+- [ ] Add far and near star Particle System layers.
+- [ ] Add gradient, far nebula, and near nebula SpriteRenderer layers.
+- [ ] Keep all background renderers behind gameplay using negative sorting orders on the existing Default sorting layer.
+- [ ] Add slow background drift/parallax that does not affect gameplay timing.
+- [ ] Write Unity Editor setup steps for creating and wiring the `Background` scene root.
+- [ ] Verify readability in an early level, dense level, boss level, shop transition, and level 101.
+
+Acceptance:
+- Level 1 no longer looks like an empty prototype scene.
+- Background motion adds depth without distracting from gameplay.
+- Chapter palettes are noticeable but subtle.
+- Level 101+ cycle tint appears without requiring separate authored background assets.
+- No new dependencies, no mobile-specific work, and no difficulty/economy tuning.
 
 ---
 
 ## Phase 2 — Sprite Replacement
-
-Status: Pending.
 
 Goal:
 - Replace gameplay-critical placeholders with readable final or near-final sprites.
@@ -57,8 +90,6 @@ Acceptance:
 
 ## Phase 3 — Animation Polish
 
-Status: Pending.
-
 Goal:
 - Add simple animations where they improve readability and arcade feel.
 
@@ -74,8 +105,6 @@ Acceptance:
 ---
 
 ## Phase 4 — VFX Pass
-
-Status: Pending.
 
 Goal:
 - Add readable combat and reward effects without hiding gameplay.
@@ -97,8 +126,6 @@ Acceptance:
 
 ## Phase 5 — Lighting and Post-Processing
 
-Status: Pending.
-
 Goal:
 - Add depth and polish with URP 2D lighting while keeping WebGL performance reasonable.
 
@@ -112,26 +139,22 @@ Acceptance:
 
 ---
 
-## Phase 6 — Background Pass
-
-Status: Pending.
+## Phase 6 — Background Integration Check
 
 Goal:
-- Replace empty/flat backgrounds with a readable space backdrop.
+- Re-check the background after sprite, animation, VFX, lighting, and post-processing work are in place.
 
 Checklist:
-- Add parallax starfield or layered space background.
-- Add subtle chapter/cycle color variation if practical.
-- Keep background contrast below gameplay objects.
+- Verify background contrast stays below gameplay objects after new sprites and VFX are added.
+- Verify chapter/cycle color shifts still work after lighting and post-processing are tuned.
+- Adjust background brightness, alpha, density, or drift speed only if readability suffers.
 
 Acceptance:
-- Background adds motion and atmosphere without competing with gameplay.
+- Background still adds motion and atmosphere without competing with gameplay.
 
 ---
 
 ## Phase 7 — Screen Feedback
-
-Status: Pending.
 
 Goal:
 - Make hits, deaths, boss moments, and major events feel stronger.
@@ -151,8 +174,6 @@ Acceptance:
 
 ## Phase 8 — Audio Foundation
 
-Status: Pending.
-
 Goal:
 - Add a stable audio system before assigning many clips.
 
@@ -171,8 +192,6 @@ Acceptance:
 
 ## Phase 9 — SFX Pass
 
-Status: Pending.
-
 Goal:
 - Add first-pass sound feedback for the full v1.0 gameplay loop.
 
@@ -188,8 +207,6 @@ Acceptance:
 ---
 
 ## Phase 10 — Music Pass
-
-Status: Pending.
 
 Goal:
 - Add first-pass music for the current v1.0 game flow.
@@ -209,8 +226,6 @@ Acceptance:
 
 ## Phase 11 — UI and UX Polish
 
-Status: Pending.
-
 Goal:
 - Make existing UI readable, consistent, and presentable without adding leaderboard or mini-game UI.
 
@@ -229,8 +244,6 @@ Acceptance:
 ---
 
 ## Phase 12 — Integration and WebGL Check
-
-Status: Pending.
 
 Goal:
 - Confirm visual/audio polish did not break performance, readability, or existing systems.
