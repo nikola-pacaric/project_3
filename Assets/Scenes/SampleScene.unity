@@ -8890,7 +8890,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 89d659b0955c8ca4fb0e472ae94348a4, type: 3}
-  _startingLevel: 124
+  _startingLevel: 75
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
@@ -9325,7 +9325,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.36078432}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -10650,7 +10650,7 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -0.35
+      scalar: -0.7
       minScalar: 0
       maxCurve:
         serializedVersion: 2

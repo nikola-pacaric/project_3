@@ -36,7 +36,7 @@ Acceptance:
 
 ---
 
-## Phase 1 — Background Pass
+## Phase 1 — Background Pass — Done
 
 Goal:
 - Replace the flat/empty gameplay backdrop with a readable arcade starfield that adds motion and atmosphere without competing with bullets, pickups, enemies, or boss attacks.
@@ -49,23 +49,21 @@ Direction:
 - Scene setup: code and assets are okay, but Unity scene/prefab setup should be done through explicit Editor steps unless direct YAML edits are explicitly approved.
 
 Checklist:
-- [ ] Generate background assets: soft star dot, soft nebula/wisp, and 16:9 vertical space gradient.
-- [ ] Add `BackgroundPaletteData` ScriptableObject for four chapter palettes.
-- [ ] Add `SpaceBackgroundController` that listens to `LevelStarted` and applies chapter/cycle visuals.
-- [ ] Add far and near star Particle System layers.
-- [ ] Add gradient, far nebula, and near nebula SpriteRenderer layers.
-- [ ] Keep all background renderers behind gameplay using negative sorting orders on the existing Default sorting layer.
-- [ ] Add slow background drift/parallax that does not affect gameplay timing.
-- [ ] Write Unity Editor setup steps for creating and wiring the `Background` scene root.
-- [ ] Verify readability in an early level, dense level, boss level, shop transition, and level 101.
+- [x] Generate background assets: soft star dot, soft nebula/wisp, and 16:9 vertical space gradient.
+- [x] Add `BackgroundPaletteData` ScriptableObject for four chapter palettes.
+- [x] Add `SpaceBackgroundController` that listens to `LevelStarted` and applies chapter/cycle visuals.
+- [x] Add far and near star Particle System layers.
+- [x] Add gradient, far nebula, and near nebula SpriteRenderer layers.
+- [x] Keep all background renderers behind gameplay using negative sorting orders on the existing Default sorting layer.
+- [x] Add slow background drift/parallax that does not affect gameplay timing.
+- [x] Write Unity Editor setup steps for creating and wiring the `Background` scene root.
+- [x] Verify readability in an early level, dense level, boss level, shop transition, and level 101.
 
-Acceptance:
-- Level 1 no longer looks like an empty prototype scene.
-- Background motion adds depth without distracting from gameplay.
-- Chapter palettes are noticeable but subtle.
-- Level 101+ cycle tint appears without requiring separate authored background assets.
-- No new dependencies, no mobile-specific work, and no difficulty/economy tuning.
-
+Completion notes:
+- Editor setup was completed manually from Codex setup instructions.
+- Playtest confirmed chapter color changes and cycle tint behavior.
+- Final tuning adjusted chapter transparency and expanded far-star emission to cover the full gameplay screen.
+ 
 ---
 
 ## Phase 2 — Sprite Replacement

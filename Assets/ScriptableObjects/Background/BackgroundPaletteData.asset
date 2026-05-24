@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BackgroundPaletteData
   _chapterPalettes:
   - _name: Chapter 1 - Deep Blue
-    _gradientTint: {r: 0.035, g: 0.055, b: 0.145, a: 1}
+    _gradientTint: {r: 0.035, g: 0.055, b: 0.145, a: 0.88235295}
     _farNebulaTint: {r: 0.1, g: 0.2, b: 0.4, a: 0.22}
     _nearNebulaTint: {r: 0.2, g: 0.46, b: 0.82, a: 0.15}
     _farStarTint: {r: 0.7, g: 0.86, b: 1, a: 0.5}
@@ -30,7 +30,7 @@ MonoBehaviour:
     _nearNebulaDriftDistance: 0.28
     _nearNebulaDriftSeconds: 24
   - _name: Chapter 2 - Violet Rift
-    _gradientTint: {r: 0.055, g: 0.035, b: 0.13, a: 1}
+    _gradientTint: {r: 0.055, g: 0.035, b: 0.13, a: 0.88235295}
     _farNebulaTint: {r: 0.22, g: 0.1, b: 0.38, a: 0.21}
     _nearNebulaTint: {r: 0.48, g: 0.22, b: 0.78, a: 0.14}
     _farStarTint: {r: 0.86, g: 0.74, b: 1, a: 0.48}
@@ -46,7 +46,7 @@ MonoBehaviour:
     _nearNebulaDriftDistance: 0.28
     _nearNebulaDriftSeconds: 24
   - _name: Chapter 3 - Green Sector
-    _gradientTint: {r: 0.025, g: 0.07, b: 0.075, a: 1}
+    _gradientTint: {r: 0.025, g: 0.07, b: 0.075, a: 0.88235295}
     _farNebulaTint: {r: 0.08, g: 0.26, b: 0.2, a: 0.2}
     _nearNebulaTint: {r: 0.2, g: 0.62, b: 0.48, a: 0.13}
     _farStarTint: {r: 0.72, g: 1, b: 0.9, a: 0.46}
@@ -62,7 +62,7 @@ MonoBehaviour:
     _nearNebulaDriftDistance: 0.28
     _nearNebulaDriftSeconds: 24
   - _name: Chapter 4 - Red Alert
-    _gradientTint: {r: 0.09, g: 0.035, b: 0.045, a: 1}
+    _gradientTint: {r: 0.09, g: 0.035, b: 0.045, a: 0.88235295}
     _farNebulaTint: {r: 0.32, g: 0.09, b: 0.12, a: 0.19}
     _nearNebulaTint: {r: 0.82, g: 0.2, b: 0.18, a: 0.12}
     _farStarTint: {r: 1, g: 0.76, b: 0.68, a: 0.44}
