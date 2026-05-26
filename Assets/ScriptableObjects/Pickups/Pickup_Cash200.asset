@@ -15,5 +15,5 @@ MonoBehaviour:
   _effectType: 3
   _displayName: 200
   _amount: 200
-  _sprite: {fileID: 0}
-  _spriteColor: {r: 0.8039216, g: 0.5215687, b: 0.2470588, a: 1}
+  _sprite: {fileID: -9195585506606793437, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _spriteColor: {r: 1, g: 1, b: 1, a: 1}

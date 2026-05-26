@@ -15,5 +15,5 @@ MonoBehaviour:
   _effectType: 13
   _displayName: Shield
   _amount: 1
-  _sprite: {fileID: 0}
-  _spriteColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  _sprite: {fileID: -5660922067487108115, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _spriteColor: {r: 1, g: 1, b: 1, a: 1}

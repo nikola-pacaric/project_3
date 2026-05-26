@@ -15,5 +15,5 @@ MonoBehaviour:
   _effectType: 15
   _displayName: Extra Life
   _amount: 1
-  _sprite: {fileID: 0}
-  _spriteColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  _sprite: {fileID: 9033317595158764154, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _spriteColor: {r: 1, g: 1, b: 1, a: 1}

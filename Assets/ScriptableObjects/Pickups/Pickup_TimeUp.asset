@@ -15,5 +15,5 @@ MonoBehaviour:
   _effectType: 10
   _displayName: Extra Time
   _amount: 1
-  _sprite: {fileID: 0}
-  _spriteColor: {r: 0, g: 0, b: 0.5450981, a: 1}
+  _sprite: {fileID: 2735089262321303741, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _spriteColor: {r: 1, g: 1, b: 1, a: 1}

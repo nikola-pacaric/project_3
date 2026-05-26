@@ -15,5 +15,5 @@ MonoBehaviour:
   _effectType: 11
   _displayName: Autofire
   _amount: 1
-  _sprite: {fileID: 0}
-  _spriteColor: {r: 1, g: 1, b: 0.83137256, a: 1}
+  _sprite: {fileID: 8107767475531076263, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _spriteColor: {r: 1, g: 1, b: 1, a: 1}
