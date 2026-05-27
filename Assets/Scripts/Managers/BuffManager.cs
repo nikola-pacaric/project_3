@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Warblade.Data;
-using Warblade.Data.Events;
 
 namespace Warblade.Managers
 {
@@ -17,9 +16,6 @@ namespace Warblade.Managers
         [SerializeField, Min(0f)] private float _rapidFireBaseDurationSeconds = 8f;
         [SerializeField, Min(0f)] private float _shieldBaseDurationSeconds = 6f;
         [SerializeField, Min(0f)] private float _secondsPerTimeLevel = 2f;
-
-        [Header("Event Channels")]
-        [SerializeField] private BuffTimerEventChannel _buffTimerChanged;
 
         private readonly float[] _remainingSeconds = new float[Enum.GetValues(typeof(BuffType)).Length];
         private readonly float[] _durationSeconds = new float[Enum.GetValues(typeof(BuffType)).Length];
@@ -48,15 +44,12 @@ namespace Warblade.Managers
                 if (_remainingSeconds[i] <= 0f) continue;
 
                 _remainingSeconds[i] = Mathf.Max(0f, _remainingSeconds[i] - deltaTime);
-                BuffType buffType = (BuffType)i;
 
                 if (_remainingSeconds[i] <= 0f)
                 {
                     _durationSeconds[i] = 0f;
                     SyncShieldState();
                 }
-
-                RaiseBuffTimerChanged(buffType);
             }
         }
 
@@ -92,7 +85,6 @@ namespace Warblade.Managers
             _durationSeconds[index] = duration;
             _remainingSeconds[index] = duration;
             SyncShieldState();
-            RaiseBuffTimerChanged(buffType);
         }
 
         /// <summary>
@@ -128,7 +120,6 @@ namespace Warblade.Managers
             {
                 _remainingSeconds[i] = 0f;
                 _durationSeconds[i] = 0f;
-                RaiseBuffTimerChanged((BuffType)i);
             }
 
             SyncShieldState();
@@ -166,12 +157,6 @@ namespace Warblade.Managers
         private void SyncShieldState()
         {
             RunStatsManager.Instance?.SetShieldActive(IsShieldActive);
-        }
-
-        private void RaiseBuffTimerChanged(BuffType buffType)
-        {
-            int index = GetIndex(buffType);
-            _buffTimerChanged?.Raise(buffType, _remainingSeconds[index], _durationSeconds[index]);
         }
     }
 }

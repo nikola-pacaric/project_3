@@ -32,7 +32,6 @@ namespace Warblade.Managers
         [SerializeField] private IntEventChannel _cashChanged;
         [SerializeField] private IntEventChannel _livesChanged;
         [SerializeField] private IntEventChannel _armourChanged;
-        [SerializeField] private WeaponTierEventChannel _weaponTierChanged;
         [SerializeField] private IntEventChannel _effectiveSpeedLevelChanged;
         [SerializeField] private IntEventChannel _effectiveBulletsLevelChanged;
         [SerializeField] private IntEventChannel _effectiveTimeLevelChanged;
@@ -197,7 +196,6 @@ namespace Warblade.Managers
             if (_weaponTier == clampedTier) return;
 
             _weaponTier = clampedTier;
-            RaiseWeaponTierChanged();
         }
 
         /// <summary>
@@ -377,7 +375,6 @@ namespace Warblade.Managers
             RaiseCashChanged();
             RaiseLivesChanged();
             RaiseArmourChanged();
-            RaiseWeaponTierChanged();
             RaiseEffectiveSpeedLevelChanged();
             RaiseEffectiveBulletsLevelChanged();
             RaiseEffectiveTimeLevelChanged();
@@ -388,8 +385,6 @@ namespace Warblade.Managers
         private void RaiseLivesChanged() => _livesChanged?.Raise(_lives);
 
         private void RaiseArmourChanged() => _armourChanged?.Raise(_armour);
-
-        private void RaiseWeaponTierChanged() => _weaponTierChanged?.Raise(_weaponTier);
 
         private void RaiseEffectiveSpeedLevelChanged() => _effectiveSpeedLevelChanged?.Raise(EffectiveSpeedLevel);
 
