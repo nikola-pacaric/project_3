@@ -4,7 +4,19 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 8831688700652102793
-    second: ChatGPT Image May 24, 2026, 02_32_16 PM_0
+    second: Boss4_0
+  - first:
+      213: 1831688700652102794
+    second: Boss4_1
+  - first:
+      213: 2831688700652102795
+    second: Boss4_2
+  - first:
+      213: 3831688700652102796
+    second: Boss4_3
+  - first:
+      213: 4831688700652102797
+    second: Boss4_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +151,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ChatGPT Image May 24, 2026, 02_32_16 PM_0
+      name: Boss4_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2172
-        height: 724
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +166,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9842339b416709a70800000000000000
+      spriteID: b4fa86220def53f48b45c55bb7c9cb9c
       internalID: 8831688700652102793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss4_1
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 384
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d7c451499d55f029f93a42372a5dde7
+      internalID: 1831688700652102794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss4_2
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 384
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d71951b91bbe566b979231dfe7a58ce0
+      internalID: 2831688700652102795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss4_3
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 0
+        width: 384
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e795b8e713356569e574cf691da5917
+      internalID: 3831688700652102796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss4_4
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 384
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c0d243369ee534c9cc90040bd0c8448
+      internalID: 4831688700652102797
       vertices: []
       indices: 
       edges: []
@@ -174,7 +274,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ChatGPT Image May 24, 2026, 02_32_16 PM_0: 8831688700652102793
+      Boss4_0: 8831688700652102793
+      Boss4_1: 1831688700652102794
+      Boss4_2: 2831688700652102795
+      Boss4_3: 3831688700652102796
+      Boss4_4: 4831688700652102797
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,22 +1,10 @@
 fileFormatVersion: 2
-guid: f6e479c01e4cf7d49afb4e882f19a228
+guid: 1e9ab1c4500959f4dadb0f1d962fc0ab
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1878704745694316283
-    second: ChatGPT Image May 26, 2026, 06_19_54 PM_0
-  - first:
-      213: 1217084268348104203
-    second: ChatGPT Image May 26, 2026, 06_19_54 PM_1
-  - first:
-      213: 8319702028319394925
-    second: ChatGPT Image May 26, 2026, 06_19_54 PM_2
-  - first:
-      213: 2618401552009930580
-    second: ChatGPT Image May 26, 2026, 06_19_54 PM_3
-  - first:
-      213: -1033867060490855365
-    second: ChatGPT Image May 26, 2026, 06_19_54 PM_4
+      213: -2313838572340273266
+    second: BossHealthBar_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -63,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -87,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -97,6 +85,19 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -121,17 +122,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ChatGPT Image May 26, 2026, 06_19_54 PM_0
+      name: BossHealthBar_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 0
         y: 0
-        width: 379
-        height: 1024
+        width: 2508
+        height: 627
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,96 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bf643fc2300821a10800000000000000
-      internalID: 1878704745694316283
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image May 26, 2026, 06_19_54 PM_1
-      rect:
-        serializedVersion: 2
-        x: 327
-        y: 398
-        width: 289
-        height: 321
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b0eda9491b3f3e010800000000000000
-      internalID: 1217084268348104203
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image May 26, 2026, 06_19_54 PM_2
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 0
-        width: 589
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d6c03134ae4857370800000000000000
-      internalID: 8319702028319394925
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image May 26, 2026, 06_19_54 PM_3
-      rect:
-        serializedVersion: 2
-        x: 919
-        y: 385
-        width: 298
-        height: 320
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 45722e2b65e665420800000000000000
-      internalID: 2618401552009930580
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image May 26, 2026, 06_19_54 PM_4
-      rect:
-        serializedVersion: 2
-        x: 985
-        y: 0
-        width: 541
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b3c177ad267f6a1f0800000000000000
-      internalID: -1033867060490855365
+      spriteID: e8f9f04e31893efd0800000000000000
+      internalID: -2313838572340273266
       vertices: []
       indices: 
       edges: []
@@ -248,11 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ChatGPT Image May 26, 2026, 06_19_54 PM_0: 1878704745694316283
-      ChatGPT Image May 26, 2026, 06_19_54 PM_1: 1217084268348104203
-      ChatGPT Image May 26, 2026, 06_19_54 PM_2: 8319702028319394925
-      ChatGPT Image May 26, 2026, 06_19_54 PM_3: 2618401552009930580
-      ChatGPT Image May 26, 2026, 06_19_54 PM_4: -1033867060490855365
+      BossHealthBar_0: -2313838572340273266
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

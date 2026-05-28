@@ -44,8 +44,12 @@ GameObject:
   - component: {fileID: 9030766919468926362}
   - component: {fileID: 9131778454682556202}
   - component: {fileID: 9111071172135918612}
+  - component: {fileID: 103105354084253417}
+  - component: {fileID: 3243315511670949031}
+  - component: {fileID: 5412058709415332418}
+  - component: {fileID: 1649324141613189325}
   m_Layer: 7
-  m_Name: Boss
+  m_Name: Boss4_KingOfDarkness
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,8 +65,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 7.88, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1.6, y: 1.4999999, z: 1.4999999}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2504996352442769693}
   m_Father: {fileID: 0}
@@ -116,7 +120,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7552218760340626732, guid: 830cbf6be9c2e2d439bda74054380b32, type: 3}
+  m_Sprite: {fileID: 8831688700652102793, guid: 9bd7cd8ba1551f64fba64443a94f01c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -186,17 +190,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.015443206, y: -0.10743356}
+  m_Offset: {x: -0.0035502315, y: -0.05678445}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.03, y: 2.46}
+    oldSize: {x: 3.84, y: 3.84}
     newSize: {x: 3.03, y: 2.46}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.7112968, y: 2.0902}
+  m_Size: {x: 2.9772043, y: 1.1785151}
   m_EdgeRadius: 0
 --- !u!95 &9111071172135918612
 Animator:
@@ -208,7 +212,7 @@ Animator:
   m_GameObject: {fileID: 6408120631548049153}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 08d6f5d2409296044891ecae64fb6f38, type: 2}
+  m_Controller: {fileID: 9100000, guid: 31092fa5c1b4d9f488138ffc98af9878, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -220,3 +224,51 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &103105354084253417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408120631548049153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9a792c7ef3d4d968c2a8ce8381f9392, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.BossHealth
+--- !u!114 &3243315511670949031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408120631548049153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f23cba62c076482a975f7366bd40ff0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.BossMovement
+--- !u!114 &5412058709415332418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408120631548049153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d806089e0bb74795ab7cad8a0914c53b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.BossShooter
+--- !u!114 &1649324141613189325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408120631548049153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eb3e7f68da040ab815a338034ca26d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.BossVisuals

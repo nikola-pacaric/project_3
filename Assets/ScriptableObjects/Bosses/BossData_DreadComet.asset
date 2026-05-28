@@ -50,3 +50,5 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
     - {fileID: 11400000, guid: 229846e4d44441b9a52a054b04fa27ce, type: 2}
   _rewardDropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}
+  _healthBarFrameSprite: {fileID: 1666653390876938245, guid: b1fa30d21fe34edeb95c2fa00b7cca90, type: 3}
+  _healthBarFillSprite: {fileID: 5497919639337944171, guid: 115db106f01f4ba9b524f60fd5d72717, type: 3}

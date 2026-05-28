@@ -29,6 +29,8 @@ MonoBehaviour:
   _fireCooldownMax: 6
   _lingerDurationMin: 0.5
   _lingerDurationMax: 1.5
+  _bulletSpeedMin: 3
+  _bulletSpeedMax: 8
   _diveCurveUpMin: 0.35
   _diveCurveUpMax: 1.2
   _diveCurveSideMin: 0.75
@@ -36,5 +38,10 @@ MonoBehaviour:
   _diveAimOffsetXMin: -0.75
   _diveAimOffsetXMax: 0.75
   _diveTrackingPortion: 0.6
+  _motherRoamSpeed: 2.5
+  _motherRoamBoundsMin: {x: -10.75, y: 1.25}
+  _motherRoamBoundsMax: {x: 10.75, y: 4.75}
+  _motherRoamRetargetIntervalMin: 1.25
+  _motherRoamRetargetIntervalMax: 3
   _spriteColor: {r: 1, g: 1, b: 1, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}

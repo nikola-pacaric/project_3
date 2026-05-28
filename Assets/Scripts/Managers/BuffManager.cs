@@ -23,6 +23,7 @@ namespace Warblade.Managers
         public bool IsAutofireActive => IsActive(BuffType.Autofire);
         public bool IsRapidFireActive => IsActive(BuffType.RapidFire);
         public bool IsShieldActive => IsActive(BuffType.Shield);
+        public float SecondsPerTimeLevel => _secondsPerTimeLevel;
 
         private void Awake()
         {
@@ -147,6 +148,11 @@ namespace Warblade.Managers
                 default:
                     return 0f;
             }
+        }
+
+        public float GetBaseDurationSeconds(BuffType buffType)
+        {
+            return GetBaseDuration(buffType);
         }
 
         private int GetIndex(BuffType buffType)

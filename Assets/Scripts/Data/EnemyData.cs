@@ -36,6 +36,10 @@ namespace Warblade.Data
         [SerializeField] private float _lingerDurationMin = 0.5f;
         [SerializeField] private float _lingerDurationMax = 1.5f;
 
+        [Header("Shooting")]
+        [SerializeField, Min(0f)] private float _bulletSpeedMin = 6.25f;
+        [SerializeField, Min(0f)] private float _bulletSpeedMax = 8f;
+
         [Header("Dive Path")]
         [SerializeField, Min(0f)] private float _diveCurveUpMin = 0.35f;
         [SerializeField, Min(0f)] private float _diveCurveUpMax = 1.2f;
@@ -78,6 +82,8 @@ namespace Warblade.Data
         public float FireCooldownMax => _fireCooldownMax;
         public float LingerDurationMin => _lingerDurationMin;
         public float LingerDurationMax => _lingerDurationMax;
+        public float BulletSpeedMin => _bulletSpeedMin;
+        public float BulletSpeedMax => _bulletSpeedMax;
         public float DiveCurveUpMin => _diveCurveUpMin;
         public float DiveCurveUpMax => _diveCurveUpMax;
         public float DiveCurveSideMin => _diveCurveSideMin;
@@ -101,6 +107,8 @@ namespace Warblade.Data
             _fireCooldownMax = Mathf.Max(_fireCooldownMin, _fireCooldownMax);
             _lingerDurationMin = Mathf.Max(0f, _lingerDurationMin);
             _lingerDurationMax = Mathf.Max(_lingerDurationMin, _lingerDurationMax);
+            _bulletSpeedMin = Mathf.Max(0f, _bulletSpeedMin);
+            _bulletSpeedMax = Mathf.Max(_bulletSpeedMin, _bulletSpeedMax);
             _diveCurveUpMin = Mathf.Max(0f, _diveCurveUpMin);
             _diveCurveUpMax = Mathf.Max(_diveCurveUpMin, _diveCurveUpMax);
             _diveCurveSideMin = Mathf.Max(0f, _diveCurveSideMin);

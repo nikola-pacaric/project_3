@@ -70,7 +70,8 @@ namespace Warblade.Entities
             if (_bulletPool != null)
             {
                 Bullet bullet = _bulletPool.Get();
-                bullet.Spawn(transform.position);
+                float bulletSpeed = Random.Range(data.BulletSpeedMin, data.BulletSpeedMax);
+                bullet.Spawn(transform.position, Vector2.down, bulletSpeed);
             }
 
             ScheduleNextFire(data);

@@ -9,11 +9,13 @@ namespace Warblade.Entities
     {
         [SerializeField] private PickupData _data;
         [SerializeField] private SpriteRenderer _spriteRenderer;
-        [SerializeField, Min(0f)] private float _fallSpeed = 2.5f;
+        [SerializeField, Min(0f)] private float _fallSpeedMin = 2f;
+        [SerializeField, Min(0f)] private float _fallSpeedMax = 3.25f;
         [SerializeField] private float _despawnY = -6.25f;
 
         private IObjectPool<Pickup> _pool;
         private bool _hasResolved;
+        private float _currentFallSpeed;
 
         public static int ActivePickupCount { get; private set; }
         public PickupData Data => _data;
@@ -46,6 +48,8 @@ namespace Warblade.Entities
                 _spriteRenderer = GetComponent<SpriteRenderer>();
             }
 
+            _fallSpeedMin = Mathf.Max(0f, _fallSpeedMin);
+            _fallSpeedMax = Mathf.Max(_fallSpeedMin, _fallSpeedMax);
             ApplyVisualsFromData();
         }
 
@@ -59,6 +63,7 @@ namespace Warblade.Entities
             transform.position = position;
             _data = data;
             _hasResolved = false;
+            _currentFallSpeed = Random.Range(_fallSpeedMin, _fallSpeedMax);
             ActivePickupCount++;
             ApplyVisualsFromData();
         }
@@ -72,7 +77,7 @@ namespace Warblade.Entities
         {
             if (_hasResolved) return;
 
-            transform.Translate(Vector3.down * (_fallSpeed * Time.deltaTime), Space.World);
+            transform.Translate(Vector3.down * (_currentFallSpeed * Time.deltaTime), Space.World);
 
             if (transform.position.y <= _despawnY)
             {

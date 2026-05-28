@@ -17,6 +17,9 @@ namespace Warblade.Entities
         [Header("Runtime Debug")]
         [SerializeField] private float _currentMovementSpeed;
 
+        public float BaseSpeed => _baseSpeed;
+        public float SpeedPerSpeedLevel => _speedPerSpeedLevel;
+
         private void Update()
         {
             if (_input == null) return;

@@ -39,50 +39,23 @@ Acceptance:
 ## Phase 1 — Background Pass — Done
 
 Goal:
-- Replace the flat/empty gameplay backdrop with a readable arcade starfield that adds motion and atmosphere without competing with bullets, pickups, enemies, or boss attacks.
+- Add a readable arcade starfield that supports chapter palettes, cycle tinting, and subtle motion without competing with gameplay.
 
-Direction:
-- Visual style: restrained arcade starfield.
-- Implementation: hybrid built-in Unity setup with SpriteRenderers for gradient/nebula layers and Particle Systems for stars.
-- Asset source: generated bitmap assets, no third-party dependencies.
-- Variation: subtle chapter palette shifts for levels 1-25, 26-50, 51-75, 76-100, plus cycle tint support for level 101+.
-- Scene setup: code and assets are okay, but Unity scene/prefab setup should be done through explicit Editor steps unless direct YAML edits are explicitly approved.
-
-Checklist:
-- [x] Generate background assets: soft star dot, soft nebula/wisp, and 16:9 vertical space gradient.
-- [x] Add `BackgroundPaletteData` ScriptableObject for four chapter palettes.
-- [x] Add `SpaceBackgroundController` that listens to `LevelStarted` and applies chapter/cycle visuals.
-- [x] Add far and near star Particle System layers.
-- [x] Add gradient, far nebula, and near nebula SpriteRenderer layers.
-- [x] Keep all background renderers behind gameplay using negative sorting orders on the existing Default sorting layer.
-- [x] Add slow background drift/parallax that does not affect gameplay timing.
-- [x] Write Unity Editor setup steps for creating and wiring the `Background` scene root.
-- [x] Verify readability in an early level, dense level, boss level, shop transition, and level 101.
-
-Completion notes:
-- Editor setup was completed manually from Codex setup instructions.
-- Playtest confirmed chapter color changes and cycle tint behavior.
-- Final tuning adjusted chapter transparency and expanded far-star emission to cover the full gameplay screen.
+Done:
+- Generated background assets, added palette data/controller support, and wired the scene setup manually from Codex steps.
+- Playtest confirmed chapter colors, cycle tint behavior, screen coverage, and gameplay readability.
  
 ---
 
-## Phase 2 — Sprite Replacement
+## Phase 2 — Sprite Replacement — Done
 
 Goal:
 - Replace gameplay-critical placeholders with readable final or near-final sprites.
 
-Checklist:
-- Player ship and thruster visuals.
-- All normal enemy sprites.
-- Special enemy sprites: kamikaze, bonus snake, mother, and current variants.
-- Four distinct boss sprites.
-- Player bullets and enemy bullets.
-- Pickup icons/sprites with colors that match their actual effect.
-- Basic UI icons for lives, armour, cash, weapon tier, buffs, shop, pause, and settings where useful.
-
-Acceptance:
-- A normal level can be played without obvious colored-box placeholder sprites.
-- Player, enemies, bullets, pickups, and hazards are readable at gameplay speed.
+Done:
+- Player, enemy, boss, bullet, pickup, shield, boss bar, and run-stat bar visuals were replaced or upgraded for gameplay readability.
+- Kamikaze and bonus enemies intentionally reuse regular enemy visuals; their behavior is what differentiates them.
+- Remaining visual adjustments, including bullet glow/color, deeper HUD/shop polish, and final boss data hookup, are deferred to later polish/tuning phases.
 
 ---
 

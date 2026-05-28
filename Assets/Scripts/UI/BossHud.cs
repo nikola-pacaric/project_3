@@ -16,16 +16,30 @@ namespace Warblade.UI
         [Header("View")]
         [SerializeField] private GameObject _root;
         [SerializeField] private TMP_Text _nameText;
+        [SerializeField] private Image _healthBarFrame;
         [SerializeField] private Image _healthFill;
 
         [Header("Behavior")]
         [SerializeField] private bool _hideWhenInactive = true;
+
+        private Sprite _defaultHealthBarFrameSprite;
+        private Sprite _defaultHealthBarFillSprite;
 
         private void Awake()
         {
             if (_root == null)
             {
                 _root = gameObject;
+            }
+
+            if (_healthBarFrame != null)
+            {
+                _defaultHealthBarFrameSprite = _healthBarFrame.sprite;
+            }
+
+            if (_healthFill != null)
+            {
+                _defaultHealthBarFillSprite = _healthFill.sprite;
             }
 
             SetVisible(!_hideWhenInactive);
@@ -59,6 +73,8 @@ namespace Warblade.UI
         {
             SetVisible(true);
             SetNameText(bossData);
+            SetHealthBarSprites(bossData);
+            ResetHealthFill();
         }
 
         private void HandleBossHealthChanged(int currentHealth, int maxHealth)
@@ -97,6 +113,35 @@ namespace Warblade.UI
             if (_nameText != null)
             {
                 _nameText.text = bossData != null ? bossData.DisplayName : string.Empty;
+            }
+        }
+
+        private void SetHealthBarSprites(BossData bossData)
+        {
+            if (_healthBarFrame != null)
+            {
+                Sprite frameSprite = bossData != null && bossData.HealthBarFrameSprite != null
+                    ? bossData.HealthBarFrameSprite
+                    : _defaultHealthBarFrameSprite;
+
+                _healthBarFrame.sprite = frameSprite;
+            }
+
+            if (_healthFill != null)
+            {
+                Sprite fillSprite = bossData != null && bossData.HealthBarFillSprite != null
+                    ? bossData.HealthBarFillSprite
+                    : _defaultHealthBarFillSprite;
+
+                _healthFill.sprite = fillSprite;
+            }
+        }
+
+        private void ResetHealthFill()
+        {
+            if (_healthFill != null)
+            {
+                _healthFill.fillAmount = 1f;
             }
         }
     }

@@ -1,6 +1,9 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Warblade.Data;
 using Warblade.Data.Events;
+using Warblade.Entities;
 using Warblade.Managers;
 
 namespace Warblade.UI
@@ -20,6 +23,10 @@ namespace Warblade.UI
         [SerializeField] private RunStatDisplay _stat;
         [SerializeField] private IntEventChannel _changed;
         [SerializeField] private TMP_Text _text;
+        [SerializeField] private Image _fillImage;
+        [SerializeField] private PlayerShooting _playerShooting;
+        [SerializeField] private PlayerMovement _playerMovement;
+        [SerializeField] private BuffType _timeDurationBuffType = BuffType.Autofire;
         [SerializeField] private string _format = "{0}";
         [SerializeField] private bool _showBar;
         [SerializeField, Min(1)] private int _barWidth = 10;
@@ -27,6 +34,11 @@ namespace Warblade.UI
         [SerializeField] private string _emptyBarCharacter = "-";
 
         private void Awake()
+        {
+            Refresh();
+        }
+
+        private void Start()
         {
             Refresh();
         }
@@ -59,7 +71,11 @@ namespace Warblade.UI
             RunStatsManager runStats = RunStatsManager.Instance;
             if (runStats == null) return;
 
-            SetText(runStats, GetCurrentValue(runStats));
+            int currentValue = GetCurrentValue(runStats);
+            int maxValue = GetMaxValue(runStats);
+
+            SetText(currentValue, maxValue);
+            SetFill(currentValue, maxValue);
         }
 
         private int GetCurrentValue(RunStatsManager runStats)
@@ -87,6 +103,8 @@ namespace Warblade.UI
         {
             switch (_stat)
             {
+                case RunStatDisplay.Lives:
+                    return runStats.MaxLives;
                 case RunStatDisplay.Armour:
                     return runStats.MaxArmour;
                 case RunStatDisplay.Speed:
@@ -100,17 +118,109 @@ namespace Warblade.UI
             }
         }
 
-        private void SetText(RunStatsManager runStats, int value)
+        private void SetText(int value, int maxValue)
         {
             if (_text != null)
             {
-                int maxValue = GetMaxValue(runStats);
                 string bar = _showBar && maxValue > 0
                     ? BuildBar(value, maxValue)
                     : string.Empty;
 
                 _text.text = string.Format(_format, value, maxValue, bar);
             }
+        }
+
+        private void SetFill(int value, int maxValue)
+        {
+            if (_fillImage == null)
+            {
+                return;
+            }
+
+            GetFillValues(value, maxValue, out float totalValue, out float totalMaxValue);
+
+            _fillImage.fillAmount = totalMaxValue <= 0
+                ? 0f
+                : Mathf.Clamp01(totalValue / totalMaxValue);
+        }
+
+        private void GetFillValues(int value, int maxValue, out float totalValue, out float totalMaxValue)
+        {
+            switch (_stat)
+            {
+                case RunStatDisplay.Bullets:
+                    GetBulletFillValues(value, maxValue, out totalValue, out totalMaxValue);
+                    return;
+
+                case RunStatDisplay.Speed:
+                    GetSpeedFillValues(value, maxValue, out totalValue, out totalMaxValue);
+                    return;
+
+                case RunStatDisplay.Time:
+                    GetTimeFillValues(value, maxValue, out totalValue, out totalMaxValue);
+                    return;
+
+                default:
+                    totalValue = value;
+                    totalMaxValue = maxValue;
+                    return;
+            }
+        }
+
+        private void GetBulletFillValues(int value, int maxValue, out float totalValue, out float totalMaxValue)
+        {
+            if (_playerShooting == null)
+            {
+                totalValue = value;
+                totalMaxValue = maxValue;
+                return;
+            }
+
+            int baseMaxActiveBullets = _playerShooting.BaseMaxActiveBullets;
+            totalValue = baseMaxActiveBullets + value;
+            totalMaxValue = baseMaxActiveBullets + maxValue;
+        }
+
+        private void GetSpeedFillValues(int value, int maxValue, out float totalValue, out float totalMaxValue)
+        {
+            PlayerMovement playerMovement = ResolvePlayerMovement();
+            if (playerMovement == null)
+            {
+                totalValue = value;
+                totalMaxValue = maxValue;
+                return;
+            }
+
+            totalValue = playerMovement.BaseSpeed + value * playerMovement.SpeedPerSpeedLevel;
+            totalMaxValue = playerMovement.BaseSpeed + maxValue * playerMovement.SpeedPerSpeedLevel;
+        }
+
+        private void GetTimeFillValues(int value, int maxValue, out float totalValue, out float totalMaxValue)
+        {
+            BuffManager buffManager = BuffManager.Instance;
+            if (buffManager == null)
+            {
+                totalValue = value;
+                totalMaxValue = maxValue;
+                return;
+            }
+
+            float baseDuration = buffManager.GetBaseDurationSeconds(_timeDurationBuffType);
+            float secondsPerLevel = buffManager.SecondsPerTimeLevel;
+            totalValue = baseDuration + value * secondsPerLevel;
+            totalMaxValue = baseDuration + maxValue * secondsPerLevel;
+        }
+
+        private PlayerMovement ResolvePlayerMovement()
+        {
+            if (_playerMovement != null)
+            {
+                return _playerMovement;
+            }
+
+            return _playerShooting != null
+                ? _playerShooting.GetComponent<PlayerMovement>()
+                : null;
         }
 
         private string BuildBar(int value, int maxValue)

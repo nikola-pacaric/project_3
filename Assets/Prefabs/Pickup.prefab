@@ -108,7 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Pickup
   _data: {fileID: 0}
   _spriteRenderer: {fileID: 392402228317719908}
-  _fallSpeed: 2.5
+  _fallSpeedMin: 1
+  _fallSpeedMax: 5
   _despawnY: -6.25
 --- !u!50 &8697706559614703622
 Rigidbody2D:

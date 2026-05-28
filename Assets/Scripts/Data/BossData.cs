@@ -23,6 +23,10 @@ namespace Warblade.Data
         [Header("Rewards")]
         [SerializeField] private DropTable _rewardDropTable;
 
+        [Header("HUD")]
+        [SerializeField] private Sprite _healthBarFrameSprite;
+        [SerializeField] private Sprite _healthBarFillSprite;
+
         public string DisplayName => _displayName;
         public int MaxHealth => _maxHealth;
         public int ScoreValue => _scoreValue;
@@ -32,6 +36,8 @@ namespace Warblade.Data
         public int ContactDamage => _contactDamage;
         public IReadOnlyList<BossPhaseData> Phases => _phases;
         public DropTable RewardDropTable => _rewardDropTable;
+        public Sprite HealthBarFrameSprite => _healthBarFrameSprite;
+        public Sprite HealthBarFillSprite => _healthBarFillSprite;
 
         private void OnValidate()
         {
