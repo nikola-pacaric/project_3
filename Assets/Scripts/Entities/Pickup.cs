@@ -11,6 +11,7 @@ namespace Warblade.Entities
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField, Min(0f)] private float _fallSpeedMin = 2f;
         [SerializeField, Min(0f)] private float _fallSpeedMax = 3.25f;
+        [SerializeField] private float _rotationSpeedDegreesPerSecond = 180f;
         [SerializeField] private float _despawnY = -6.25f;
 
         private IObjectPool<Pickup> _pool;
@@ -78,6 +79,7 @@ namespace Warblade.Entities
             if (_hasResolved) return;
 
             transform.Translate(Vector3.down * (_currentFallSpeed * Time.deltaTime), Space.World);
+            transform.Rotate(0f, 0f, _rotationSpeedDegreesPerSecond * Time.deltaTime, Space.Self);
 
             if (transform.position.y <= _despawnY)
             {

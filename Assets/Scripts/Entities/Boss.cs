@@ -56,12 +56,15 @@ namespace Warblade.Entities
             _state == BossState.Intro ||
             _state == BossState.Transitioning ||
             _state == BossState.Active;
-        public bool HasEnteredArena => _state == BossState.Transitioning || _state == BossState.Active;
+        public bool HasEnteredArena =>
+            _state == BossState.Intro ||
+            _state == BossState.Transitioning ||
+            _state == BossState.Active;
         public bool IsDefeated => _state == BossState.Defeated;
         public bool IsEncounterRunning => IsActive;
 
         internal BossState State => _state;
-        internal bool CanTakeDamage => _state != BossState.Inactive && _state != BossState.Defeated;
+        internal bool CanTakeDamage => HasEnteredArena;
         internal bool CanDealContactDamage => CanTakeDamage && _data != null;
 
         private bool HasCurrentPhase =>
@@ -150,10 +153,10 @@ namespace Warblade.Entities
             _currentPhaseIndex = ResolvePhaseIndex();
             _movement.Spawn(_data, _cycleScaling);
             _shooter.Spawn(_cycleScaling);
+            _visuals.PauseAnimationAtFirstFrame();
             _visuals.ApplyCycleVisuals(_cycleScaling);
             _state = BossState.Entering;
 
-            _bossSpawned?.Raise(_data);
             RaiseHealthChanged();
             RaisePhaseChanged();
         }
@@ -255,6 +258,8 @@ namespace Warblade.Entities
         private void BeginIntro()
         {
             _state = BossState.Intro;
+            _visuals.PlayAnimation();
+            _bossSpawned?.Raise(_data);
             _bossIntroStarted?.Raise(_data);
 
             if (_introDuration <= Mathf.Epsilon)

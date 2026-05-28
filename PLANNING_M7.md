@@ -59,19 +59,16 @@ Done:
 
 ---
 
-## Phase 3 — Animation Polish
+## Phase 3 — Animation Polish — Done
 
 Goal:
 - Add simple animations where they improve readability and arcade feel.
 
-Checklist:
-- Player thrust, hit, and death presentation.
-- Enemy idle/formation and death animation.
-- Boss intro, hurt, phase-change, and death presentation.
-- Pickup spawn, idle shimmer/bob, and collect animation.
-
-Acceptance:
-- Animation improves feel without changing gameplay timing or breaking pooling.
+Done:
+- Enemy sprite loops are already wired for the current enemy sets.
+- Added player thruster particles, pickup spin, and player death/respawn timing with temporary invulnerability.
+- Bosses now enter on a frozen first frame, start their idle animation after reaching position, become vulnerable at that moment, and trigger the boss HUD slide-in.
+- Playtest confirmed the Phase 3 animation timing works. Explosions and impact particles stay in Phase 4.
 
 ---
 

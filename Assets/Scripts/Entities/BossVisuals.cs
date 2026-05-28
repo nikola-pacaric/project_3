@@ -8,6 +8,7 @@ namespace Warblade.Entities
     {
         private SpriteRenderer[] _spriteRenderers;
         private Color[] _baseSpriteColors;
+        private Animator[] _animators;
 
         internal void Initialize(SpriteRenderer[] spriteRenderers)
         {
@@ -24,6 +25,46 @@ namespace Warblade.Entities
             for (int i = 0; i < _baseSpriteColors.Length; i++)
             {
                 _baseSpriteColors[i] = _spriteRenderers[i] == null ? Color.white : _spriteRenderers[i].color;
+            }
+
+            _animators = GetComponentsInChildren<Animator>(true);
+        }
+
+        internal void PauseAnimationAtFirstFrame()
+        {
+            if (_animators == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _animators.Length; i++)
+            {
+                Animator animator = _animators[i];
+                if (animator == null)
+                {
+                    continue;
+                }
+
+                animator.speed = 0f;
+                animator.Rebind();
+                animator.Update(0f);
+            }
+        }
+
+        internal void PlayAnimation()
+        {
+            if (_animators == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _animators.Length; i++)
+            {
+                Animator animator = _animators[i];
+                if (animator != null)
+                {
+                    animator.speed = 1f;
+                }
             }
         }
 
