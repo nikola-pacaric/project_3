@@ -266,6 +266,7 @@ namespace Warblade.Entities
                 ScoreManager.Instance.AddScore(_data.ScoreValue);
             }
 
+            VfxManager.Instance?.Play(VfxCue.EnemyDeath, transform.position);
             PickupDropPool.Instance?.TryDrop(_data.DropTable, transform.position);
 
             Release(killed: true);

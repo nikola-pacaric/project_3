@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using Warblade.Data;
 using Warblade.Managers;
+using Warblade.Systems;
 
 namespace Warblade.Entities
 {
@@ -93,6 +94,7 @@ namespace Warblade.Entities
             if (other.GetComponentInParent<PlayerHealth>() == null) return;
 
             ApplyEffect();
+            VfxManager.Instance?.Play(VfxCue.PickupCollect, transform.position);
             ReturnToPool();
         }
 

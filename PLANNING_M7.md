@@ -78,13 +78,25 @@ Goal:
 - Add readable combat and reward effects without hiding gameplay.
 
 Checklist:
-- Player and enemy muzzle flashes.
-- Bullet impact sparks.
-- Enemy death explosions.
-- Boss hit, phase-change, and death effects.
-- Player hit, shield hit, and death effects.
-- Pickup spawn and collect effects.
-- Level start, level complete, boss warning, and boss defeat effects.
+- [x] Player muzzle flash.
+- [x] Bullet impact sparks.
+- [x] Enemy death explosions.
+- [x] Pickup collect effect.
+- [ ] Player hit effect.
+- [ ] Shield hit effect.
+- [ ] Player death effect.
+- [ ] Boss muzzle flash.
+- [ ] Boss hit effect.
+- [ ] Boss phase-change effect.
+- [ ] Boss warning effect.
+- [ ] Boss death effect.
+- [ ] Boss defeat effect.
+- [ ] Level start effect.
+- [ ] Level complete effect.
+
+Decisions:
+- Small enemy muzzle flashes are intentionally skipped so enemy bullets remain clean and readable.
+- Pickup spawn effects are intentionally skipped so drops can appear without adding screen clutter.
 
 Acceptance:
 - Combat feels responsive and readable.

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Warblade.Data;
 using Warblade.Managers;
 using Warblade.Systems;
 
@@ -70,16 +71,19 @@ namespace Warblade.Entities
 
             if (IsShieldActive(runStats))
             {
+                VfxManager.Instance?.Play(VfxCue.ShieldHit, transform.position);
                 return;
             }
 
             if (runStats.TryConsumeArmour())
             {
+                VfxManager.Instance?.Play(VfxCue.PlayerHit, transform.position);
                 return;
             }
 
             runStats.DowngradeWeaponTier();
             bool outOfLives = runStats.LoseLife();
+            VfxManager.Instance?.Play(VfxCue.PlayerDeath, transform.position);
             _deathRoutine = StartCoroutine(RunDeathRoutine(outOfLives));
         }
 

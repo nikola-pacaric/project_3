@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.02745098, b: 0.22745098, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -110,6 +110,7 @@ MonoBehaviour:
   _direction: {x: 0, y: 1}
   _maxLifetimeDistance: 12
   _damage: 1
+  _impactVfxCue: 40
 --- !u!70 &7909210673094272449
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

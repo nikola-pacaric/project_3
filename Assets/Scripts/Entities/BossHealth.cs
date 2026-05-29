@@ -1,4 +1,5 @@
 using UnityEngine;
+using Warblade.Data;
 using Warblade.Systems;
 
 namespace Warblade.Entities
@@ -42,6 +43,7 @@ namespace Warblade.Entities
                 return;
             }
 
+            VfxManager.Instance?.Play(VfxCue.BossHit, transform.position);
             _boss.UpdatePhase();
         }
 

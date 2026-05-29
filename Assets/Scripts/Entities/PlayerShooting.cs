@@ -166,6 +166,7 @@ namespace Warblade.Entities
             Bullet bullet = _pool.Get();
             _activePlayerBullets.Add(bullet);
             bullet.Spawn(spawnPosition, direction);
+            VfxManager.Instance?.Play(VfxCue.PlayerMuzzleFlash, spawnPosition, direction);
         }
 
         private WeaponTier GetWeaponTier()

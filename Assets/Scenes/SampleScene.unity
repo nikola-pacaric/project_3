@@ -5526,6 +5526,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1517309659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &307442006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 307442008}
+  - component: {fileID: 307442007}
+  m_Layer: 0
+  m_Name: VfxManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &307442007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307442006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0519bf83330ce47941afbaede70e34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Systems.VfxManager
+  _defaultWorldPosition: {x: 0, y: 0, z: 0}
+  _vfxPools:
+  - _cue: 10
+    _prefab: {fileID: 8904919205302333885, guid: f9da2a7ec418fc64b87cf7b6e8a5e0dd, type: 3}
+    _defaultCapacity: 24
+    _maxSize: 96
+  - _cue: 40
+    _prefab: {fileID: 7723505627967220860, guid: 9fcbf94b6920e434cab8a71e6cfb468d, type: 3}
+    _defaultCapacity: 48
+    _maxSize: 160
+  - _cue: 50
+    _prefab: {fileID: 3882115381871291641, guid: 3174fe4bbf0ec9d45abef4ec5b5f3b0a, type: 3}
+    _defaultCapacity: 24
+    _maxSize: 96
+  - _cue: 130
+    _prefab: {fileID: 3467275471756392633, guid: 1dd73afeb5e35e14d8bf55a6eb12166e, type: 3}
+    _defaultCapacity: 14
+    _maxSize: 48
+--- !u!4 &307442008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307442006}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &416393606
 GameObject:
   m_ObjectHideFlags: 0
@@ -18255,8 +18317,8 @@ MonoBehaviour:
   _deathPresentationDuration: 0.75
   _respawnDelay: 1.25
   _respawnInvulnerabilityDuration: 3
-  _movement: {fileID: 0}
-  _shooting: {fileID: 0}
+  _movement: {fileID: 1517309660}
+  _shooting: {fileID: 1517309661}
   _damageColliders: []
   _spriteRenderers: []
   _thrusterParticles: []
@@ -18936,7 +18998,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 46afcc8bccdad874fb8ce54a8f62050c, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 2fca7d9da29524c439a74c9989e791bc, type: 3}
-  _startingLevel: 24
+  _startingLevel: 1
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
@@ -25453,3 +25515,4 @@ SceneRoots:
   - {fileID: 1199898342}
   - {fileID: 1210000001}
   - {fileID: 1731442902}
+  - {fileID: 307442008}

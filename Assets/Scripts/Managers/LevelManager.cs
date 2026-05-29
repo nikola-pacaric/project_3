@@ -171,6 +171,7 @@ namespace Warblade.Managers
                 _enemySpawner.SetCycleScaling(cycleScaling);
                 _onLevelStarted?.Invoke(CurrentLevel);
                 _levelStarted?.Raise(CurrentLevel);
+                VfxManager.Instance?.PlayAtDefaultPosition(VfxCue.LevelStart);
                 RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
 
                 if (IsCampaignBossLevel(CurrentLevel))
@@ -205,6 +206,7 @@ namespace Warblade.Managers
                 AwardSpecialPerfectClearBonus();
                 _onLevelCompleted?.Invoke(CurrentLevel);
                 _levelCompleted?.Raise(CurrentLevel);
+                VfxManager.Instance?.PlayAtDefaultPosition(VfxCue.LevelComplete);
                 if (_levelTransitionDelay > 0f)
                 {
                     yield return new WaitForSeconds(_levelTransitionDelay);

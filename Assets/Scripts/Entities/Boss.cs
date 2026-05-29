@@ -222,6 +222,7 @@ namespace Warblade.Entities
             BossPhaseData nextPhase = CurrentPhase;
             _movement.PreparePhase();
             _shooter.StopCurrentAttack();
+            VfxManager.Instance?.Play(VfxCue.BossPhaseChange, transform.position);
             RaisePhaseChanged();
 
             if (nextPhase == null || nextPhase.TransitionDuration <= Mathf.Epsilon)
@@ -242,6 +243,8 @@ namespace Warblade.Entities
             }
 
             _state = BossState.Defeated;
+            VfxManager.Instance?.Play(VfxCue.BossDeath, transform.position);
+            VfxManager.Instance?.Play(VfxCue.BossDefeat, transform.position);
             StopIntro();
             _movement?.StopPhaseTransition();
             _shooter?.StopCurrentAttack();
@@ -259,6 +262,7 @@ namespace Warblade.Entities
         {
             _state = BossState.Intro;
             _visuals.PlayAnimation();
+            VfxManager.Instance?.Play(VfxCue.BossWarning, transform.position);
             _bossSpawned?.Raise(_data);
             _bossIntroStarted?.Raise(_data);
 

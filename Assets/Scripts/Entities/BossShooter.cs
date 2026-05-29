@@ -230,7 +230,10 @@ namespace Warblade.Entities
                 return;
             }
 
-            bullet.Spawn(ResolveFirePosition(), DirectionFromAngle(angleDegrees), speed);
+            Vector2 firePosition = ResolveFirePosition();
+            Vector2 direction = DirectionFromAngle(angleDegrees);
+            bullet.Spawn(firePosition, direction, speed);
+            VfxManager.Instance?.Play(VfxCue.BossMuzzleFlash, firePosition, direction);
         }
 
         private float ResolveAimedAngle(BossAttackPatternData pattern)

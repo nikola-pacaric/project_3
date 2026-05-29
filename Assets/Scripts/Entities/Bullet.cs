@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Pool;
+using Warblade.Data;
 using Warblade.Systems;
 
 namespace Warblade.Entities
@@ -10,6 +11,7 @@ namespace Warblade.Entities
         [SerializeField] private Vector2 _direction = Vector2.up;
         [SerializeField] private float _maxLifetimeDistance = 12f;
         [SerializeField] private int _damage = 1;
+        [SerializeField] private VfxCue _impactVfxCue = VfxCue.BulletImpact;
 
         private Vector3 _spawnPosition;
         private IObjectPool<Bullet> _pool;
@@ -74,6 +76,7 @@ namespace Warblade.Entities
             if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
                 damageable.TakeDamage(_damage);
+                VfxManager.Instance?.Play(_impactVfxCue, transform.position, -_direction);
             }
             ReturnToPool();
         }
