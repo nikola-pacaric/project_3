@@ -5577,6 +5577,14 @@ MonoBehaviour:
     _prefab: {fileID: 7723505627967220860, guid: 9a94b696152d4bb47ac878bccabcdf7e, type: 3}
     _defaultCapacity: 48
     _maxSize: 160
+  - _cue: 110
+    _prefab: {fileID: -5563655953822980405, guid: ec191bbb531c1fe439ca83773e81d0a8, type: 3}
+    _defaultCapacity: 2
+    _maxSize: 6
+  - _cue: 100
+    _prefab: {fileID: 823117726858696349, guid: 0ec28231a60a671449851c235bccd195, type: 3}
+    _defaultCapacity: 4
+    _maxSize: 16
 --- !u!4 &307442008
 Transform:
   m_ObjectHideFlags: 0
@@ -7705,7 +7713,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.055
+      scalar: 0.07
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -19578,7 +19586,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.035
+      scalar: 0.045
       minScalar: 1
       maxCurve:
         serializedVersion: 2

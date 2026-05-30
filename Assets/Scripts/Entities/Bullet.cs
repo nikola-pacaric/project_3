@@ -75,8 +75,18 @@ namespace Warblade.Entities
 
             if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
-                damageable.TakeDamage(_damage);
-                VfxManager.Instance?.Play(_impactVfxCue, transform.position, -_direction);
+                Vector3 hitPoint = other.ClosestPoint(transform.position);
+
+                if (damageable is IHitPointDamageable hitPointDamageable)
+                {
+                    hitPointDamageable.TakeDamage(_damage, hitPoint);
+                }
+                else
+                {
+                    damageable.TakeDamage(_damage);
+                }
+
+                VfxManager.Instance?.Play(_impactVfxCue, hitPoint, -_direction);
             }
             ReturnToPool();
         }

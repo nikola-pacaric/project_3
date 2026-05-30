@@ -83,8 +83,8 @@ Checklist:
 - [x] Enemy death explosions.
 - [x] Pickup collect effect.
 - [x] EnemyBulletImpact VFX.
-- [ ] Shield hit effect.
-- [ ] Player death effect.
+- [x] Shield hit effect.
+- [x] Player death effect.
 - [ ] Boss muzzle flash.
 - [ ] Boss hit effect.
 - [ ] Boss phase-change effect.

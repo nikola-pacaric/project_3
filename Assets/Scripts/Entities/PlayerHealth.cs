@@ -8,7 +8,7 @@ using Warblade.Systems;
 
 namespace Warblade.Entities
 {
-    public class PlayerHealth : MonoBehaviour, IDamageable
+    public class PlayerHealth : MonoBehaviour, IHitPointDamageable
     {
         public static event Action GameOverRaised;
 
@@ -52,15 +52,20 @@ namespace Warblade.Entities
 
         public void TakeDamage(int amount)
         {
+            TakeDamage(amount, transform.position);
+        }
+
+        public void TakeDamage(int amount, Vector3 hitPoint)
+        {
             if (_isDead) return;
             if (_deathRoutine != null) return;
             if (_isInvulnerable) return;
             if (amount <= 0) return;
 
-            ResolveHit();
+            ResolveHit(hitPoint);
         }
 
-        private void ResolveHit()
+        private void ResolveHit(Vector3 hitPoint)
         {
             RunStatsManager runStats = RunStatsManager.Instance;
             if (runStats == null)
@@ -71,7 +76,7 @@ namespace Warblade.Entities
 
             if (IsShieldActive(runStats))
             {
-                VfxManager.Instance?.Play(VfxCue.ShieldHit, transform.position);
+                VfxManager.Instance?.Play(VfxCue.ShieldHit, hitPoint);
                 return;
             }
 
