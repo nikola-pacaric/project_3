@@ -5573,6 +5573,10 @@ MonoBehaviour:
     _prefab: {fileID: 3467275471756392633, guid: 1dd73afeb5e35e14d8bf55a6eb12166e, type: 3}
     _defaultCapacity: 14
     _maxSize: 48
+  - _cue: 45
+    _prefab: {fileID: 7723505627967220860, guid: 9a94b696152d4bb47ac878bccabcdf7e, type: 3}
+    _defaultCapacity: 48
+    _maxSize: 160
 --- !u!4 &307442008
 Transform:
   m_ObjectHideFlags: 0

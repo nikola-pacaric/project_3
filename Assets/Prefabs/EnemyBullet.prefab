@@ -110,6 +110,7 @@ MonoBehaviour:
   _direction: {x: 0, y: -1}
   _maxLifetimeDistance: 12
   _damage: 1
+  _impactVfxCue: 45
 --- !u!50 &8940227645539820913
 Rigidbody2D:
   serializedVersion: 5

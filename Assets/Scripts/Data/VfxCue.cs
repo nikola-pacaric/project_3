@@ -6,6 +6,7 @@ namespace Warblade.Data
         PlayerMuzzleFlash = 10,
         BossMuzzleFlash = 30,
         BulletImpact = 40,
+        EnemyBulletImpact = 45,
         EnemyDeath = 50,
         BossHit = 60,
         BossPhaseChange = 70,

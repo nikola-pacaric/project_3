@@ -82,7 +82,7 @@ Checklist:
 - [x] Bullet impact sparks.
 - [x] Enemy death explosions.
 - [x] Pickup collect effect.
-- [ ] Player hit effect.
+- [x] EnemyBulletImpact VFX.
 - [ ] Shield hit effect.
 - [ ] Player death effect.
 - [ ] Boss muzzle flash.
