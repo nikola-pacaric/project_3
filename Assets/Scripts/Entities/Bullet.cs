@@ -12,9 +12,13 @@ namespace Warblade.Entities
         [SerializeField] private float _maxLifetimeDistance = 12f;
         [SerializeField] private int _damage = 1;
         [SerializeField] private VfxCue _impactVfxCue = VfxCue.BulletImpact;
+        [SerializeField, Min(0f)] private float _spriteRotationSpeedDegreesPerSecond = 180f;
 
         private Vector3 _spawnPosition;
         private IObjectPool<Bullet> _pool;
+        private SpriteRenderer _spriteRenderer;
+        private Quaternion _defaultSpriteLocalRotation;
+        private bool _spinSprite;
         private bool _isActive;
 
         public static int ActiveBulletCount { get; private set; }
@@ -28,6 +32,17 @@ namespace Warblade.Entities
         public void SetPool(IObjectPool<Bullet> pool)
         {
             _pool = pool;
+        }
+
+        public void SetSpriteSpin(bool shouldSpin)
+        {
+            ResolveSpriteRenderer();
+
+            _spinSprite = shouldSpin;
+            if (_spriteRenderer != null)
+            {
+                _spriteRenderer.transform.localRotation = _defaultSpriteLocalRotation;
+            }
         }
 
         public void Spawn(Vector3 position)
@@ -57,11 +72,17 @@ namespace Warblade.Entities
             SetActiveState(false);
         }
 
+        private void Awake()
+        {
+            ResolveSpriteRenderer();
+        }
+
         private void Update()
         {
             if (!_isActive) return;
 
             transform.Translate(_direction * (_speed * Time.deltaTime), Space.World);
+            TickSpriteSpin();
 
             if (Vector3.Distance(transform.position, _spawnPosition) > _maxLifetimeDistance)
             {
@@ -112,6 +133,31 @@ namespace Warblade.Entities
 
             _isActive = isActive;
             ActiveBulletCount = Mathf.Max(0, ActiveBulletCount + (isActive ? 1 : -1));
+        }
+
+        private void ResolveSpriteRenderer()
+        {
+            if (_spriteRenderer != null)
+            {
+                return;
+            }
+
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            _defaultSpriteLocalRotation = _spriteRenderer == null ? Quaternion.identity : _spriteRenderer.transform.localRotation;
+        }
+
+        private void TickSpriteSpin()
+        {
+            if (!_spinSprite || _spriteRenderer == null || _spriteRotationSpeedDegreesPerSecond <= 0f)
+            {
+                return;
+            }
+
+            _spriteRenderer.transform.Rotate(
+                0f,
+                0f,
+                _spriteRotationSpeedDegreesPerSecond * Time.deltaTime,
+                Space.Self);
         }
     }
 }

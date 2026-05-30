@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossAttackPatternData
   _patternType: 2
   _bulletCount: 4
-  _spreadAngle: 20
+  _spreadAngle: 25
   _patternDuration: 2.4
   _shotInterval: 0.4
   _baseAngleDegrees: 270
   _aimAtPlayer: 0
-  _rotateEachVolley: 0
+  _rotateEachVolley: 1
   _volleyRotationDegrees: 12
   _sweepStartAngleDegrees: 220
   _sweepEndAngleDegrees: 320
   _bulletSpeed: 4
+  _spinBulletSprite: 1

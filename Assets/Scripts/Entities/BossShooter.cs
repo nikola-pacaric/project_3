@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Warblade.Data;
+using Warblade.Managers;
 using Warblade.Systems;
 
 namespace Warblade.Entities
@@ -15,7 +17,7 @@ namespace Warblade.Entities
         private GameObject _bossBulletPrefab;
         private int _bulletPoolDefaultCapacity = 32;
         private int _bulletPoolMaxSize = 128;
-        private IObjectPool<Bullet> _bulletPool;
+        private readonly Dictionary<GameObject, IObjectPool<Bullet>> _bulletPools = new Dictionary<GameObject, IObjectPool<Bullet>>();
         private Coroutine _attackRoutine;
         private float _nextAttackTime;
         private int _volleyIndex;
@@ -33,30 +35,6 @@ namespace Warblade.Entities
             _bossBulletPrefab = bossBulletPrefab;
             _bulletPoolDefaultCapacity = Mathf.Max(1, bulletPoolDefaultCapacity);
             _bulletPoolMaxSize = Mathf.Max(_bulletPoolDefaultCapacity, bulletPoolMaxSize);
-
-            if (_bulletPool != null || _bossBulletPrefab == null)
-            {
-                return;
-            }
-
-            if (!_bossBulletPrefab.TryGetComponent(out Bullet _))
-            {
-                Debug.LogError(
-                    $"[{nameof(Boss)}] Boss bullet prefab '{_bossBulletPrefab.name}' is missing {nameof(Bullet)}.",
-                    this);
-                return;
-            }
-
-            _bulletPool = new ObjectPool<Bullet>(
-                createFunc: CreateBullet,
-                actionOnGet: bullet => bullet.gameObject.SetActive(true),
-                actionOnRelease: bullet => bullet.gameObject.SetActive(false),
-                actionOnDestroy: bullet => Destroy(bullet.gameObject),
-                collectionCheck: true,
-                defaultCapacity: _bulletPoolDefaultCapacity,
-                maxSize: _bulletPoolMaxSize);
-
-            PoolPrewarmer.Prewarm(_bulletPool, _bulletPoolDefaultCapacity);
         }
 
         internal void Spawn(CycleScalingState cycleScaling)
@@ -88,14 +66,14 @@ namespace Warblade.Entities
                 return;
             }
 
-            BossAttackPatternData pattern = ChooseAttackPattern(phase);
-            if (pattern == null)
+            BossPhaseAttackData attack = ChooseAttack(phase);
+            if (attack == null)
             {
                 ScheduleNextAttack(phase);
                 return;
             }
 
-            _attackRoutine = StartCoroutine(RunAttackPattern(pattern, phase));
+            _attackRoutine = StartCoroutine(RunAttack(attack, phase));
         }
 
         internal void StopCurrentAttack()
@@ -109,30 +87,33 @@ namespace Warblade.Entities
             _attackRoutine = null;
         }
 
-        private BossAttackPatternData ChooseAttackPattern(BossPhaseData phase)
+        private BossPhaseAttackData ChooseAttack(BossPhaseData phase)
         {
-            if (phase == null || phase.AttackPatterns == null || phase.AttackPatterns.Count == 0)
+            if (phase == null || phase.Attacks == null || phase.Attacks.Count == 0)
             {
                 return null;
             }
 
-            int startIndex = Random.Range(0, phase.AttackPatterns.Count);
-            for (int i = 0; i < phase.AttackPatterns.Count; i++)
+            int startIndex = Random.Range(0, phase.Attacks.Count);
+            for (int i = 0; i < phase.Attacks.Count; i++)
             {
-                int index = (startIndex + i) % phase.AttackPatterns.Count;
-                BossAttackPatternData pattern = phase.AttackPatterns[index];
-                if (pattern != null)
+                int index = (startIndex + i) % phase.Attacks.Count;
+                BossPhaseAttackData attack = phase.Attacks[index];
+                if (attack != null && attack.HasPattern)
                 {
-                    return pattern;
+                    return attack;
                 }
             }
 
             return null;
         }
 
-        private IEnumerator RunAttackPattern(BossAttackPatternData pattern, BossPhaseData phase)
+        private IEnumerator RunAttack(BossPhaseAttackData attack, BossPhaseData phase)
         {
-            if (_bulletPool == null)
+            BossAttackPatternData pattern = attack.Pattern;
+            GameObject bulletPrefab = ResolveBulletPrefab(attack);
+            bool spinBulletSprite = pattern.SpinBulletSprite;
+            if (bulletPrefab == null)
             {
                 Debug.LogWarning(
                     $"[{nameof(Boss)}] '{name}' cannot fire because no boss bullet prefab is assigned.",
@@ -145,15 +126,15 @@ namespace Warblade.Entities
             switch (pattern.PatternType)
             {
                 case BossAttackPatternType.Aimed:
-                    FireAimed(pattern);
+                    FireAimed(pattern, bulletPrefab, spinBulletSprite);
                     break;
 
                 case BossAttackPatternType.Radial:
-                    FireRadial(pattern);
+                    FireRadial(pattern, bulletPrefab, spinBulletSprite);
                     break;
 
                 case BossAttackPatternType.Sweep:
-                    yield return FireSweep(pattern);
+                    yield return FireSweep(pattern, bulletPrefab, spinBulletSprite);
                     break;
             }
 
@@ -161,7 +142,10 @@ namespace Warblade.Entities
             _attackRoutine = null;
         }
 
-        private IEnumerator FireSweep(BossAttackPatternData pattern)
+        private IEnumerator FireSweep(
+            BossAttackPatternData pattern,
+            GameObject bulletPrefab,
+            bool spinBulletSprite)
         {
             float duration = Mathf.Max(0f, pattern.PatternDuration);
             float interval = Mathf.Max(0.01f, pattern.ShotInterval);
@@ -171,7 +155,7 @@ namespace Warblade.Entities
             {
                 float t = duration <= Mathf.Epsilon ? 1f : Mathf.Clamp01(elapsed / duration);
                 float angle = Mathf.Lerp(pattern.SweepStartAngleDegrees, pattern.SweepEndAngleDegrees, t);
-                FireSpread(pattern, angle);
+                FireSpread(pattern, bulletPrefab, spinBulletSprite, angle);
                 elapsed += interval;
 
                 if (elapsed <= duration)
@@ -182,13 +166,19 @@ namespace Warblade.Entities
             while (elapsed <= duration && _boss != null && _boss.State == BossState.Active);
         }
 
-        private void FireAimed(BossAttackPatternData pattern)
+        private void FireAimed(
+            BossAttackPatternData pattern,
+            GameObject bulletPrefab,
+            bool spinBulletSprite)
         {
             float centerAngle = ResolveAimedAngle(pattern);
-            FireSpread(pattern, centerAngle);
+            FireSpread(pattern, bulletPrefab, spinBulletSprite, centerAngle);
         }
 
-        private void FireRadial(BossAttackPatternData pattern)
+        private void FireRadial(
+            BossAttackPatternData pattern,
+            GameObject bulletPrefab,
+            bool spinBulletSprite)
         {
             float rotationOffset = pattern.RotateEachVolley
                 ? _volleyIndex * pattern.VolleyRotationDegrees
@@ -203,13 +193,21 @@ namespace Warblade.Entities
 
             for (int i = 0; i < bulletCount; i++)
             {
-                FireBulletAtAngle(startAngle + step * i, ResolveBossPressureSpeed(pattern.BulletSpeed));
+                FireBulletAtAngle(
+                    bulletPrefab,
+                    spinBulletSprite,
+                    startAngle + step * i,
+                    ResolveBossPressureSpeed(pattern.BulletSpeed));
             }
 
             _volleyIndex++;
         }
 
-        private void FireSpread(BossAttackPatternData pattern, float centerAngle)
+        private void FireSpread(
+            BossAttackPatternData pattern,
+            GameObject bulletPrefab,
+            bool spinBulletSprite,
+            float centerAngle)
         {
             int bulletCount = Mathf.Max(1, pattern.BulletCount);
             float spread = pattern.SpreadAngle;
@@ -218,13 +216,27 @@ namespace Warblade.Entities
 
             for (int i = 0; i < bulletCount; i++)
             {
-                FireBulletAtAngle(startAngle + step * i, ResolveBossPressureSpeed(pattern.BulletSpeed));
+                FireBulletAtAngle(
+                    bulletPrefab,
+                    spinBulletSprite,
+                    startAngle + step * i,
+                    ResolveBossPressureSpeed(pattern.BulletSpeed));
             }
         }
 
-        private void FireBulletAtAngle(float angleDegrees, float speed)
+        private void FireBulletAtAngle(
+            GameObject bulletPrefab,
+            bool spinBulletSprite,
+            float angleDegrees,
+            float speed)
         {
-            Bullet bullet = _bulletPool.Get();
+            IObjectPool<Bullet> bulletPool = GetOrCreateBulletPool(bulletPrefab);
+            if (bulletPool == null)
+            {
+                return;
+            }
+
+            Bullet bullet = bulletPool.Get();
             if (bullet == null)
             {
                 return;
@@ -232,24 +244,37 @@ namespace Warblade.Entities
 
             Vector2 firePosition = ResolveFirePosition();
             Vector2 direction = DirectionFromAngle(angleDegrees);
+            bullet.SetSpriteSpin(spinBulletSprite);
             bullet.Spawn(firePosition, direction, speed);
             VfxManager.Instance?.Play(VfxCue.BossMuzzleFlash, firePosition, direction);
         }
 
         private float ResolveAimedAngle(BossAttackPatternData pattern)
         {
-            if (!pattern.AimAtPlayer || _playerTransform == null)
+            Transform playerTransform = ResolvePlayerTarget();
+            if (!pattern.AimAtPlayer || playerTransform == null)
             {
                 return pattern.BaseAngleDegrees;
             }
 
-            Vector2 direction = (Vector2)_playerTransform.position - ResolveFirePosition();
+            Vector2 direction = (Vector2)playerTransform.position - ResolveFirePosition();
             if (direction.sqrMagnitude <= Mathf.Epsilon)
             {
                 return pattern.BaseAngleDegrees;
             }
 
             return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        }
+
+        private Transform ResolvePlayerTarget()
+        {
+            if (_playerTransform != null)
+            {
+                return _playerTransform;
+            }
+
+            _playerTransform = LevelManager.Instance == null ? null : LevelManager.Instance.PlayerTransform;
+            return _playerTransform;
         }
 
         private Vector2 ResolveFirePosition()
@@ -274,11 +299,51 @@ namespace Warblade.Entities
             _nextAttackTime = Time.time + Random.Range(phase.AttackCooldownMin, phase.AttackCooldownMax);
         }
 
-        private Bullet CreateBullet()
+        private GameObject ResolveBulletPrefab(BossPhaseAttackData attack)
         {
-            GameObject go = Instantiate(_bossBulletPrefab);
+            return attack.BulletPrefab != null ? attack.BulletPrefab : _bossBulletPrefab;
+        }
+
+        private IObjectPool<Bullet> GetOrCreateBulletPool(GameObject bulletPrefab)
+        {
+            if (bulletPrefab == null)
+            {
+                return null;
+            }
+
+            if (_bulletPools.TryGetValue(bulletPrefab, out IObjectPool<Bullet> bulletPool))
+            {
+                return bulletPool;
+            }
+
+            if (!bulletPrefab.TryGetComponent(out Bullet _))
+            {
+                Debug.LogError(
+                    $"[{nameof(Boss)}] Boss bullet prefab '{bulletPrefab.name}' is missing {nameof(Bullet)}.",
+                    this);
+                return null;
+            }
+
+            ObjectPool<Bullet> newPool = null;
+            newPool = new ObjectPool<Bullet>(
+                createFunc: () => CreateBullet(bulletPrefab, newPool),
+                actionOnGet: bullet => bullet.gameObject.SetActive(true),
+                actionOnRelease: bullet => bullet.gameObject.SetActive(false),
+                actionOnDestroy: bullet => Destroy(bullet.gameObject),
+                collectionCheck: true,
+                defaultCapacity: _bulletPoolDefaultCapacity,
+                maxSize: _bulletPoolMaxSize);
+
+            _bulletPools.Add(bulletPrefab, newPool);
+            PoolPrewarmer.Prewarm(newPool, _bulletPoolDefaultCapacity);
+            return newPool;
+        }
+
+        private Bullet CreateBullet(GameObject bulletPrefab, IObjectPool<Bullet> bulletPool)
+        {
+            GameObject go = Instantiate(bulletPrefab);
             Bullet bullet = go.GetComponent<Bullet>();
-            bullet.SetPool(_bulletPool);
+            bullet.SetPool(bulletPool);
             return bullet;
         }
 

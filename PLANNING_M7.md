@@ -91,8 +91,7 @@ Checklist:
 - [ ] Boss warning effect.
 - [ ] Boss death effect.
 - [ ] Boss defeat effect.
-- [ ] Level start effect.
-- [ ] Level complete effect.
+- [x] Sector warp transition after every 4-level enemy set and boss level.
 
 Decisions:
 - Small enemy muzzle flashes are intentionally skipped so enemy bullets remain clean and readable.

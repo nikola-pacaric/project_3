@@ -24,3 +24,4 @@ MonoBehaviour:
   _sweepStartAngleDegrees: 210
   _sweepEndAngleDegrees: 330
   _bulletSpeed: 5
+  _spinBulletSprite: 0

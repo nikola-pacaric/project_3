@@ -248,18 +248,34 @@ namespace Warblade.Editor.ContentValidation
                         continue;
                     }
 
-                    if (phase.AttackPatterns == null || phase.AttackPatterns.Count == 0)
+                    if (phase.Attacks == null || phase.Attacks.Count == 0)
                     {
-                        report.Error($"Boss phase '{phase.PhaseName}' has no attack patterns.", boss);
+                        report.Error($"Boss phase '{phase.PhaseName}' has no attacks.", boss);
                         continue;
                     }
 
-                    for (int patternIndex = 0; patternIndex < phase.AttackPatterns.Count; patternIndex++)
+                    for (int attackIndex = 0; attackIndex < phase.Attacks.Count; attackIndex++)
                     {
-                        if (phase.AttackPatterns[patternIndex] == null)
+                        BossPhaseAttackData attack = phase.Attacks[attackIndex];
+                        if (attack == null)
                         {
                             report.Error(
-                                $"Boss phase '{phase.PhaseName}' has a missing attack pattern at index {patternIndex}.",
+                                $"Boss phase '{phase.PhaseName}' has a missing attack at index {attackIndex}.",
+                                boss);
+                            continue;
+                        }
+
+                        if (attack.Pattern == null)
+                        {
+                            report.Error(
+                                $"Boss phase '{phase.PhaseName}' has a missing attack pattern at index {attackIndex}.",
+                                boss);
+                        }
+
+                        if (attack.BulletPrefab == null)
+                        {
+                            report.Warning(
+                                $"Boss phase '{phase.PhaseName}' attack {attackIndex} has no bullet prefab and will use the boss component fallback prefab.",
                                 boss);
                         }
                     }

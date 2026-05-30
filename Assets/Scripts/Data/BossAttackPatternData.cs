@@ -24,6 +24,7 @@ namespace Warblade.Data
 
         [Header("Projectile")]
         [SerializeField, Min(0f)] private float _bulletSpeed = 5f;
+        [SerializeField] private bool _spinBulletSprite;
 
         public BossAttackPatternType PatternType => _patternType;
         public int BulletCount => _bulletCount;
@@ -37,6 +38,7 @@ namespace Warblade.Data
         public float SweepStartAngleDegrees => _sweepStartAngleDegrees;
         public float SweepEndAngleDegrees => _sweepEndAngleDegrees;
         public float BulletSpeed => _bulletSpeed;
+        public bool SpinBulletSprite => _spinBulletSprite;
 
         private void OnValidate()
         {

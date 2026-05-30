@@ -27,7 +27,8 @@ namespace Warblade.Data
         [SerializeField, Range(0f, 1f)] private float _playerShadowStrength = 0.65f;
         [SerializeField, Min(0f)] private float _attackCooldownMin = 1f;
         [SerializeField, Min(0f)] private float _attackCooldownMax = 2f;
-        [SerializeField] private List<BossAttackPatternData> _attackPatterns = new List<BossAttackPatternData>();
+        [SerializeField] private List<BossPhaseAttackData> _attacks = new List<BossPhaseAttackData>();
+        [SerializeField, HideInInspector] private List<BossAttackPatternData> _attackPatterns = new List<BossAttackPatternData>();
 
         public string PhaseName => _phaseName;
         public float HealthThreshold => _healthThreshold;
@@ -42,7 +43,14 @@ namespace Warblade.Data
         public float PlayerShadowStrength => _playerShadowStrength;
         public float AttackCooldownMin => _attackCooldownMin;
         public float AttackCooldownMax => _attackCooldownMax;
-        public IReadOnlyList<BossAttackPatternData> AttackPatterns => _attackPatterns;
+        public IReadOnlyList<BossPhaseAttackData> Attacks
+        {
+            get
+            {
+                MigrateLegacyAttackPatterns();
+                return _attacks;
+            }
+        }
 
         internal void OnValidate()
         {
@@ -67,6 +75,22 @@ namespace Warblade.Data
             else if (_movementBehavior == BossMovementBehavior.SineDrift)
             {
                 _movementBehavior = BossMovementBehavior.FigureEight;
+            }
+
+            MigrateLegacyAttackPatterns();
+        }
+
+        private void MigrateLegacyAttackPatterns()
+        {
+            if ((_attacks != null && _attacks.Count > 0) || _attackPatterns == null || _attackPatterns.Count == 0)
+            {
+                return;
+            }
+
+            _attacks = new List<BossPhaseAttackData>(_attackPatterns.Count);
+            for (int i = 0; i < _attackPatterns.Count; i++)
+            {
+                _attacks.Add(new BossPhaseAttackData(_attackPatterns[i]));
             }
         }
     }

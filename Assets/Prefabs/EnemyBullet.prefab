@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8174780968148590973}
   - component: {fileID: 1272030104596985274}
   - component: {fileID: 8940227645539820913}
-  - component: {fileID: 7795724772371353474}
+  - component: {fileID: 3730211807013523708}
   m_Layer: 9
   m_Name: EnemyBullet
   m_TagString: Untagged
@@ -111,6 +111,7 @@ MonoBehaviour:
   _maxLifetimeDistance: 12
   _damage: 1
   _impactVfxCue: 45
+  _spriteRotationSpeedDegreesPerSecond: 360
 --- !u!50 &8940227645539820913
 Rigidbody2D:
   serializedVersion: 5
@@ -138,8 +139,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &7795724772371353474
-CircleCollider2D:
+--- !u!70 &3730211807013523708
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -168,9 +169,10 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.50000006
+  m_Size: {x: 1, y: 1}
+  m_Direction: 1

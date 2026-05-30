@@ -32,6 +32,7 @@ namespace Warblade.Managers
         [SerializeField] private WaveRunner _waveRunner;
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private PlayerShooting _playerShooting;
+        [SerializeField] private SectorTransitionController _sectorTransitionController;
         [SerializeField] private CycleScalingData _cycleScalingData;
         [SerializeField] private LevelData[] _levels;
         [SerializeField] private CampaignBossRoute[] _campaignBosses = Array.Empty<CampaignBossRoute>();
@@ -39,6 +40,7 @@ namespace Warblade.Managers
         [SerializeField] private bool _playOnStart = true;
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
         [SerializeField, Min(1)] private int _shopInterval = 4;
+        [SerializeField, Min(1)] private int _sectorTransitionInterval = 4;
         [SerializeField, Range(0f, 1f)] private float _finalDiveRemainingRatio = 0.1f;
         [SerializeField] private LevelChangedEvent _onLevelStarted = new LevelChangedEvent();
         [SerializeField] private LevelChangedEvent _onLevelCompleted = new LevelChangedEvent();
@@ -66,6 +68,7 @@ namespace Warblade.Managers
 
         public LevelChangedEvent OnLevelStarted => _onLevelStarted;
         public LevelChangedEvent OnLevelCompleted => _onLevelCompleted;
+        public Transform PlayerTransform => _playerShooting == null ? null : _playerShooting.transform;
 
         private void Awake()
         {
@@ -171,7 +174,6 @@ namespace Warblade.Managers
                 _enemySpawner.SetCycleScaling(cycleScaling);
                 _onLevelStarted?.Invoke(CurrentLevel);
                 _levelStarted?.Raise(CurrentLevel);
-                VfxManager.Instance?.PlayAtDefaultPosition(VfxCue.LevelStart);
                 RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
 
                 if (IsCampaignBossLevel(CurrentLevel))
@@ -206,7 +208,6 @@ namespace Warblade.Managers
                 AwardSpecialPerfectClearBonus();
                 _onLevelCompleted?.Invoke(CurrentLevel);
                 _levelCompleted?.Raise(CurrentLevel);
-                VfxManager.Instance?.PlayAtDefaultPosition(VfxCue.LevelComplete);
                 if (_levelTransitionDelay > 0f)
                 {
                     yield return new WaitForSeconds(_levelTransitionDelay);
@@ -224,6 +225,12 @@ namespace Warblade.Managers
                 if (ShouldEnterShopAfterLevel(completedLevel))
                 {
                     yield return EnterShopRoutine();
+                    if (_isGameOver) break;
+                }
+
+                if (ShouldPlaySectorTransitionAfterLevel(completedLevel))
+                {
+                    yield return _sectorTransitionController.PlayTransitionRoutine();
                     if (_isGameOver) break;
                 }
 
@@ -421,6 +428,18 @@ namespace Warblade.Managers
         private bool ShouldEnterShopAfterLevel(int completedLevel)
         {
             return _shopInterval > 0 && completedLevel % _shopInterval == 0;
+        }
+
+        private bool ShouldPlaySectorTransitionAfterLevel(int completedLevel)
+        {
+            if (_sectorTransitionController == null)
+            {
+                return false;
+            }
+
+            int campaignLevel = CycleScalingData.GetCampaignLevelForCycle(completedLevel);
+            bool completedEnemySet = _sectorTransitionInterval > 0 && campaignLevel % _sectorTransitionInterval == 0;
+            return completedEnemySet || IsCampaignBossLevel(completedLevel);
         }
 
         private static bool IsCampaignBossLevel(int levelNumber)
