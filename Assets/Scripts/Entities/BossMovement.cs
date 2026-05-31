@@ -112,10 +112,11 @@ namespace Warblade.Entities
             }
         }
 
-        internal void PreparePhase()
+        internal void PreparePhase(BossPhaseData phase)
         {
             _phaseMovementTime = 0f;
-            _patrolDirection = transform.position.x >= _arenaCenterPosition.x ? -1 : 1;
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
+            _patrolDirection = transform.position.x >= phaseCenter.x ? -1 : 1;
             ResetPhaseMovementState();
         }
 
@@ -200,29 +201,31 @@ namespace Warblade.Entities
                 return;
             }
 
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             Vector2 position = transform.position;
             position.x += _patrolDirection * movementSpeed * Time.deltaTime;
 
-            float minX = _arenaCenterPosition.x - amplitude;
-            float maxX = _arenaCenterPosition.x + amplitude;
+            float minX = phaseCenter.x - amplitude;
+            float maxX = phaseCenter.x + amplitude;
             if (position.x <= minX || position.x >= maxX)
             {
                 position.x = Mathf.Clamp(position.x, minX, maxX);
                 _patrolDirection *= -1;
             }
 
-            position.y = Mathf.MoveTowards(position.y, _arenaCenterPosition.y, movementSpeed * Time.deltaTime);
+            position.y = Mathf.MoveTowards(position.y, phaseCenter.y, movementSpeed * Time.deltaTime);
             transform.position = position;
         }
 
         private void UpdateFigureEight(BossPhaseData phase)
         {
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             float movementSpeed = ResolveBossPressureSpeed(phase.MovementSpeed);
             float xOffset = Mathf.Sin(_phaseMovementTime * movementSpeed) * phase.MovementAmplitude;
             float yOffset = Mathf.Sin(_phaseMovementTime * movementSpeed * 2f) * phase.VerticalMovementAmplitude;
             transform.position = new Vector2(
-                _arenaCenterPosition.x + xOffset,
-                _arenaCenterPosition.y + yOffset);
+                phaseCenter.x + xOffset,
+                phaseCenter.y + yOffset);
         }
 
         private void UpdateDashAndPause(BossPhaseData phase)
@@ -260,21 +263,22 @@ namespace Warblade.Entities
 
         private Vector2 ResolveDashTarget(BossPhaseData phase)
         {
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             float x = phase.MovementAmplitude;
             float y = phase.VerticalMovementAmplitude;
             switch (_movementWaypointIndex % 4)
             {
                 case 0:
-                    return _arenaCenterPosition + new Vector2(-x, 0f);
+                    return phaseCenter + new Vector2(-x, 0f);
 
                 case 1:
-                    return _arenaCenterPosition + new Vector2(x, -y);
+                    return phaseCenter + new Vector2(x, -y);
 
                 case 2:
-                    return _arenaCenterPosition + new Vector2(x, y);
+                    return phaseCenter + new Vector2(x, y);
 
                 default:
-                    return _arenaCenterPosition + new Vector2(-x, -y);
+                    return phaseCenter + new Vector2(-x, -y);
             }
         }
 
@@ -286,12 +290,13 @@ namespace Warblade.Entities
                 return;
             }
 
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             float progress = Mathf.PingPong(_phaseMovementTime * movementSpeed * 0.25f, 1f);
             float x = Mathf.Lerp(
-                _arenaCenterPosition.x - phase.MovementAmplitude,
-                _arenaCenterPosition.x + phase.MovementAmplitude,
+                phaseCenter.x - phase.MovementAmplitude,
+                phaseCenter.x + phase.MovementAmplitude,
                 progress);
-            float y = _arenaCenterPosition.y - Mathf.Sin(progress * Mathf.PI) * phase.VerticalMovementAmplitude;
+            float y = phaseCenter.y - Mathf.Sin(progress * Mathf.PI) * phase.VerticalMovementAmplitude;
             transform.position = new Vector2(x, y);
         }
 
@@ -329,6 +334,7 @@ namespace Warblade.Entities
 
         private Vector2 ResolveNextLaneTarget(BossPhaseData phase)
         {
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             int laneCount = Mathf.Max(2, phase.MovementLaneCount);
             _movementWaypointIndex += _patrolDirection;
 
@@ -345,11 +351,11 @@ namespace Warblade.Entities
 
             float laneT = laneCount <= 1 ? 0.5f : _movementWaypointIndex / (float)(laneCount - 1);
             float x = Mathf.Lerp(
-                _arenaCenterPosition.x - phase.MovementAmplitude,
-                _arenaCenterPosition.x + phase.MovementAmplitude,
+                phaseCenter.x - phase.MovementAmplitude,
+                phaseCenter.x + phase.MovementAmplitude,
                 laneT);
 
-            return new Vector2(x, _arenaCenterPosition.y);
+            return new Vector2(x, phaseCenter.y);
         }
 
         private void UpdatePlayerShadow(BossPhaseData phase)
@@ -360,20 +366,21 @@ namespace Warblade.Entities
                 return;
             }
 
-            float targetX = _arenaCenterPosition.x;
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
+            float targetX = phaseCenter.x;
             if (_playerTransform != null)
             {
-                targetX = Mathf.Lerp(_arenaCenterPosition.x, _playerTransform.position.x, phase.PlayerShadowStrength);
+                targetX = Mathf.Lerp(phaseCenter.x, _playerTransform.position.x, phase.PlayerShadowStrength);
             }
 
             targetX = Mathf.Clamp(
                 targetX,
-                _arenaCenterPosition.x - phase.MovementAmplitude,
-                _arenaCenterPosition.x + phase.MovementAmplitude);
+                phaseCenter.x - phase.MovementAmplitude,
+                phaseCenter.x + phase.MovementAmplitude);
 
             Vector2 position = transform.position;
             position.x = Mathf.MoveTowards(position.x, targetX, movementSpeed * Time.deltaTime);
-            position.y = Mathf.MoveTowards(position.y, _arenaCenterPosition.y, movementSpeed * Time.deltaTime);
+            position.y = Mathf.MoveTowards(position.y, phaseCenter.y, movementSpeed * Time.deltaTime);
             transform.position = position;
         }
 
@@ -405,29 +412,31 @@ namespace Warblade.Entities
 
         private Vector2 ResolveBoxPatrolTarget(BossPhaseData phase)
         {
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             float x = phase.MovementAmplitude;
             float y = phase.VerticalMovementAmplitude;
             switch (_movementWaypointIndex % 4)
             {
                 case 0:
-                    return _arenaCenterPosition + new Vector2(-x, y);
+                    return phaseCenter + new Vector2(-x, y);
 
                 case 1:
-                    return _arenaCenterPosition + new Vector2(x, y);
+                    return phaseCenter + new Vector2(x, y);
 
                 case 2:
-                    return _arenaCenterPosition + new Vector2(x, -y);
+                    return phaseCenter + new Vector2(x, -y);
 
                 default:
-                    return _arenaCenterPosition + new Vector2(-x, -y);
+                    return phaseCenter + new Vector2(-x, -y);
             }
         }
 
         private Vector2 ResolvePhaseTransitionTarget(BossPhaseData phase, Vector2 currentPosition)
         {
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             if (phase == null || phase.TransitionTarget == BossPhaseTransitionTarget.ArenaCenter)
             {
-                return _arenaCenterPosition;
+                return phaseCenter;
             }
 
             switch (ResolveMovementBehavior(phase.MovementBehavior))
@@ -437,9 +446,9 @@ namespace Warblade.Entities
                     return new Vector2(
                         Mathf.Clamp(
                             currentPosition.x,
-                            _arenaCenterPosition.x - phase.MovementAmplitude,
-                            _arenaCenterPosition.x + phase.MovementAmplitude),
-                        _arenaCenterPosition.y);
+                            phaseCenter.x - phase.MovementAmplitude,
+                            phaseCenter.x + phase.MovementAmplitude),
+                        phaseCenter.y);
 
                 case BossMovementBehavior.LaneSwitch:
                     return ResolveClosestLanePoint(phase, currentPosition);
@@ -448,19 +457,19 @@ namespace Warblade.Entities
                     return ResolveClosestPoint(
                         currentPosition,
                         out _movementWaypointIndex,
-                        _arenaCenterPosition + new Vector2(-phase.MovementAmplitude, phase.VerticalMovementAmplitude),
-                        _arenaCenterPosition + new Vector2(phase.MovementAmplitude, phase.VerticalMovementAmplitude),
-                        _arenaCenterPosition + new Vector2(phase.MovementAmplitude, -phase.VerticalMovementAmplitude),
-                        _arenaCenterPosition + new Vector2(-phase.MovementAmplitude, -phase.VerticalMovementAmplitude));
+                        phaseCenter + new Vector2(-phase.MovementAmplitude, phase.VerticalMovementAmplitude),
+                        phaseCenter + new Vector2(phase.MovementAmplitude, phase.VerticalMovementAmplitude),
+                        phaseCenter + new Vector2(phase.MovementAmplitude, -phase.VerticalMovementAmplitude),
+                        phaseCenter + new Vector2(-phase.MovementAmplitude, -phase.VerticalMovementAmplitude));
 
                 case BossMovementBehavior.DashAndPause:
                     return ResolveClosestPoint(
                         currentPosition,
                         out _movementWaypointIndex,
-                        _arenaCenterPosition + new Vector2(-phase.MovementAmplitude, 0f),
-                        _arenaCenterPosition + new Vector2(phase.MovementAmplitude, -phase.VerticalMovementAmplitude),
-                        _arenaCenterPosition + new Vector2(phase.MovementAmplitude, phase.VerticalMovementAmplitude),
-                        _arenaCenterPosition + new Vector2(-phase.MovementAmplitude, -phase.VerticalMovementAmplitude));
+                        phaseCenter + new Vector2(-phase.MovementAmplitude, 0f),
+                        phaseCenter + new Vector2(phase.MovementAmplitude, -phase.VerticalMovementAmplitude),
+                        phaseCenter + new Vector2(phase.MovementAmplitude, phase.VerticalMovementAmplitude),
+                        phaseCenter + new Vector2(-phase.MovementAmplitude, -phase.VerticalMovementAmplitude));
 
                 case BossMovementBehavior.DiveSweep:
                     return ResolveClosestDiveSweepPoint(phase, currentPosition);
@@ -469,14 +478,15 @@ namespace Warblade.Entities
                     return ResolveClosestFigureEightPoint(phase, currentPosition);
 
                 default:
-                    return _arenaCenterPosition;
+                    return phaseCenter;
             }
         }
 
         private Vector2 ResolveClosestLanePoint(BossPhaseData phase, Vector2 currentPosition)
         {
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
             int laneCount = Mathf.Max(2, phase.MovementLaneCount);
-            Vector2 closest = _arenaCenterPosition;
+            Vector2 closest = phaseCenter;
             float closestDistance = float.PositiveInfinity;
 
             for (int i = 0; i < laneCount; i++)
@@ -484,10 +494,10 @@ namespace Warblade.Entities
                 float laneT = i / (float)(laneCount - 1);
                 Vector2 lanePosition = new Vector2(
                     Mathf.Lerp(
-                        _arenaCenterPosition.x - phase.MovementAmplitude,
-                        _arenaCenterPosition.x + phase.MovementAmplitude,
+                        phaseCenter.x - phase.MovementAmplitude,
+                        phaseCenter.x + phase.MovementAmplitude,
                         laneT),
-                    _arenaCenterPosition.y);
+                    phaseCenter.y);
                 float distance = Vector2.SqrMagnitude(currentPosition - lanePosition);
                 if (distance < closestDistance)
                 {
@@ -503,13 +513,14 @@ namespace Warblade.Entities
         private Vector2 ResolveClosestDiveSweepPoint(BossPhaseData phase, Vector2 currentPosition)
         {
             const int sampleCount = 48;
-            Vector2 closest = _arenaCenterPosition;
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
+            Vector2 closest = phaseCenter;
             float closestDistance = float.PositiveInfinity;
 
             for (int i = 0; i <= sampleCount; i++)
             {
                 float progress = i / (float)sampleCount;
-                Vector2 point = _arenaCenterPosition + new Vector2(
+                Vector2 point = phaseCenter + new Vector2(
                     Mathf.Lerp(-phase.MovementAmplitude, phase.MovementAmplitude, progress),
                     -Mathf.Sin(progress * Mathf.PI) * phase.VerticalMovementAmplitude);
                 float distance = Vector2.SqrMagnitude(currentPosition - point);
@@ -530,13 +541,14 @@ namespace Warblade.Entities
         private Vector2 ResolveClosestFigureEightPoint(BossPhaseData phase, Vector2 currentPosition)
         {
             const int sampleCount = 72;
-            Vector2 closest = _arenaCenterPosition;
+            Vector2 phaseCenter = ResolvePhaseCenterPosition(phase);
+            Vector2 closest = phaseCenter;
             float closestDistance = float.PositiveInfinity;
 
             for (int i = 0; i <= sampleCount; i++)
             {
                 float t = i / (float)sampleCount * Mathf.PI * 2f;
-                Vector2 point = _arenaCenterPosition + new Vector2(
+                Vector2 point = phaseCenter + new Vector2(
                     Mathf.Sin(t) * phase.MovementAmplitude,
                     Mathf.Sin(t * 2f) * phase.VerticalMovementAmplitude);
                 float distance = Vector2.SqrMagnitude(currentPosition - point);
@@ -585,6 +597,16 @@ namespace Warblade.Entities
             _movementPauseTimer = 0f;
             _movementWaypointIndex = 0;
             _hasMovementTarget = false;
+        }
+
+        private Vector2 ResolvePhaseCenterPosition(BossPhaseData phase)
+        {
+            if (phase == null)
+            {
+                return _arenaCenterPosition;
+            }
+
+            return _arenaCenterPosition + new Vector2(0f, phase.MovementCenterYOffset);
         }
 
         private float ResolveBossPressureSpeed(float baseSpeed)

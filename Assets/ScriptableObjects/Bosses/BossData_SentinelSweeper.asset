@@ -16,37 +16,97 @@ MonoBehaviour:
   _maxHealth: 16
   _scoreValue: 7000
   _entryStartPosition: {x: 0, y: 7}
-  _entryTargetPosition: {x: 0, y: 2.75}
+  _entryTargetPosition: {x: 0, y: 1}
   _entrySpeed: 3.2
   _contactDamage: 1
   _phases:
   - _phaseName: Tracking Pass
     _healthThreshold: 1
-    _movementBehavior: 1
-    _movementAmplitude: 2.2
-    _movementSpeed: 1.5
-    _attackCooldownMin: 1
-    _attackCooldownMax: 1.7
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 4
+    _movementAmplitude: 6
+    _verticalMovementAmplitude: 0.8
+    _movementSpeed: 3
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
+    _attackCooldownMin: 0.8
+    _attackCooldownMax: 1.4
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
+      _bulletPrefab: {fileID: 4267132517815133610, guid: aee0d7fbee0397e49aaf7cb185f8752c, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 67face463b5e66a4a9ed5998efe26496, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: e9f7052b691c15f4d95f45d86d6bb74c, type: 3}
+      _simultaneousGroupId: 2
+    - _pattern: {fileID: 11400000, guid: cfbeccca9a23443591a60670caeb496a, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 67face463b5e66a4a9ed5998efe26496, type: 3}
+      _simultaneousGroupId: 2
     _attackPatterns:
     - {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
     - {fileID: 11400000, guid: cfbeccca9a23443591a60670caeb496a, type: 2}
   - _phaseName: Crossfire
     _healthThreshold: 0.65
-    _movementBehavior: 1
-    _movementAmplitude: 3
-    _movementSpeed: 2.2
-    _attackCooldownMin: 0.85
-    _attackCooldownMax: 1.35
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 5
+    _movementAmplitude: 6.5
+    _verticalMovementAmplitude: 1.6
+    _movementSpeed: 2.3
+    _movementPauseDuration: 1
+    _movementLaneCount: 2
+    _playerShadowStrength: 0.65
+    _attackCooldownMin: 0.7
+    _attackCooldownMax: 1.2
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 67face463b5e66a4a9ed5998efe26496, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 67face463b5e66a4a9ed5998efe26496, type: 3}
+      _simultaneousGroupId: 2
+    - _pattern: {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: e9f7052b691c15f4d95f45d86d6bb74c, type: 3}
+      _simultaneousGroupId: 2
     _attackPatterns:
     - {fileID: 11400000, guid: cfbeccca9a23443591a60670caeb496a, type: 2}
     - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
   - _phaseName: Overdrive
     _healthThreshold: 0.3
-    _movementBehavior: 2
-    _movementAmplitude: 2
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 6
+    _movementAmplitude: 6.04
+    _verticalMovementAmplitude: 0
     _movementSpeed: 3
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 4
+    _playerShadowStrength: 0.65
     _attackCooldownMin: 0.65
-    _attackCooldownMax: 1.05
+    _attackCooldownMax: 1
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 67face463b5e66a4a9ed5998efe26496, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
+      _bulletPrefab: {fileID: 4862872240051208319, guid: 69f27235ce9466a4789ddfbf2cfd5167, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
+      _bulletPrefab: {fileID: 4862872240051208319, guid: 69f27235ce9466a4789ddfbf2cfd5167, type: 3}
+      _simultaneousGroupId: 2
+    - _pattern: {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
+      _bulletPrefab: {fileID: 4862872240051208319, guid: 69f27235ce9466a4789ddfbf2cfd5167, type: 3}
+      _simultaneousGroupId: 2
+    - _pattern: {fileID: 11400000, guid: cfbeccca9a23443591a60670caeb496a, type: 2}
+      _bulletPrefab: {fileID: 4862872240051208319, guid: 69f27235ce9466a4789ddfbf2cfd5167, type: 3}
+      _simultaneousGroupId: 3
+    - _pattern: {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: e9f7052b691c15f4d95f45d86d6bb74c, type: 3}
+      _simultaneousGroupId: 3
     _attackPatterns:
     - {fileID: 11400000, guid: 229846e4d44441b9a52a054b04fa27ce, type: 2}
     - {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}

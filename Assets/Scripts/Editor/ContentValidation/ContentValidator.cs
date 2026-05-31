@@ -254,6 +254,7 @@ namespace Warblade.Editor.ContentValidation
                         continue;
                     }
 
+                    Dictionary<int, int> simultaneousGroupCounts = new Dictionary<int, int>();
                     for (int attackIndex = 0; attackIndex < phase.Attacks.Count; attackIndex++)
                     {
                         BossPhaseAttackData attack = phase.Attacks[attackIndex];
@@ -271,11 +272,30 @@ namespace Warblade.Editor.ContentValidation
                                 $"Boss phase '{phase.PhaseName}' has a missing attack pattern at index {attackIndex}.",
                                 boss);
                         }
+                        else if (attack.SimultaneousGroupId > 0)
+                        {
+                            if (!simultaneousGroupCounts.ContainsKey(attack.SimultaneousGroupId))
+                            {
+                                simultaneousGroupCounts.Add(attack.SimultaneousGroupId, 0);
+                            }
+
+                            simultaneousGroupCounts[attack.SimultaneousGroupId]++;
+                        }
 
                         if (attack.BulletPrefab == null)
                         {
                             report.Warning(
                                 $"Boss phase '{phase.PhaseName}' attack {attackIndex} has no bullet prefab and will use the boss component fallback prefab.",
+                                boss);
+                        }
+                    }
+
+                    foreach (KeyValuePair<int, int> groupCount in simultaneousGroupCounts)
+                    {
+                        if (groupCount.Value == 1)
+                        {
+                            report.Warning(
+                                $"Boss phase '{phase.PhaseName}' simultaneous group {groupCount.Key} only has one valid attack and will fire like a standalone attack.",
                                 boss);
                         }
                     }

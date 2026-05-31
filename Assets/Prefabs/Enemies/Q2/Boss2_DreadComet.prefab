@@ -142,13 +142,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c964ac0d2824121b7377d3962c8dc22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Boss
-  _data: {fileID: 11400000, guid: 45e1e718494c479c9957fd152866cc5b, type: 2}
+  _data: {fileID: 11400000, guid: 19e2a6adcd6f4ebc94a493b744cc4fb7, type: 2}
   _spawnOnEnable: 1
   _spriteRenderers: []
   _introDuration: 1.5
   _playerTransform: {fileID: 0}
   _firePoint: {fileID: 2504996352442769693}
-  _bossBulletPrefab: {fileID: 924634902285088487, guid: becb08ed0d59d9647a14de74504b9385, type: 3}
+  _bossBulletPrefab: {fileID: 1391419535676523885, guid: 6ba004e4b25795545abdbf2294528eb0, type: 3}
   _bulletPoolDefaultCapacity: 32
   _bulletPoolMaxSize: 128
   _bossSpawned: {fileID: 11400000, guid: 0f239019da764438a39c78c65461f173, type: 2}

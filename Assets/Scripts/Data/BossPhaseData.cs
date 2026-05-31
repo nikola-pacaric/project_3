@@ -14,6 +14,8 @@ namespace Warblade.Data
         [Tooltip("Where the boss should move before this phase starts.")]
         [SerializeField] private BossPhaseTransitionTarget _transitionTarget = BossPhaseTransitionTarget.ClosestPointOnNextMovement;
         [SerializeField] private BossMovementBehavior _movementBehavior = BossMovementBehavior.HoldPosition;
+        [Tooltip("Moves this phase's movement center up or down from the boss entry target without changing path size.")]
+        [SerializeField] private float _movementCenterYOffset;
         [Tooltip("Horizontal movement range from the boss entry target.")]
         [SerializeField, Min(0f)] private float _movementAmplitude = 1.5f;
         [Tooltip("Vertical movement range from the boss entry target for patterns that move on Y.")]
@@ -35,6 +37,7 @@ namespace Warblade.Data
         public float TransitionDuration => _transitionDuration;
         public BossPhaseTransitionTarget TransitionTarget => _transitionTarget;
         public BossMovementBehavior MovementBehavior => _movementBehavior;
+        public float MovementCenterYOffset => _movementCenterYOffset;
         public float MovementAmplitude => _movementAmplitude;
         public float VerticalMovementAmplitude => _verticalMovementAmplitude;
         public float MovementSpeed => _movementSpeed;

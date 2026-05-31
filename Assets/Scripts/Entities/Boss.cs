@@ -220,7 +220,7 @@ namespace Warblade.Entities
 
             _currentPhaseIndex = nextPhaseIndex;
             BossPhaseData nextPhase = CurrentPhase;
-            _movement.PreparePhase();
+            _movement.PreparePhase(nextPhase);
             _shooter.StopCurrentAttack();
             VfxManager.Instance?.Play(VfxCue.BossPhaseChange, transform.position);
             RaisePhaseChanged();

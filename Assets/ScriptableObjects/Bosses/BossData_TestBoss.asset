@@ -16,7 +16,7 @@ MonoBehaviour:
   _maxHealth: 21
   _scoreValue: 5000
   _entryStartPosition: {x: 0, y: 7}
-  _entryTargetPosition: {x: 0, y: 2}
+  _entryTargetPosition: {x: 0, y: 1}
   _entrySpeed: 4
   _contactDamage: 1
   _phases:
@@ -25,6 +25,7 @@ MonoBehaviour:
     _transitionDuration: 0
     _transitionTarget: 1
     _movementBehavior: 1
+    _movementCenterYOffset: 0
     _movementAmplitude: 6
     _verticalMovementAmplitude: 0.75
     _movementSpeed: 3
@@ -32,18 +33,14 @@ MonoBehaviour:
     _movementLaneCount: 3
     _playerShadowStrength: 0.65
     _attackCooldownMin: 1
-    _attackCooldownMax: 2
+    _attackCooldownMax: 1.8
     _attacks:
-    - _pattern: {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
-      _bulletSprite: {fileID: 3780998769208025429, guid: a768d85fd7ce3d848930acf223842584, type: 3}
-      _colliderSizeOverride: {x: 2, y: 2}
-      _colliderRadiusOverride: 1
-      _bulletPrefab: {fileID: 0}
     - _pattern: {fileID: 11400000, guid: 154ab312a99a4208a9316a1a67b58246, type: 2}
-      _bulletSprite: {fileID: -765783506, guid: a768d85fd7ce3d848930acf223842584, type: 3}
-      _colliderSizeOverride: {x: 2, y: 2}
-      _colliderRadiusOverride: 1
-      _bulletPrefab: {fileID: 0}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 450a6b402867d75419bd7e8866b3a5ac, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: 12f0c9b6738ff1d4a94adab04988fe53, type: 3}
+      _simultaneousGroupId: 1
     _attackPatterns:
     - {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
     - {fileID: 11400000, guid: 154ab312a99a4208a9316a1a67b58246, type: 2}
@@ -52,6 +49,7 @@ MonoBehaviour:
     _transitionDuration: 1.25
     _transitionTarget: 1
     _movementBehavior: 8
+    _movementCenterYOffset: 0
     _movementAmplitude: 6.06
     _verticalMovementAmplitude: 1.5
     _movementSpeed: 2
@@ -62,10 +60,11 @@ MonoBehaviour:
     _attackCooldownMax: 1.6
     _attacks:
     - _pattern: {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
-      _bulletSprite: {fileID: 0}
-      _colliderSizeOverride: {x: 0, y: 0}
-      _colliderRadiusOverride: 0
-      _bulletPrefab: {fileID: 0}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 450a6b402867d75419bd7e8866b3a5ac, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
+      _bulletPrefab: {fileID: 4267132517815133610, guid: 4aad6d6caa6158e409e05eff90747ff5, type: 3}
+      _simultaneousGroupId: 1
     _attackPatterns:
     - {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
   - _phaseName: Last Stand
@@ -73,6 +72,7 @@ MonoBehaviour:
     _transitionDuration: 1.25
     _transitionTarget: 1
     _movementBehavior: 3
+    _movementCenterYOffset: 0
     _movementAmplitude: 7
     _verticalMovementAmplitude: 2
     _movementSpeed: 1.5
@@ -80,18 +80,17 @@ MonoBehaviour:
     _movementLaneCount: 3
     _playerShadowStrength: 0.6
     _attackCooldownMin: 0.8
-    _attackCooldownMax: 1.3
+    _attackCooldownMax: 1.4
     _attacks:
     - _pattern: {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
-      _bulletSprite: {fileID: 0}
-      _colliderSizeOverride: {x: 0, y: 0}
-      _colliderRadiusOverride: 0
-      _bulletPrefab: {fileID: 0}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 450a6b402867d75419bd7e8866b3a5ac, type: 3}
+      _simultaneousGroupId: 1
     - _pattern: {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
-      _bulletSprite: {fileID: 0}
-      _colliderSizeOverride: {x: 0, y: 0}
-      _colliderRadiusOverride: 0
-      _bulletPrefab: {fileID: 0}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: f574ba8e3d31e9a4685efb13982f6ff7, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 450a6b402867d75419bd7e8866b3a5ac, type: 3}
+      _simultaneousGroupId: 0
     _attackPatterns:
     - {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
     - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}

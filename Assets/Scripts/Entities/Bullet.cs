@@ -12,11 +12,14 @@ namespace Warblade.Entities
         [SerializeField] private float _maxLifetimeDistance = 12f;
         [SerializeField] private int _damage = 1;
         [SerializeField] private VfxCue _impactVfxCue = VfxCue.BulletImpact;
+        [Tooltip("When enabled, the bullet visually rotates to face its travel direction. Disable this for bullets that should keep their prefab rotation.")]
+        [SerializeField] private bool _alignRotationToDirection = true;
         [SerializeField, Min(0f)] private float _spriteRotationSpeedDegreesPerSecond = 180f;
 
         private Vector3 _spawnPosition;
         private IObjectPool<Bullet> _pool;
         private SpriteRenderer _spriteRenderer;
+        private Quaternion _defaultRootRotation;
         private Quaternion _defaultSpriteLocalRotation;
         private bool _spinSprite;
         private bool _isActive;
@@ -56,7 +59,7 @@ namespace Warblade.Entities
             _direction = direction.sqrMagnitude > Mathf.Epsilon
                 ? direction.normalized
                 : Vector2.up;
-            transform.up = _direction;
+            ApplySpawnRotation();
             _spawnPosition = position;
             SetActiveState(true);
         }
@@ -74,6 +77,7 @@ namespace Warblade.Entities
 
         private void Awake()
         {
+            _defaultRootRotation = transform.rotation;
             ResolveSpriteRenderer();
         }
 
@@ -144,6 +148,18 @@ namespace Warblade.Entities
 
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             _defaultSpriteLocalRotation = _spriteRenderer == null ? Quaternion.identity : _spriteRenderer.transform.localRotation;
+        }
+
+        private void ApplySpawnRotation()
+        {
+            if (_alignRotationToDirection)
+            {
+                transform.up = _direction;
+            }
+            else
+            {
+                transform.rotation = _defaultRootRotation;
+            }
         }
 
         private void TickSpriteSpin()

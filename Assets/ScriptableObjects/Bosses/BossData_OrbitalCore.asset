@@ -16,36 +16,84 @@ MonoBehaviour:
   _maxHealth: 22
   _scoreValue: 9000
   _entryStartPosition: {x: 0, y: 7.25}
-  _entryTargetPosition: {x: 0, y: 3}
+  _entryTargetPosition: {x: 0, y: 1}
   _entrySpeed: 2.6
   _contactDamage: 1
   _phases:
   - _phaseName: Charging Ring
     _healthThreshold: 1
-    _movementBehavior: 0
-    _movementAmplitude: 0
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 3
+    _movementAmplitude: 7
+    _verticalMovementAmplitude: 1.3
     _movementSpeed: 1.5
-    _attackCooldownMin: 1.25
-    _attackCooldownMax: 2
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
+    _attackCooldownMin: 0.9
+    _attackCooldownMax: 1.6
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 552aae0cb6e222b4fbdeb122dcff047d, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 7705d9528da83394cb396bd75faee144, type: 3}
+      _simultaneousGroupId: 0
+    - _pattern: {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
+      _bulletPrefab: {fileID: 2870247936452653466, guid: 25cbba22fa0057f4da8c9bd145210aac, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: 231654b75bd51354d95e02d9d0534acd, type: 3}
+      _simultaneousGroupId: 1
     _attackPatterns:
     - {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
   - _phaseName: Rotating Shell
     _healthThreshold: 0.7
-    _movementBehavior: 2
-    _movementAmplitude: 1.25
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 3
+    _movementAmplitude: 3
+    _verticalMovementAmplitude: 0.75
     _movementSpeed: 1.8
-    _attackCooldownMin: 1
-    _attackCooldownMax: 1.5
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.579
+    _attackCooldownMin: 0.9
+    _attackCooldownMax: 1.4
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
+      _bulletPrefab: {fileID: 2870247936452653466, guid: 25cbba22fa0057f4da8c9bd145210aac, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 154ab312a99a4208a9316a1a67b58246, type: 2}
+      _bulletPrefab: {fileID: 2870247936452653466, guid: 25cbba22fa0057f4da8c9bd145210aac, type: 3}
+      _simultaneousGroupId: 0
+    - _pattern: {fileID: 11400000, guid: b1bd554975a14db1908d66169ddfcf51, type: 2}
+      _bulletPrefab: {fileID: 4862872240051208319, guid: 9a0763b475fc5444e8ca0ffcc576f7f5, type: 3}
+      _simultaneousGroupId: 1
     _attackPatterns:
     - {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
     - {fileID: 11400000, guid: 1279bf1a9d1741a1a6e04b240fb85630, type: 2}
   - _phaseName: Unstable Core
     _healthThreshold: 0.35
-    _movementBehavior: 2
-    _movementAmplitude: 1.8
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 4
+    _movementAmplitude: 5
+    _verticalMovementAmplitude: 1.5
     _movementSpeed: 2.4
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
     _attackCooldownMin: 0.8
-    _attackCooldownMax: 1.15
+    _attackCooldownMax: 1.2
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 7705d9528da83394cb396bd75faee144, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
+      _bulletPrefab: {fileID: 4862872240051208319, guid: 9a0763b475fc5444e8ca0ffcc576f7f5, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: 231654b75bd51354d95e02d9d0534acd, type: 3}
+      _simultaneousGroupId: 0
     _attackPatterns:
     - {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
     - {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}

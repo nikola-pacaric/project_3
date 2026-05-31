@@ -23,4 +23,5 @@ MonoBehaviour:
   _volleyRotationDegrees: 12
   _sweepStartAngleDegrees: 210
   _sweepEndAngleDegrees: 330
-  _bulletSpeed: 6
+  _bulletSpeed: 6.5
+  _spinBulletSprite: 0

@@ -13,39 +13,81 @@ MonoBehaviour:
   m_Name: BossData_DreadComet
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossData
   _displayName: Dread Comet
-  _maxHealth: 18
+  _maxHealth: 20
   _scoreValue: 11000
   _entryStartPosition: {x: 0, y: 7}
-  _entryTargetPosition: {x: 0, y: 2.65}
+  _entryTargetPosition: {x: 0, y: 1}
   _entrySpeed: 3.6
   _contactDamage: 1
   _phases:
   - _phaseName: Lock On
     _healthThreshold: 1
-    _movementBehavior: 2
-    _movementAmplitude: 1.5
-    _movementSpeed: 2
-    _attackCooldownMin: 0.95
-    _attackCooldownMax: 1.55
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 8
+    _movementAmplitude: 6
+    _verticalMovementAmplitude: 1
+    _movementSpeed: 3
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
+    _attackCooldownMin: 0.9
+    _attackCooldownMax: 1.7
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
+      _bulletPrefab: {fileID: 1391419535676523885, guid: 6ba004e4b25795545abdbf2294528eb0, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: cfbeccca9a23443591a60670caeb496a, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 3189f1efca7c9d24fa5411bea24b65cd, type: 3}
+      _simultaneousGroupId: 1
     _attackPatterns:
     - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
   - _phaseName: Pursuit Volley
     _healthThreshold: 0.6
-    _movementBehavior: 1
-    _movementAmplitude: 2.5
-    _movementSpeed: 2.8
-    _attackCooldownMin: 0.75
-    _attackCooldownMax: 1.2
+    _transitionDuration: 0.75
+    _transitionTarget: 1
+    _movementBehavior: 5
+    _movementAmplitude: 6
+    _verticalMovementAmplitude: 3
+    _movementSpeed: 2.5
+    _movementPauseDuration: 0.5
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
+    _attackCooldownMin: 0.9
+    _attackCooldownMax: 1.5
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 3189f1efca7c9d24fa5411bea24b65cd, type: 3}
+      _simultaneousGroupId: 0
+    - _pattern: {fileID: 11400000, guid: 5835dc6931724a28b561ebc8e53b2aa8, type: 2}
+      _bulletPrefab: {fileID: 4267132517815133610, guid: da6d85db051bf3946a9d09f9dcfefb52, type: 3}
+      _simultaneousGroupId: 0
     _attackPatterns:
     - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
     - {fileID: 11400000, guid: 229846e4d44441b9a52a054b04fa27ce, type: 2}
   - _phaseName: Burnout
     _healthThreshold: 0.25
+    _transitionDuration: 0.75
+    _transitionTarget: 1
     _movementBehavior: 1
-    _movementAmplitude: 3.25
-    _movementSpeed: 3.4
-    _attackCooldownMin: 0.55
-    _attackCooldownMax: 0.9
+    _movementAmplitude: 6
+    _verticalMovementAmplitude: 1
+    _movementSpeed: 3
+    _movementPauseDuration: 0.75
+    _movementLaneCount: 3
+    _playerShadowStrength: 0.65
+    _attackCooldownMin: 0.75
+    _attackCooldownMax: 1.2
+    _attacks:
+    - _pattern: {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
+      _bulletPrefab: {fileID: 4267132517815133610, guid: da6d85db051bf3946a9d09f9dcfefb52, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 229846e4d44441b9a52a054b04fa27ce, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 3189f1efca7c9d24fa5411bea24b65cd, type: 3}
+      _simultaneousGroupId: 1
+    - _pattern: {fileID: 11400000, guid: 552aae0cb6e222b4fbdeb122dcff047d, type: 2}
+      _bulletPrefab: {fileID: 3604733107955917413, guid: 3189f1efca7c9d24fa5411bea24b65cd, type: 3}
+      _simultaneousGroupId: 1
     _attackPatterns:
     - {fileID: 11400000, guid: 6638aad93d944dbdba35231f01a272f2, type: 2}
     - {fileID: 11400000, guid: 229846e4d44441b9a52a054b04fa27ce, type: 2}

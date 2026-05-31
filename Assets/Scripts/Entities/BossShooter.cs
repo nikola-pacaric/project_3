@@ -18,10 +18,16 @@ namespace Warblade.Entities
         private int _bulletPoolDefaultCapacity = 32;
         private int _bulletPoolMaxSize = 128;
         private readonly Dictionary<GameObject, IObjectPool<Bullet>> _bulletPools = new Dictionary<GameObject, IObjectPool<Bullet>>();
+        private readonly List<Coroutine> _parallelAttackRoutines = new List<Coroutine>();
         private Coroutine _attackRoutine;
         private float _nextAttackTime;
         private int _volleyIndex;
         private CycleScalingState _cycleScaling = CycleScalingState.Default;
+
+        private sealed class ParallelAttackCounter
+        {
+            public int Running;
+        }
 
         internal void Initialize(
             Boss boss,
@@ -66,18 +72,29 @@ namespace Warblade.Entities
                 return;
             }
 
-            BossPhaseAttackData attack = ChooseAttack(phase);
-            if (attack == null)
+            List<BossPhaseAttackData> attacks = ChooseAttacks(phase);
+            if (attacks == null || attacks.Count == 0)
             {
                 ScheduleNextAttack(phase);
                 return;
             }
 
-            _attackRoutine = StartCoroutine(RunAttack(attack, phase));
+            _attackRoutine = StartCoroutine(RunAttacks(attacks, phase));
         }
 
         internal void StopCurrentAttack()
         {
+            for (int i = 0; i < _parallelAttackRoutines.Count; i++)
+            {
+                Coroutine routine = _parallelAttackRoutines[i];
+                if (routine != null)
+                {
+                    StopCoroutine(routine);
+                }
+            }
+
+            _parallelAttackRoutines.Clear();
+
             if (_attackRoutine == null)
             {
                 return;
@@ -87,28 +104,132 @@ namespace Warblade.Entities
             _attackRoutine = null;
         }
 
-        private BossPhaseAttackData ChooseAttack(BossPhaseData phase)
+        private List<BossPhaseAttackData> ChooseAttacks(BossPhaseData phase)
         {
             if (phase == null || phase.Attacks == null || phase.Attacks.Count == 0)
             {
                 return null;
             }
 
-            int startIndex = Random.Range(0, phase.Attacks.Count);
+            int optionCount = CountAttackOptions(phase);
+            if (optionCount == 0)
+            {
+                return null;
+            }
+
+            int selectedOption = Random.Range(0, optionCount);
+            int optionIndex = 0;
+            List<int> visitedGroupIds = new List<int>();
             for (int i = 0; i < phase.Attacks.Count; i++)
             {
-                int index = (startIndex + i) % phase.Attacks.Count;
-                BossPhaseAttackData attack = phase.Attacks[index];
-                if (attack != null && attack.HasPattern)
+                BossPhaseAttackData attack = phase.Attacks[i];
+                if (attack == null || !attack.HasPattern)
                 {
-                    return attack;
+                    continue;
                 }
+
+                int groupId = attack.SimultaneousGroupId;
+                if (groupId <= 0)
+                {
+                    if (optionIndex == selectedOption)
+                    {
+                        return new List<BossPhaseAttackData> { attack };
+                    }
+
+                    optionIndex++;
+                    continue;
+                }
+
+                if (visitedGroupIds.Contains(groupId))
+                {
+                    continue;
+                }
+
+                visitedGroupIds.Add(groupId);
+                if (optionIndex == selectedOption)
+                {
+                    return CollectAttackGroup(phase, groupId);
+                }
+
+                optionIndex++;
             }
 
             return null;
         }
 
-        private IEnumerator RunAttack(BossPhaseAttackData attack, BossPhaseData phase)
+        private int CountAttackOptions(BossPhaseData phase)
+        {
+            int optionCount = 0;
+            List<int> visitedGroupIds = new List<int>();
+
+            for (int i = 0; i < phase.Attacks.Count; i++)
+            {
+                BossPhaseAttackData attack = phase.Attacks[i];
+                if (attack == null || !attack.HasPattern)
+                {
+                    continue;
+                }
+
+                int groupId = attack.SimultaneousGroupId;
+                if (groupId <= 0)
+                {
+                    optionCount++;
+                    continue;
+                }
+
+                if (visitedGroupIds.Contains(groupId))
+                {
+                    continue;
+                }
+
+                visitedGroupIds.Add(groupId);
+                optionCount++;
+            }
+
+            return optionCount;
+        }
+
+        private List<BossPhaseAttackData> CollectAttackGroup(BossPhaseData phase, int groupId)
+        {
+            List<BossPhaseAttackData> attacks = new List<BossPhaseAttackData>();
+            for (int i = 0; i < phase.Attacks.Count; i++)
+            {
+                BossPhaseAttackData attack = phase.Attacks[i];
+                if (attack != null && attack.HasPattern && attack.SimultaneousGroupId == groupId)
+                {
+                    attacks.Add(attack);
+                }
+            }
+
+            return attacks;
+        }
+
+        private IEnumerator RunAttacks(List<BossPhaseAttackData> attacks, BossPhaseData phase)
+        {
+            ParallelAttackCounter parallelAttackCounter = new ParallelAttackCounter();
+
+            for (int i = 0; i < attacks.Count; i++)
+            {
+                BossPhaseAttackData attack = attacks[i];
+                if (attack == null || !attack.HasPattern)
+                {
+                    continue;
+                }
+
+                StartAttack(attack, parallelAttackCounter);
+            }
+
+            while (parallelAttackCounter.Running > 0 && _boss != null && _boss.State == BossState.Active)
+            {
+                yield return null;
+            }
+
+            _parallelAttackRoutines.Clear();
+            ScheduleNextAttack(phase);
+            _attackRoutine = null;
+        }
+
+        private void StartAttack(BossPhaseAttackData attack, ParallelAttackCounter parallelAttackCounter)
         {
             BossAttackPatternData pattern = attack.Pattern;
             GameObject bulletPrefab = ResolveBulletPrefab(attack);
@@ -118,9 +239,7 @@ namespace Warblade.Entities
                 Debug.LogWarning(
                     $"[{nameof(Boss)}] '{name}' cannot fire because no boss bullet prefab is assigned.",
                     this);
-                ScheduleNextAttack(phase);
-                _attackRoutine = null;
-                yield break;
+                return;
             }
 
             switch (pattern.PatternType)
@@ -134,12 +253,28 @@ namespace Warblade.Entities
                     break;
 
                 case BossAttackPatternType.Sweep:
-                    yield return FireSweep(pattern, bulletPrefab, spinBulletSprite);
+                    parallelAttackCounter.Running++;
+                    Coroutine routine = StartCoroutine(RunParallelAttack(
+                        FireSweep(pattern, bulletPrefab, spinBulletSprite),
+                        () => parallelAttackCounter.Running--));
+                    _parallelAttackRoutines.Add(routine);
                     break;
             }
+        }
 
-            ScheduleNextAttack(phase);
-            _attackRoutine = null;
+        private IEnumerator RunParallelAttack(IEnumerator attackRoutine, System.Action onComplete)
+        {
+            try
+            {
+                while (attackRoutine.MoveNext())
+                {
+                    yield return attackRoutine.Current;
+                }
+            }
+            finally
+            {
+                onComplete?.Invoke();
+            }
         }
 
         private IEnumerator FireSweep(

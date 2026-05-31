@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: BossAttackPattern_SweepWideSlow
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.BossAttackPatternData
   _patternType: 2
-  _bulletCount: 5
-  _spreadAngle: 24
-  _patternDuration: 3
-  _shotInterval: 0.35
+  _bulletCount: 4
+  _spreadAngle: 33
+  _patternDuration: 2.5
+  _shotInterval: 0.4
   _baseAngleDegrees: 270
   _aimAtPlayer: 0
   _rotateEachVolley: 0
   _volleyRotationDegrees: 12
-  _sweepStartAngleDegrees: 200
-  _sweepEndAngleDegrees: 340
-  _bulletSpeed: 4.2
+  _sweepStartAngleDegrees: 230
+  _sweepEndAngleDegrees: 310
+  _bulletSpeed: 3.5
+  _spinBulletSprite: 1
