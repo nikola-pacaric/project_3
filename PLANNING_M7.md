@@ -108,10 +108,15 @@ Acceptance:
 
 ---
 
-## Phase 5 — Lighting and Post-Processing
+## Phase 5 — Lighting and Post-Processing — In Progress
 
 Goal:
 - Add depth and polish with URP 2D lighting while keeping WebGL performance reasonable.
+
+Current focus:
+- Bloom is being evaluated first as the global glow layer.
+- Bloom is treated as an amplifier for bright authored visuals, not a replacement for better bullet, pickup, boss bar, or VFX art.
+- URP 2D lights will be considered after bloom tuning, and only where they add clear scene response without hurting WebGL readability/performance.
 
 Checklist:
 - Add restrained 2D lights to bullets, explosions, pickups, bosses, or background where useful.
