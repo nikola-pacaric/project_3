@@ -22,6 +22,12 @@ namespace Warblade.Entities
         [Header("Intro")]
         [SerializeField, Min(0f)] private float _introDuration = 1.5f;
 
+        [Header("Defeat Presentation")]
+        [SerializeField, Min(0f)] private float _defeatPresentationDuration = 1.8f;
+        [SerializeField] private Vector2 _defeatRiseOffset = new Vector2(0f, 0.75f);
+        [SerializeField, Min(0f)] private float _defeatShakeAmplitude = 0.08f;
+        [SerializeField, Min(0f)] private float _defeatShakeFrequency = 45f;
+
         [Header("Attacks")]
         [SerializeField] private Transform _playerTransform;
         [SerializeField] private Transform _firePoint;
@@ -40,6 +46,7 @@ namespace Warblade.Entities
         private int _currentPhaseIndex = -1;
         private bool _isSpawning;
         private Coroutine _introRoutine;
+        private Coroutine _defeatRoutine;
         private CycleScalingState _cycleScaling = CycleScalingState.Default;
         private BossHealth _health;
         private BossMovement _movement;
@@ -89,6 +96,7 @@ namespace Warblade.Entities
         private void OnDisable()
         {
             StopIntro();
+            StopDefeatPresentation();
             _movement?.StopPhaseTransition();
             _shooter?.StopCurrentAttack();
         }
@@ -102,6 +110,9 @@ namespace Warblade.Entities
 
             _bulletPoolDefaultCapacity = Mathf.Max(1, _bulletPoolDefaultCapacity);
             _bulletPoolMaxSize = Mathf.Max(_bulletPoolDefaultCapacity, _bulletPoolMaxSize);
+            _defeatPresentationDuration = Mathf.Max(0f, _defeatPresentationDuration);
+            _defeatShakeAmplitude = Mathf.Max(0f, _defeatShakeAmplitude);
+            _defeatShakeFrequency = Mathf.Max(0f, _defeatShakeFrequency);
         }
 
         private void Update()
@@ -146,6 +157,7 @@ namespace Warblade.Entities
             _isSpawning = false;
 
             StopIntro();
+            StopDefeatPresentation();
             _movement.StopPhaseTransition();
             _shooter.StopCurrentAttack();
 
@@ -243,14 +255,11 @@ namespace Warblade.Entities
             }
 
             _state = BossState.Defeated;
-            VfxManager.Instance?.Play(VfxCue.BossDeath, transform.position);
-            VfxManager.Instance?.Play(VfxCue.BossDefeat, transform.position);
             StopIntro();
             _movement?.StopPhaseTransition();
             _shooter?.StopCurrentAttack();
-            AwardDefeatRewards();
-            _bossDefeated?.Raise(_data);
-            gameObject.SetActive(false);
+
+            _defeatRoutine = StartCoroutine(RunDefeatPresentation());
         }
 
         internal void RaiseHealthChanged()
@@ -302,6 +311,49 @@ namespace Warblade.Entities
 
             StopCoroutine(_introRoutine);
             _introRoutine = null;
+        }
+
+        private void StopDefeatPresentation()
+        {
+            if (_defeatRoutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(_defeatRoutine);
+            _defeatRoutine = null;
+        }
+
+        private IEnumerator RunDefeatPresentation()
+        {
+            Vector3 startPosition = transform.position;
+            Vector3 targetPosition = startPosition + (Vector3)_defeatRiseOffset;
+            float elapsed = 0f;
+
+            while (elapsed < _defeatPresentationDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = _defeatPresentationDuration <= Mathf.Epsilon
+                    ? 1f
+                    : Mathf.Clamp01(elapsed / _defeatPresentationDuration);
+                float easedT = Mathf.SmoothStep(0f, 1f, t);
+                float shakeStrength = _defeatShakeAmplitude * (1f - t);
+                float shakeTime = Time.time * _defeatShakeFrequency;
+                Vector3 shakeOffset = new Vector3(
+                    Mathf.Sin(shakeTime) * shakeStrength,
+                    Mathf.Cos(shakeTime * 1.37f) * shakeStrength * 0.35f,
+                    0f);
+
+                transform.position = Vector3.Lerp(startPosition, targetPosition, easedT) + shakeOffset;
+                yield return null;
+            }
+
+            transform.position = targetPosition;
+            VfxManager.Instance?.Play(VfxCue.BossDeath, transform.position);
+            AwardDefeatRewards();
+            _bossDefeated?.Raise(_data);
+            _defeatRoutine = null;
+            gameObject.SetActive(false);
         }
 
         private void RaisePhaseChanged()

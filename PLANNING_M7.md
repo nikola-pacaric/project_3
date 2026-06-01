@@ -72,7 +72,7 @@ Done:
 
 ---
 
-## Phase 4 — VFX Pass
+## Phase 4 — VFX Pass — Done
 
 Goal:
 - Add readable combat and reward effects without hiding gameplay.
@@ -85,21 +85,26 @@ Checklist:
 - [x] EnemyBulletImpact VFX.
 - [x] Shield hit effect.
 - [x] Player death effect.
-- [ ] Boss muzzle flash.
-- [ ] Boss hit effect.
-- [ ] Boss phase-change effect.
-- [ ] Boss warning effect.
-- [ ] Boss death effect.
-- [ ] Boss defeat effect.
+- [x] Boss muzzle flash.
+- [x] Boss hit effect.
+- [x] Boss phase-change effect.
+- [x] Boss warning effect.
+- [x] Boss death effect.
+- [x] Boss defeat effect.
 - [x] Sector warp transition after every 4-level enemy set and boss level.
 
 Decisions:
 - Small enemy muzzle flashes are intentionally skipped so enemy bullets remain clean and readable.
 - Pickup spawn effects are intentionally skipped so drops can appear without adding screen clutter.
+- Boss hit particles were chosen not to implement because player bullet impact sparks already show the contact point, and an extra boss-centered hit pulse made fast multi-shot damage harder to read.
+- Boss warning particles were chosen not to implement because the boss sprite animation already signals the active/combat-ready moment after the slide-in.
+- Boss muzzle flashes are attached under each boss BulletPoint instead of pooled through VfxManager so they stay visually locked to moving bosses.
+- Boss defeat is a sprite/object presentation: the boss stops, shakes, rises slightly, then triggers the BossDeath line-burst VFX.
 
 Acceptance:
 - Combat feels responsive and readable.
 - Effects do not obscure enemy bullets or pickups.
+- All four bosses were playtested with the muzzle flash, phase-change ring, and delayed death presentation working cleanly.
 
 ---
 

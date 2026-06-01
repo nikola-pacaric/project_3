@@ -17,7 +17,7 @@ MonoBehaviour:
   _scoreValue: 9000
   _entryStartPosition: {x: 0, y: 7.25}
   _entryTargetPosition: {x: 0, y: 1}
-  _entrySpeed: 2.6
+  _entrySpeed: 3.5
   _contactDamage: 1
   _phases:
   - _phaseName: Charging Ring
@@ -25,7 +25,8 @@ MonoBehaviour:
     _transitionDuration: 0.75
     _transitionTarget: 1
     _movementBehavior: 3
-    _movementAmplitude: 7
+    _movementCenterYOffset: 0
+    _movementAmplitude: 6
     _verticalMovementAmplitude: 1.3
     _movementSpeed: 1.5
     _movementPauseDuration: 0.5
@@ -34,7 +35,7 @@ MonoBehaviour:
     _attackCooldownMin: 0.9
     _attackCooldownMax: 1.6
     _attacks:
-    - _pattern: {fileID: 11400000, guid: 552aae0cb6e222b4fbdeb122dcff047d, type: 2}
+    - _pattern: {fileID: 11400000, guid: acd7b4d9533db254e8caf2f29091dba7, type: 2}
       _bulletPrefab: {fileID: 3604733107955917413, guid: 7705d9528da83394cb396bd75faee144, type: 3}
       _simultaneousGroupId: 0
     - _pattern: {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
@@ -50,6 +51,7 @@ MonoBehaviour:
     _transitionDuration: 0.75
     _transitionTarget: 1
     _movementBehavior: 3
+    _movementCenterYOffset: 0
     _movementAmplitude: 3
     _verticalMovementAmplitude: 0.75
     _movementSpeed: 1.8
@@ -76,6 +78,7 @@ MonoBehaviour:
     _transitionDuration: 0.75
     _transitionTarget: 1
     _movementBehavior: 4
+    _movementCenterYOffset: 0
     _movementAmplitude: 5
     _verticalMovementAmplitude: 1.5
     _movementSpeed: 2.4

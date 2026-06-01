@@ -19,9 +19,9 @@ Completed milestones are kept as short summaries. Active and future milestones k
 
 ## Current Milestone
 
-**M7** *(next: Game Feel)*
+**M7** *(current: Game Feel)*
 
-M6 Content Fill is complete. The next milestone is M7 Game Feel: sprites, VFX, SFX, UI polish, and presentation cleanup before final tuning.
+M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, and the Phase 4 VFX pass are complete. The next major work is lighting/post-processing, then screen feedback, audio, music, UI polish, and integration checks before final tuning.
 
 ---
 
@@ -76,14 +76,14 @@ The content model was refactored for safer authoring: reusable formation shape d
 **Goal:** juice. Stops looking like a prototype.
 
 **Build — Visual**
-- [ ] Parallax starfield (Particle System)
-- [ ] Player thruster particles
-- [ ] Explosion variants (grunts, bullets, bosses)
+- [x] Parallax starfield (Particle System)
+- [x] Player thruster particles
+- [x] Explosion and impact variants (player, enemies, bullets, bosses)
 - [ ] URP 2D lights on bullets and explosions
 - [ ] Player hit flash (UI overlay coroutine)
 - [ ] Screen shake via Cinemachine Impulse
 - [ ] Bloom + color grading in Global Volume
-- [ ] Replace placeholder sprites with generated sprite sheets
+- [x] Replace placeholder sprites with generated sprite sheets
 
 **Build — Audio**
 - [ ] `AudioManager` singleton, separate SFX/music mixer channels

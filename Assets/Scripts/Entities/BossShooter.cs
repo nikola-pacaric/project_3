@@ -11,16 +11,23 @@ namespace Warblade.Entities
     [DisallowMultipleComponent]
     public class BossShooter : MonoBehaviour
     {
+        private const string MuzzleFlashChildName = "MuzzleFlash";
+
+        [Header("VFX")]
+        [SerializeField, Min(0f)] private float _muzzleFlashCooldown = 0.03f;
+
         private Boss _boss;
         private Transform _playerTransform;
         private Transform _firePoint;
         private GameObject _bossBulletPrefab;
         private int _bulletPoolDefaultCapacity = 32;
         private int _bulletPoolMaxSize = 128;
+        private ParticleSystem[] _muzzleFlashParticles;
         private readonly Dictionary<GameObject, IObjectPool<Bullet>> _bulletPools = new Dictionary<GameObject, IObjectPool<Bullet>>();
         private readonly List<Coroutine> _parallelAttackRoutines = new List<Coroutine>();
         private Coroutine _attackRoutine;
         private float _nextAttackTime;
+        private float _nextMuzzleFlashTime;
         private int _volleyIndex;
         private CycleScalingState _cycleScaling = CycleScalingState.Default;
 
@@ -41,12 +48,14 @@ namespace Warblade.Entities
             _bossBulletPrefab = bossBulletPrefab;
             _bulletPoolDefaultCapacity = Mathf.Max(1, bulletPoolDefaultCapacity);
             _bulletPoolMaxSize = Mathf.Max(_bulletPoolDefaultCapacity, bulletPoolMaxSize);
+            ResolveMuzzleFlashParticles();
         }
 
         internal void Spawn(CycleScalingState cycleScaling)
         {
             _cycleScaling = cycleScaling;
             _volleyIndex = 0;
+            _nextMuzzleFlashTime = 0f;
             StopCurrentAttack();
         }
 
@@ -325,16 +334,18 @@ namespace Warblade.Entities
                 ? 360f / bulletCount
                 : bulletCount <= 1 ? 0f : spread / (bulletCount - 1);
             float startAngle = pattern.BaseAngleDegrees + rotationOffset - (spread >= 360f ? 0f : spread * 0.5f);
+            bool firedAnyBullet = false;
 
             for (int i = 0; i < bulletCount; i++)
             {
-                FireBulletAtAngle(
+                firedAnyBullet |= FireBulletAtAngle(
                     bulletPrefab,
                     spinBulletSprite,
                     startAngle + step * i,
                     ResolveBossPressureSpeed(pattern.BulletSpeed));
             }
 
+            PlayMuzzleFlashIfNeeded(firedAnyBullet);
             _volleyIndex++;
         }
 
@@ -348,18 +359,21 @@ namespace Warblade.Entities
             float spread = pattern.SpreadAngle;
             float step = bulletCount <= 1 ? 0f : spread / (bulletCount - 1);
             float startAngle = centerAngle - spread * 0.5f;
+            bool firedAnyBullet = false;
 
             for (int i = 0; i < bulletCount; i++)
             {
-                FireBulletAtAngle(
+                firedAnyBullet |= FireBulletAtAngle(
                     bulletPrefab,
                     spinBulletSprite,
                     startAngle + step * i,
                     ResolveBossPressureSpeed(pattern.BulletSpeed));
             }
+
+            PlayMuzzleFlashIfNeeded(firedAnyBullet);
         }
 
-        private void FireBulletAtAngle(
+        private bool FireBulletAtAngle(
             GameObject bulletPrefab,
             bool spinBulletSprite,
             float angleDegrees,
@@ -368,20 +382,20 @@ namespace Warblade.Entities
             IObjectPool<Bullet> bulletPool = GetOrCreateBulletPool(bulletPrefab);
             if (bulletPool == null)
             {
-                return;
+                return false;
             }
 
             Bullet bullet = bulletPool.Get();
             if (bullet == null)
             {
-                return;
+                return false;
             }
 
             Vector2 firePosition = ResolveFirePosition();
             Vector2 direction = DirectionFromAngle(angleDegrees);
             bullet.SetSpriteSpin(spinBulletSprite);
             bullet.Spawn(firePosition, direction, speed);
-            VfxManager.Instance?.Play(VfxCue.BossMuzzleFlash, firePosition, direction);
+            return true;
         }
 
         private float ResolveAimedAngle(BossAttackPatternData pattern)
@@ -415,6 +429,42 @@ namespace Warblade.Entities
         private Vector2 ResolveFirePosition()
         {
             return _firePoint == null ? transform.position : _firePoint.position;
+        }
+
+        private void PlayMuzzleFlashIfNeeded(bool firedAnyBullet)
+        {
+            if (!firedAnyBullet || Time.time < _nextMuzzleFlashTime)
+            {
+                return;
+            }
+
+            ResolveMuzzleFlashParticles();
+            if (_muzzleFlashParticles == null || _muzzleFlashParticles.Length == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _muzzleFlashParticles.Length; i++)
+            {
+                ParticleSystem muzzleFlashParticle = _muzzleFlashParticles[i];
+                if (muzzleFlashParticle == null)
+                {
+                    continue;
+                }
+
+                muzzleFlashParticle.Clear(true);
+                muzzleFlashParticle.Play(true);
+            }
+
+            _nextMuzzleFlashTime = Time.time + _muzzleFlashCooldown;
+        }
+
+        private void ResolveMuzzleFlashParticles()
+        {
+            Transform muzzleFlashRoot = _firePoint == null ? null : _firePoint.Find(MuzzleFlashChildName);
+            _muzzleFlashParticles = muzzleFlashRoot == null
+                ? null
+                : muzzleFlashRoot.GetComponentsInChildren<ParticleSystem>(true);
         }
 
         private static Vector2 DirectionFromAngle(float angleDegrees)

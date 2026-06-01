@@ -5585,6 +5585,14 @@ MonoBehaviour:
     _prefab: {fileID: 823117726858696349, guid: 0ec28231a60a671449851c235bccd195, type: 3}
     _defaultCapacity: 4
     _maxSize: 16
+  - _cue: 70
+    _prefab: {fileID: 4439526723333882779, guid: 0557734936bbbd340a437adc221ffebf, type: 3}
+    _defaultCapacity: 2
+    _maxSize: 6
+  - _cue: 80
+    _prefab: {fileID: 7346359508953492356, guid: c1f21440ff37ca842b5e7062ae7821ea, type: 3}
+    _defaultCapacity: 2
+    _maxSize: 6
 --- !u!4 &307442008
 Transform:
   m_ObjectHideFlags: 0
@@ -19099,7 +19107,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 46afcc8bccdad874fb8ce54a8f62050c, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 2fca7d9da29524c439a74c9989e791bc, type: 3}
-  _startingLevel: 25
+  _startingLevel: 100
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4

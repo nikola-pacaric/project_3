@@ -16,8 +16,8 @@ MonoBehaviour:
   _maxHealth: 21
   _scoreValue: 5000
   _entryStartPosition: {x: 0, y: 7}
-  _entryTargetPosition: {x: 0, y: 1}
-  _entrySpeed: 4
+  _entryTargetPosition: {x: 0, y: 1.5}
+  _entrySpeed: 3.5
   _contactDamage: 1
   _phases:
   - _phaseName: Opening
@@ -49,9 +49,9 @@ MonoBehaviour:
     _transitionDuration: 1.25
     _transitionTarget: 1
     _movementBehavior: 8
-    _movementCenterYOffset: 0
-    _movementAmplitude: 6.06
-    _verticalMovementAmplitude: 1.5
+    _movementCenterYOffset: -0.5
+    _movementAmplitude: 6
+    _verticalMovementAmplitude: 1
     _movementSpeed: 2
     _movementPauseDuration: 0.5
     _movementLaneCount: 3
