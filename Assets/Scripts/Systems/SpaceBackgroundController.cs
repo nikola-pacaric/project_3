@@ -7,6 +7,7 @@ namespace Warblade.Systems
     /// <summary>
     /// Applies chapter and cycle visuals to the gameplay background without coupling it to level flow.
     /// </summary>
+    [DefaultExecutionOrder(1000)]
     public class SpaceBackgroundController : MonoBehaviour
     {
         private const float TwoPi = Mathf.PI * 2f;
@@ -26,6 +27,12 @@ namespace Warblade.Systems
         [Header("Star Layers")]
         [SerializeField] private ParticleSystem _farStars;
         [SerializeField] private ParticleSystem _nearStars;
+
+        [Header("Camera Lock")]
+        [SerializeField] private bool _followMainCamera = true;
+        [SerializeField] private Camera _cameraToFollow;
+        [SerializeField] private bool _followCameraX = true;
+        [SerializeField] private bool _followCameraY = true;
 
         [Header("Sorting")]
         [SerializeField] private bool _applySorting = true;
@@ -61,9 +68,11 @@ namespace Warblade.Systems
         private float _nearStarsBaseLengthScale;
         private float _farStarsBaseVelocityScale;
         private float _nearStarsBaseVelocityScale;
+        private Vector3 _initialRootPosition;
 
         private void Awake()
         {
+            _initialRootPosition = transform.position;
             CaptureInitialPositions();
             CaptureStarRendererDefaults();
         }
@@ -98,6 +107,11 @@ namespace Warblade.Systems
 
             ApplyDrift(_farNebulaRenderer, _farNebulaInitialLocalPosition, _currentPalette.FarNebulaDriftDirection, _currentPalette.FarNebulaDriftDistance, _currentPalette.FarNebulaDriftSeconds);
             ApplyDrift(_nearNebulaRenderer, _nearNebulaInitialLocalPosition, _currentPalette.NearNebulaDriftDirection, _currentPalette.NearNebulaDriftDistance, _currentPalette.NearNebulaDriftSeconds);
+        }
+
+        private void LateUpdate()
+        {
+            FollowCamera();
         }
 
         private void OnValidate()
@@ -206,6 +220,36 @@ namespace Warblade.Systems
             {
                 _nearNebulaInitialLocalPosition = _nearNebulaRenderer.transform.localPosition;
             }
+        }
+
+        private void FollowCamera()
+        {
+            if (!_followMainCamera)
+            {
+                return;
+            }
+
+            Camera cameraToFollow = ResolveCameraToFollow();
+            if (cameraToFollow == null)
+            {
+                return;
+            }
+
+            Vector3 position = transform.position;
+            Vector3 cameraPosition = cameraToFollow.transform.position;
+            position.x = _followCameraX ? cameraPosition.x : _initialRootPosition.x;
+            position.y = _followCameraY ? cameraPosition.y : _initialRootPosition.y;
+            transform.position = position;
+        }
+
+        private Camera ResolveCameraToFollow()
+        {
+            if (_cameraToFollow == null)
+            {
+                _cameraToFollow = Camera.main;
+            }
+
+            return _cameraToFollow;
         }
 
         private void ApplySorting()

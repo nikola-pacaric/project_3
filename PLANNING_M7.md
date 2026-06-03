@@ -125,33 +125,40 @@ Acceptance:
 
 ---
 
-## Phase 6 — Background Integration Check
+## Phase 6 — Background Integration Check — Done
 
 Goal:
 - Re-check the background after sprite, animation, VFX, lighting, and post-processing work are in place.
 
-Checklist:
-- Verify background contrast stays below gameplay objects after new sprites and VFX are added.
-- Verify chapter/cycle color shifts still work after lighting and post-processing are tuned.
-- Adjust background brightness, alpha, density, or drift speed only if readability suffers.
+Done:
+- Playtest confirmed the background contrast stays below gameplay objects after the Phase 5 lighting and color-grading pass.
+- Bullets stand out clearly because of their restrained 2D lights.
+- Chapter/background color changes still read well after the post-processing pass.
+- Boss fights remain readable and visually pleasing with the updated background, bullets, VFX, and boss bars.
+- No background brightness, alpha, density, or drift-speed adjustments were needed.
 
 Acceptance:
 - Background still adds motion and atmosphere without competing with gameplay.
 
 ---
 
-## Phase 7 — Screen Feedback
+## Phase 7 — Screen Feedback — Done
 
 Goal:
 - Make hits, deaths, boss moments, and major events feel stronger.
 
-Checklist:
-- Player hit flash.
-- Screen shake for player hit/death, boss phase change, boss death, and major explosions.
-- Optional short hit pause only if it does not hurt control precision.
+Done:
+- Added a `ScreenFeedbackManager` that listens to ScriptableObject event channels for player death, Mother enemy death, and boss death.
+- Added white screen flashes for those death cues only, with separate Inspector-tunable timing, alpha, and impulse strength per cue.
+- Added restrained Cinemachine impulse feedback for those same death cues.
+- Wired player death and Mother death feedback request channels through `PlayerHealth` and `EnemySpawner`; boss death uses the existing `BossDefeated` event channel.
+- Camera shake was playtested and adjusted so the background remains camera-locked during impulse, preventing the camera clear color from showing at the edges.
+- Death/respawn playtesting found a multi-hit downgrade issue; `PlayerHealth` now guards death resolution so one death only applies one life loss and one weapon-tier downgrade.
 
 Dependency note:
-- Use Cinemachine only if it is already available or explicitly approved. Otherwise use a small custom camera shake component.
+- Cinemachine is installed and approved for this phase.
+- No hit pause.
+- No player-hit flash or player-hit shake; normal player hits should not steal attention from bullets.
 
 Acceptance:
 - Feedback makes important events obvious while movement and bullet reading remain fair.

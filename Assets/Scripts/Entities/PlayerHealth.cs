@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Warblade.Data;
+using Warblade.Data.Events;
 using Warblade.Managers;
 using Warblade.Systems;
 
@@ -25,6 +26,7 @@ namespace Warblade.Entities
         [SerializeField] private ParticleSystem[] _thrusterParticles;
 
         [Header("Events")]
+        [SerializeField] private VoidEventChannel _playerDeathFeedbackRequested;
         [SerializeField] private UnityEvent _onDeathStarted;
         [SerializeField] private UnityEvent _onRespawned;
         [SerializeField] private UnityEvent _onRespawnProtectionStarted;
@@ -32,6 +34,7 @@ namespace Warblade.Entities
         [SerializeField] private UnityEvent _onGameOver;
 
         private bool _isDead;
+        private bool _isResolvingDeath;
         private bool _isInvulnerable;
         private Coroutine _deathRoutine;
         private Coroutine _respawnProtectionRoutine;
@@ -58,6 +61,7 @@ namespace Warblade.Entities
         public void TakeDamage(int amount, Vector3 hitPoint)
         {
             if (_isDead) return;
+            if (_isResolvingDeath) return;
             if (_deathRoutine != null) return;
             if (_isInvulnerable) return;
             if (amount <= 0) return;
@@ -67,6 +71,11 @@ namespace Warblade.Entities
 
         private void ResolveHit(Vector3 hitPoint)
         {
+            if (_isResolvingDeath || _deathRoutine != null)
+            {
+                return;
+            }
+
             RunStatsManager runStats = RunStatsManager.Instance;
             if (runStats == null)
             {
@@ -86,10 +95,22 @@ namespace Warblade.Entities
                 return;
             }
 
+            _isResolvingDeath = true;
             runStats.DowngradeWeaponTier();
             bool outOfLives = runStats.LoseLife();
             VfxManager.Instance?.Play(VfxCue.PlayerDeath, transform.position);
-            _deathRoutine = StartCoroutine(RunDeathRoutine(outOfLives));
+            _playerDeathFeedbackRequested?.Raise();
+            BeginDeathRoutine(outOfLives);
+        }
+
+        private void BeginDeathRoutine(bool isFinalDeath)
+        {
+            if (_deathRoutine != null)
+            {
+                return;
+            }
+
+            _deathRoutine = StartCoroutine(RunDeathRoutine(isFinalDeath));
         }
 
         private IEnumerator RunDeathRoutine(bool isFinalDeath)
@@ -105,6 +126,7 @@ namespace Warblade.Entities
             if (isFinalDeath)
             {
                 RaiseGameOver();
+                _isResolvingDeath = false;
                 _deathRoutine = null;
                 yield break;
             }
@@ -115,6 +137,7 @@ namespace Warblade.Entities
             }
 
             Respawn();
+            _isResolvingDeath = false;
             _deathRoutine = null;
         }
 

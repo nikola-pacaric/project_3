@@ -21,7 +21,7 @@ Completed milestones are kept as short summaries. Active and future milestones k
 
 **M7** *(current: Game Feel)*
 
-M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, and Phase 5 lighting/post-processing are complete. The remaining major work is background integration checks, screen feedback, audio, music, UI polish, and integration checks before final tuning.
+M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, and Phase 7 screen feedback are complete. The remaining major work is audio, music, UI polish, and integration checks before final tuning.
 
 ---
 
@@ -80,8 +80,8 @@ The content model was refactored for safer authoring: reusable formation shape d
 - [x] Player thruster particles
 - [x] Explosion and impact variants (player, enemies, bullets, bosses)
 - [x] URP 2D lights on bullets and explosions
-- [ ] Player hit flash (UI overlay coroutine)
-- [ ] Screen shake via Cinemachine Impulse
+- [x] Screen flash for player death, Mother death, and boss death
+- [x] Restrained Cinemachine Impulse feedback for major death cues
 - [x] Bloom + color grading in Global Volume
 - [x] Replace placeholder sprites with generated sprite sheets
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Warblade.Data;
+using Warblade.Data.Events;
 using Warblade.Entities;
 
 namespace Warblade.Systems
@@ -20,6 +21,8 @@ namespace Warblade.Systems
         [SerializeField, Range(0f, 1f)] private float _concurrentDiveLimitRemainingRatio = 0.1f;
         [SerializeField, Min(0f)] private float _limitedDiveCooldownMin = 1.25f;
         [SerializeField, Min(0f)] private float _limitedDiveCooldownMax = 3.5f;
+        [Header("Events")]
+        [SerializeField] private VoidEventChannel _motherDeathFeedbackRequested;
 
         private readonly Dictionary<Enemy, IObjectPool<Enemy>> _pools =
             new Dictionary<Enemy, IObjectPool<Enemy>>();
@@ -413,7 +416,17 @@ namespace Warblade.Systems
         {
             EndLimitedDive(enemy);
 
-            if (enemy == null || enemy.Data == null || !enemy.Data.CountsForPerfectClearBonus)
+            if (enemy == null || enemy.Data == null)
+            {
+                return;
+            }
+
+            if (killed && enemy.Data.BehaviorMode == EnemyBehaviorMode.Mother)
+            {
+                _motherDeathFeedbackRequested?.Raise();
+            }
+
+            if (!enemy.Data.CountsForPerfectClearBonus)
             {
                 return;
             }
