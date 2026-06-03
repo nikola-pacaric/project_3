@@ -108,5 +108,8 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
+# Unity editor crash/recovery scratch scenes
+/[Aa]ssets/_Recovery*
+
 # Unity editor scratch file created during filesystem case-sensitivity checks
 /casesensitivetest

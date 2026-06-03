@@ -21,7 +21,7 @@ Completed milestones are kept as short summaries. Active and future milestones k
 
 **M7** *(current: Game Feel)*
 
-M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, and the Phase 4 VFX pass are complete. Phase 5 lighting/post-processing is now in progress, starting with bloom evaluation before deciding where URP 2D lights are worth the WebGL cost. After Phase 5, the remaining major work is screen feedback, audio, music, UI polish, and integration checks before final tuning.
+M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, and Phase 5 lighting/post-processing are complete. The remaining major work is background integration checks, screen feedback, audio, music, UI polish, and integration checks before final tuning.
 
 ---
 
@@ -79,10 +79,10 @@ The content model was refactored for safer authoring: reusable formation shape d
 - [x] Parallax starfield (Particle System)
 - [x] Player thruster particles
 - [x] Explosion and impact variants (player, enemies, bullets, bosses)
-- [ ] URP 2D lights on bullets and explosions
+- [x] URP 2D lights on bullets and explosions
 - [ ] Player hit flash (UI overlay coroutine)
 - [ ] Screen shake via Cinemachine Impulse
-- [ ] Bloom + color grading in Global Volume *(Phase 5 in progress)*
+- [x] Bloom + color grading in Global Volume
 - [x] Replace placeholder sprites with generated sprite sheets
 
 **Build — Audio**

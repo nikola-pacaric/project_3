@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 3403604891949308139}
   - component: {fileID: 4183958756525609875}
   - component: {fileID: 5575274565299706346}
+  - component: {fileID: 747138563903007265}
+  - component: {fileID: 4820017014737226238}
+  - component: {fileID: 3961933745524172377}
   m_Layer: 7
   m_Name: Enemy6_Mother
   m_TagString: Enemy
@@ -183,3 +186,39 @@ MonoBehaviour:
   _enemyBulletPrefab: {fileID: 924634902285088487, guid: becb08ed0d59d9647a14de74504b9385, type: 3}
   _bulletPoolDefaultCapacity: 5
   _bulletPoolMaxSize: 20
+--- !u!114 &747138563903007265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812367059781503115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8bb5f05968e4fd9b4dccb3dbd5d6f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.EnemyHealth
+--- !u!114 &4820017014737226238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812367059781503115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a5ec9f593b4b139eb0bdb9e99d2ef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.EnemyMovement
+--- !u!114 &3961933745524172377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812367059781503115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e374763b30524d0fba490282fa7b095d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.EnemyShooter

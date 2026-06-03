@@ -108,20 +108,17 @@ Acceptance:
 
 ---
 
-## Phase 5 — Lighting and Post-Processing — In Progress
+## Phase 5 — Lighting and Post-Processing — Done
 
 Goal:
 - Add depth and polish with URP 2D lighting while keeping WebGL performance reasonable.
 
-Current focus:
-- Bloom is being evaluated first as the global glow layer.
-- Bloom is treated as an amplifier for bright authored visuals, not a replacement for better bullet, pickup, boss bar, or VFX art.
-- URP 2D lights will be considered after bloom tuning, and only where they add clear scene response without hurting WebGL readability/performance.
-
-Checklist:
-- Add restrained 2D lights to bullets, explosions, pickups, bosses, or background where useful.
-- Add a restrained Global Volume: bloom and color grading first, vignette only if it helps.
-- Verify dense waves and boss fights stay readable.
+Done:
+- Added restrained URP 2D lights to player bullets, enemy bullets, boss bullets, pickups, and combat VFX where the glow helps readability.
+- Added a restrained Global Volume with bloom plus subtle color grading: darker exposure, more contrast/saturation, and mild white-balance warmth.
+- Reworked boss-specific health bar fills to preserve the original bright laser texture while matching each boss color, including Boss 3's greener palette.
+- Playtest confirmed boss fights read well with the lighting, VFX, boss bar colors, and bullets.
+- Playtest confirmed level 1 remains readable with the updated effects, colors, and bullets.
 
 Acceptance:
 - The game looks less flat without making bullets or pickups hard to see.

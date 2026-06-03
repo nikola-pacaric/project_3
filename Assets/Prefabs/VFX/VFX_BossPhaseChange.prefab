@@ -49,7 +49,7 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 1
   m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.2509804}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.VfxLightPulse
   _light: {fileID: 4334625115842541642}
-  _peakIntensity: 2.5
+  _peakIntensity: 2
   _peakOuterRadius: 1.8
   _peakInnerRadius: 0.25
   _fadeDuration: 0.3
@@ -5101,6 +5101,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.PooledVfx
   _particleSystems:
   - {fileID: 7921752019440755129}
-  - {fileID: 0}
-  - {fileID: 0}
   _fallbackLifetime: 1
