@@ -108,6 +108,7 @@ namespace Warblade.Managers
             BuffManager.Instance?.ClearAllBuffs();
             RunStatsManager.Instance?.ResetRun();
             SetState(GameState.GameOver);
+            AudioManager.Instance?.PlayOneShot(AudioCue.GameOver);
         }
 
         /// <summary>
@@ -118,10 +119,12 @@ namespace Warblade.Managers
             if (CurrentState == GameState.Playing)
             {
                 SetState(GameState.Paused);
+                AudioManager.Instance?.PlayOneShot(AudioCue.Pause);
             }
             else if (CurrentState == GameState.Paused)
             {
                 SetState(GameState.Playing);
+                AudioManager.Instance?.PlayOneShot(AudioCue.Pause);
             }
         }
 

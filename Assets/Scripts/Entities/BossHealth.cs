@@ -1,5 +1,6 @@
 using UnityEngine;
 using Warblade.Data;
+using Warblade.Managers;
 using Warblade.Systems;
 
 namespace Warblade.Entities
@@ -43,6 +44,7 @@ namespace Warblade.Entities
                 return;
             }
 
+            AudioManager.Instance?.PlayOneShot(AudioCue.BossHit);
             VfxManager.Instance?.Play(VfxCue.BossHit, transform.position);
             _boss.UpdatePhase();
         }

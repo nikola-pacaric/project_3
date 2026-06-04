@@ -266,10 +266,23 @@ namespace Warblade.Entities
                 ScoreManager.Instance.AddScore(_data.ScoreValue);
             }
 
+            AudioManager.Instance?.PlayOneShot(ResolveDeathAudioCue());
             VfxManager.Instance?.Play(VfxCue.EnemyDeath, transform.position);
             PickupDropPool.Instance?.TryDrop(_data.DropTable, transform.position);
 
             Release(killed: true);
+        }
+
+        private AudioCue ResolveDeathAudioCue()
+        {
+            if (_data == null || _data.BehaviorMode != EnemyBehaviorMode.Mother)
+            {
+                return AudioCue.EnemyDeath;
+            }
+
+            return AudioManager.Instance != null && AudioManager.Instance.HasCue(AudioCue.EnemyMotherDeath)
+                ? AudioCue.EnemyMotherDeath
+                : AudioCue.EnemyDeath;
         }
 
         internal void Release(bool killed)

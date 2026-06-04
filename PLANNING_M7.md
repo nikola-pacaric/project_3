@@ -165,18 +165,23 @@ Acceptance:
 
 ---
 
-## Phase 8 — Audio Foundation
+## Phase 8 — Audio Foundation — Done
 
 Goal:
 - Add a stable audio system before assigning many clips.
 
+Status:
+- Added `AudioManager`, `AudioCue`, and `AudioBus` for the global service, cue IDs, one-shot routing, looping music entry point, and normalized mixer volume APIs.
+- Added and wired `GameplayAudioMixer` with Master, Music, SFX, and UI groups plus exposed volume parameters.
+- Scene wiring was playtested with real `PlayerShoot`, `PlayerShieldHit`, `Pause`, and `GameOver` cues.
+
 Checklist:
-- `AudioManager` global service if not already present.
-- Separate Master, Music, SFX, and UI mixer groups.
-- One-shot SFX support.
-- Looping music support.
-- Volume settings for master/SFX/music.
-- No runtime `FindObjectOfType` or `GameObject.Find`.
+- [x] `AudioManager` global service if not already present.
+- [x] Separate Master, Music, SFX, and UI mixer groups.
+- [x] One-shot SFX support.
+- [x] Looping music support.
+- [x] Volume settings for master/SFX/music.
+- [x] No runtime `FindObjectOfType` or `GameObject.Find`.
 
 Acceptance:
 - SFX and music can play through separate channels and be controlled independently.
@@ -188,11 +193,28 @@ Acceptance:
 Goal:
 - Add first-pass sound feedback for the full v1.0 gameplay loop.
 
+Status:
+- Imported first-pass SFX assets under `Assets/Audio/SFX`.
+- Wired and play-tested initial Phase 8 cues: player shoot, shield hit, pause, and game over.
+- Wired assigned Phase 9 gameplay cues for player death, enemy shoot/hit/death, Mother death, boss intro/hit/death, pickup collection groups, and restart-button UI.
+- Remaining Phase 9 work: assign and wire shop open, buy success, and shop leave cues.
+
+Decisions:
+- Normal player damage uses the player death sound because an unshielded hit always kills the player.
+- Shield hits keep their own sound because they communicate protection rather than death.
+- Boss hit can reuse the enemy hit sound; boss phase changes stay visual-only.
+- Level start and level complete stay visual-only for this pass.
+- Shop buy fail is not needed because unavailable items cannot be selected.
+- Pickup sounds play only when collected by the player, never when spawned.
+- Pickup collection uses five sound groups: cash, weapon, life, sucker, and all other pickup types.
+- Weapon upgrade does not need a separate cue because weapon pickups use the pickup weapon sound.
+
 Checklist:
-- Player: shoot, hit, shield hit, death, weapon upgrade.
-- Enemy/combat: enemy shoot, hit, death, boss hit, boss phase change, boss death, boss intro.
-- Pickups/economy: spawn, collect, cash, armour, life, timed buff, sucker downgrade.
-- UI/flow: button, shop open, buy success/fail, shop leave, pause, level start, level complete, game over.
+- Player: shoot, shield hit, death.
+- Enemy/combat: enemy shoot, hit, regular death, Mother death, boss hit, boss death, boss intro.
+- Pickups/economy: cash, weapon, life, sucker downgrade, all other pickup types.
+- UI/flow: button, pause, game over.
+- Shop: open, buy success, leave.
 
 Acceptance:
 - Every important action/result has sound feedback and repeated sounds are not painful.

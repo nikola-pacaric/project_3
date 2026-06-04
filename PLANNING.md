@@ -86,9 +86,14 @@ The content model was refactored for safer authoring: reusable formation shape d
 - [x] Replace placeholder sprites with generated sprite sheets
 
 **Build — Audio**
-- [ ] `AudioManager` singleton, separate SFX/music mixer channels
-- [ ] SFX library: shoot, hit, explosion, pickup, shop, UI, boss roar, level start
+- [x] `AudioManager` singleton, separate SFX/music mixer channels
+- [ ] SFX library: shoot, hit, explosion, pickup, shop, UI, boss roar
 - [ ] Music: menu, gameplay, boss
+
+Audio status:
+- Phase 8 audio foundation is complete.
+- Phase 9 SFX pass is in progress: player, enemy, Mother enemy, boss, pickup, pause, game-over, and restart-button cues are wired and assigned.
+- Shop SFX and remaining UI polish sounds are still pending.
 
 **Build — UI / UX**
 - [ ] Main menu (Start, Settings)

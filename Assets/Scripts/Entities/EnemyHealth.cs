@@ -1,4 +1,6 @@
 using UnityEngine;
+using Warblade.Data;
+using Warblade.Managers;
 using Warblade.Systems;
 
 namespace Warblade.Entities
@@ -30,7 +32,10 @@ namespace Warblade.Entities
             if (_currentHealth <= 0)
             {
                 _enemy.Die();
+                return;
             }
+
+            AudioManager.Instance?.PlayOneShot(AudioCue.EnemyHit);
         }
 
         private void OnTriggerEnter2D(Collider2D other)

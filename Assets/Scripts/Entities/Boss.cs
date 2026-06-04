@@ -271,6 +271,7 @@ namespace Warblade.Entities
         {
             _state = BossState.Intro;
             _visuals.PlayAnimation();
+            AudioManager.Instance?.PlayOneShot(AudioCue.BossIntro);
             VfxManager.Instance?.Play(VfxCue.BossWarning, transform.position);
             _bossSpawned?.Raise(_data);
             _bossIntroStarted?.Raise(_data);
@@ -349,6 +350,7 @@ namespace Warblade.Entities
             }
 
             transform.position = targetPosition;
+            AudioManager.Instance?.PlayOneShot(AudioCue.BossDeath);
             VfxManager.Instance?.Play(VfxCue.BossDeath, transform.position);
             AwardDefeatRewards();
             _bossDefeated?.Raise(_data);

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Warblade.Data;
 using Warblade.Managers;
 
 namespace Warblade.UI
@@ -27,6 +28,8 @@ namespace Warblade.UI
 
         public void Restart()
         {
+            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
+
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.RestartCurrentScene();

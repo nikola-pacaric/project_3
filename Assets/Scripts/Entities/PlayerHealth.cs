@@ -86,6 +86,7 @@ namespace Warblade.Entities
             if (IsShieldActive(runStats))
             {
                 VfxManager.Instance?.Play(VfxCue.ShieldHit, hitPoint);
+                AudioManager.Instance?.PlayOneShot(AudioCue.PlayerShieldHit);
                 return;
             }
 
@@ -98,6 +99,7 @@ namespace Warblade.Entities
             _isResolvingDeath = true;
             runStats.DowngradeWeaponTier();
             bool outOfLives = runStats.LoseLife();
+            AudioManager.Instance?.PlayOneShot(AudioCue.PlayerDeath);
             VfxManager.Instance?.Play(VfxCue.PlayerDeath, transform.position);
             _playerDeathFeedbackRequested?.Raise();
             BeginDeathRoutine(outOfLives);

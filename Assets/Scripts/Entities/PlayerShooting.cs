@@ -244,6 +244,8 @@ namespace Warblade.Entities
             {
                 SpawnBullet(baseSpawnPosition + (Vector3)_volleyOffsets[i], _volleyDirections[i]);
             }
+
+            AudioManager.Instance?.PlayOneShot(AudioCue.PlayerShoot);
         }
 
         private bool HasRoomForVolley(int volleySize)

@@ -94,8 +94,50 @@ namespace Warblade.Entities
             if (other.GetComponentInParent<PlayerHealth>() == null) return;
 
             ApplyEffect();
+            AudioManager.Instance?.PlayOneShot(ResolveCollectAudioCue());
             VfxManager.Instance?.Play(VfxCue.PickupCollect, transform.position);
             ReturnToPool();
+        }
+
+        private AudioCue ResolveCollectAudioCue()
+        {
+            if (_data == null)
+            {
+                return AudioCue.PickupOther;
+            }
+
+            switch (_data.EffectType)
+            {
+                case PickupEffectType.Cash10:
+                case PickupEffectType.Cash50:
+                case PickupEffectType.Cash100:
+                case PickupEffectType.Cash200:
+                    return AudioCue.PickupCash;
+
+                case PickupEffectType.WeaponSingle:
+                case PickupEffectType.WeaponDouble:
+                case PickupEffectType.WeaponTriple:
+                case PickupEffectType.WeaponQuad:
+                    return AudioCue.PickupWeapon;
+
+                case PickupEffectType.ExtraLife:
+                    return AudioCue.PickupLife;
+
+                case PickupEffectType.SuckerSpeed:
+                case PickupEffectType.SuckerBullets:
+                case PickupEffectType.SuckerTime:
+                    return AudioCue.PickupSucker;
+
+                case PickupEffectType.SpeedUp:
+                case PickupEffectType.BulletsUp:
+                case PickupEffectType.TimeUp:
+                case PickupEffectType.Autofire:
+                case PickupEffectType.RapidFire:
+                case PickupEffectType.Shield:
+                case PickupEffectType.Armour:
+                default:
+                    return AudioCue.PickupOther;
+            }
         }
 
         private void ApplyEffect()

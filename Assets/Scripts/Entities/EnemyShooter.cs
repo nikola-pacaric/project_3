@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Pool;
 using Warblade.Data;
+using Warblade.Managers;
 using Warblade.Systems;
 
 namespace Warblade.Entities
@@ -72,6 +73,7 @@ namespace Warblade.Entities
                 Bullet bullet = _bulletPool.Get();
                 float bulletSpeed = Random.Range(data.BulletSpeedMin, data.BulletSpeedMax);
                 bullet.Spawn(transform.position, Vector2.down, bulletSpeed);
+                AudioManager.Instance?.PlayOneShot(AudioCue.EnemyShoot);
             }
 
             ScheduleNextFire(data);
