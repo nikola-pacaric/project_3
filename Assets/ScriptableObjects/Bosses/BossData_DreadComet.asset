@@ -17,7 +17,7 @@ MonoBehaviour:
   _scoreValue: 11000
   _entryStartPosition: {x: 0, y: 7}
   _entryTargetPosition: {x: 0, y: 1}
-  _entrySpeed: 3.5
+  _entrySpeed: 2.5
   _contactDamage: 1
   _phases:
   - _phaseName: Lock On

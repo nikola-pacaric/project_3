@@ -5993,7 +5993,7 @@ MonoBehaviour:
   _thrusterParticles:
   - {fileID: 13673402}
   - {fileID: 1172843155}
-  _durationSeconds: 5
+  _durationSeconds: 6
   _warpCurve:
     serializedVersion: 2
     m_Curve:
@@ -18700,6 +18700,9 @@ MonoBehaviour:
   _quadShotOuterAngle: 5
   _poolDefaultCapacity: 10
   _poolMaxSize: 50
+  _doubleShotBulletColor: {r: 0.455, g: 1, b: 0.173, a: 1}
+  _tripleShotBulletColor: {r: 0.059, g: 0.776, b: 1, a: 1}
+  _quadShotBulletColor: {r: 1, g: 0.808, b: 0.18, a: 1}
   _debugAutofireActive: 0
   _debugRapidFireActive: 0
 --- !u!50 &1517309663
@@ -19476,7 +19479,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 46afcc8bccdad874fb8ce54a8f62050c, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 2fca7d9da29524c439a74c9989e791bc, type: 3}
-  _startingLevel: 25
+  _startingLevel: 4
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
@@ -25788,8 +25791,8 @@ MonoBehaviour:
   - _cue: 10
     _bus: 0
     _clips:
-    - {fileID: 8300000, guid: e928fb696f7feaf41ac41a2a1e07b539, type: 3}
-    _volume: 0.3
+    - {fileID: 8300000, guid: fc75357be9e687f4b90449db028412ae, type: 3}
+    _volume: 0.6
     _pitchJitter: 0.04
     _loop: 0
   - _cue: 12
@@ -25865,7 +25868,7 @@ MonoBehaviour:
   - _cue: 30
     _bus: 0
     _clips:
-    - {fileID: 8300000, guid: 6c2cb5a98e4130740ab68cd7813c2f43, type: 3}
+    - {fileID: 8300000, guid: 184bf6b92000d4543b20e246a95bf39a, type: 3}
     _volume: 0.6
     _pitchJitter: 0
     _loop: 0
@@ -25908,6 +25911,41 @@ MonoBehaviour:
     _bus: 0
     _clips:
     - {fileID: 8300000, guid: 6511aec168be543479e58a0dbb31f755, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _loop: 0
+  - _cue: 101
+    _bus: 1
+    _clips:
+    - {fileID: 8300000, guid: ec66130c1cd31684480a149f2cfab229, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _loop: 0
+  - _cue: 102
+    _bus: 1
+    _clips:
+    - {fileID: 8300000, guid: 73b4201d20854b943a82fd20789051a4, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _loop: 0
+  - _cue: 104
+    _bus: 1
+    _clips:
+    - {fileID: 8300000, guid: fc150d70cffd66d40873b96b34d4a29c, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _loop: 0
+  - _cue: 52
+    _bus: 0
+    _clips:
+    - {fileID: 8300000, guid: 6c2cb5a98e4130740ab68cd7813c2f43, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _loop: 0
+  - _cue: 109
+    _bus: 0
+    _clips:
+    - {fileID: 8300000, guid: 5c04ddcd8354e1d44aedb3fd4ecf7aa7, type: 3}
     _volume: 0.6
     _pitchJitter: 0
     _loop: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Rendering.Universal;
 using Warblade.Data;
 using Warblade.Systems;
 
@@ -19,6 +20,10 @@ namespace Warblade.Entities
         private Vector3 _spawnPosition;
         private IObjectPool<Bullet> _pool;
         private SpriteRenderer _spriteRenderer;
+        private SpriteRenderer[] _spriteRenderers;
+        private Color[] _defaultSpriteColors;
+        private Light2D[] _lights;
+        private Color[] _defaultLightColors;
         private Quaternion _defaultRootRotation;
         private Quaternion _defaultSpriteLocalRotation;
         private bool _spinSprite;
@@ -45,6 +50,71 @@ namespace Warblade.Entities
             if (_spriteRenderer != null)
             {
                 _spriteRenderer.transform.localRotation = _defaultSpriteLocalRotation;
+            }
+        }
+
+        public void ResetPresentationColors()
+        {
+            ResolvePresentationRenderers();
+
+            if (_spriteRenderers != null && _defaultSpriteColors != null)
+            {
+                for (int i = 0; i < _spriteRenderers.Length; i++)
+                {
+                    if (_spriteRenderers[i] != null && i < _defaultSpriteColors.Length)
+                    {
+                        _spriteRenderers[i].color = _defaultSpriteColors[i];
+                    }
+                }
+            }
+
+            if (_lights != null && _defaultLightColors != null)
+            {
+                for (int i = 0; i < _lights.Length; i++)
+                {
+                    if (_lights[i] != null && i < _defaultLightColors.Length)
+                    {
+                        _lights[i].color = _defaultLightColors[i];
+                    }
+                }
+            }
+        }
+
+        public void SetPresentationColor(Color color)
+        {
+            ResolvePresentationRenderers();
+
+            if (_spriteRenderers != null && _defaultSpriteColors != null)
+            {
+                for (int i = 0; i < _spriteRenderers.Length; i++)
+                {
+                    if (_spriteRenderers[i] == null || i >= _defaultSpriteColors.Length)
+                    {
+                        continue;
+                    }
+
+                    Color defaultColor = _defaultSpriteColors[i];
+                    float intensity = Mathf.Max(defaultColor.r, defaultColor.g, defaultColor.b);
+                    _spriteRenderers[i].color = new Color(
+                        color.r * intensity,
+                        color.g * intensity,
+                        color.b * intensity,
+                        defaultColor.a);
+                }
+            }
+
+            if (_lights != null && _defaultLightColors != null)
+            {
+                for (int i = 0; i < _lights.Length; i++)
+                {
+                    if (_lights[i] == null || i >= _defaultLightColors.Length)
+                    {
+                        continue;
+                    }
+
+                    Color defaultColor = _defaultLightColors[i];
+                    _lights[i].color = new Color(color.r, color.g, color.b, defaultColor.a);
+                }
             }
         }
 
@@ -79,6 +149,7 @@ namespace Warblade.Entities
         {
             _defaultRootRotation = transform.rotation;
             ResolveSpriteRenderer();
+            ResolvePresentationRenderers();
         }
 
         private void Update()
@@ -148,6 +219,35 @@ namespace Warblade.Entities
 
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             _defaultSpriteLocalRotation = _spriteRenderer == null ? Quaternion.identity : _spriteRenderer.transform.localRotation;
+        }
+
+        private void ResolvePresentationRenderers()
+        {
+            if (_spriteRenderers == null || _defaultSpriteColors == null)
+            {
+                _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+                _defaultSpriteColors = new Color[_spriteRenderers.Length];
+
+                for (int i = 0; i < _spriteRenderers.Length; i++)
+                {
+                    _defaultSpriteColors[i] = _spriteRenderers[i] == null
+                        ? Color.white
+                        : _spriteRenderers[i].color;
+                }
+            }
+
+            if (_lights == null || _defaultLightColors == null)
+            {
+                _lights = GetComponentsInChildren<Light2D>(true);
+                _defaultLightColors = new Color[_lights.Length];
+
+                for (int i = 0; i < _lights.Length; i++)
+                {
+                    _defaultLightColors[i] = _lights[i] == null
+                        ? Color.white
+                        : _lights[i].color;
+                }
+            }
         }
 
         private void ApplySpawnRotation()

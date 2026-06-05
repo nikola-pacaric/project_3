@@ -171,6 +171,7 @@ namespace Warblade.Entities
 
             RaiseHealthChanged();
             RaisePhaseChanged();
+            AudioManager.Instance?.PlayLoop(AudioCue.BossIntro);
         }
 
         /// <summary>
@@ -271,7 +272,7 @@ namespace Warblade.Entities
         {
             _state = BossState.Intro;
             _visuals.PlayAnimation();
-            AudioManager.Instance?.PlayOneShot(AudioCue.BossIntro);
+            AudioManager.Instance?.StopLoop(AudioCue.BossIntro);
             VfxManager.Instance?.Play(VfxCue.BossWarning, transform.position);
             _bossSpawned?.Raise(_data);
             _bossIntroStarted?.Raise(_data);
@@ -305,6 +306,8 @@ namespace Warblade.Entities
 
         private void StopIntro()
         {
+            AudioManager.Instance?.StopLoop(AudioCue.BossIntro);
+
             if (_introRoutine == null)
             {
                 return;

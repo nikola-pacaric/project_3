@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using Warblade.Data;
 using Warblade.Entities;
+using Warblade.Managers;
 
 namespace Warblade.Systems
 {
@@ -67,6 +69,13 @@ namespace Warblade.Systems
         {
             CaptureThrusterDefaults();
             _playerShooting?.SetShootingEnabled(false);
+
+            float warpAudioFadeOutDuration = _durationSeconds * _travelBackRatio;
+            float warpAudioFadeOutDelay = Mathf.Max(0f, _durationSeconds - warpAudioFadeOutDuration);
+            AudioManager.Instance?.PlayOneShotWithFadeOut(
+                AudioCue.SectionWarp,
+                warpAudioFadeOutDelay,
+                warpAudioFadeOutDuration);
 
             float elapsed = 0f;
             float startY = _playerTransform == null ? 0f : _playerTransform.position.y;

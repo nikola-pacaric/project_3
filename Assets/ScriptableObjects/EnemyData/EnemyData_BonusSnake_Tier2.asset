@@ -23,6 +23,8 @@ MonoBehaviour:
   _limitConcurrentDivesAboveFinalThreshold: 0
   _passThroughChance: 1
   _respawnTopY: 6
+  _spawnAudioCue: 35
+  _despawnAudioCue: 37
   _diveCooldownMin: 0.15
   _diveCooldownMax: 0.5
   _fireCooldownMin: 999

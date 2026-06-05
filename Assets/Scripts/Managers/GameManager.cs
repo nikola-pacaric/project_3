@@ -86,7 +86,10 @@ namespace Warblade.Managers
         public void EnterShop()
         {
             if (CurrentState == GameState.GameOver) return;
+            if (CurrentState == GameState.Shop) return;
+
             SetState(GameState.Shop);
+            AudioManager.Instance?.PlayOneShot(AudioCue.ShopOpen);
         }
 
         /// <summary>
@@ -95,7 +98,9 @@ namespace Warblade.Managers
         public void LeaveShop()
         {
             if (CurrentState != GameState.Shop) return;
+
             SetState(GameState.Playing);
+            AudioManager.Instance?.PlayOneShot(AudioCue.ShopLeave);
         }
 
         /// <summary>

@@ -16,6 +16,9 @@ namespace Warblade.Entities
         [Header("VFX")]
         [SerializeField, Min(0f)] private float _muzzleFlashCooldown = 0.03f;
 
+        [Header("Audio")]
+        [SerializeField, Min(0f)] private float _shotAudioCooldown = 0.08f;
+
         private Boss _boss;
         private Transform _playerTransform;
         private Transform _firePoint;
@@ -28,6 +31,7 @@ namespace Warblade.Entities
         private Coroutine _attackRoutine;
         private float _nextAttackTime;
         private float _nextMuzzleFlashTime;
+        private float _nextShotAudioTime;
         private int _volleyIndex;
         private CycleScalingState _cycleScaling = CycleScalingState.Default;
 
@@ -56,6 +60,7 @@ namespace Warblade.Entities
             _cycleScaling = cycleScaling;
             _volleyIndex = 0;
             _nextMuzzleFlashTime = 0f;
+            _nextShotAudioTime = 0f;
             StopCurrentAttack();
         }
 
@@ -346,6 +351,7 @@ namespace Warblade.Entities
             }
 
             PlayMuzzleFlashIfNeeded(firedAnyBullet);
+            PlayShotAudioIfNeeded(firedAnyBullet);
             _volleyIndex++;
         }
 
@@ -371,6 +377,7 @@ namespace Warblade.Entities
             }
 
             PlayMuzzleFlashIfNeeded(firedAnyBullet);
+            PlayShotAudioIfNeeded(firedAnyBullet);
         }
 
         private bool FireBulletAtAngle(
@@ -457,6 +464,21 @@ namespace Warblade.Entities
             }
 
             _nextMuzzleFlashTime = Time.time + _muzzleFlashCooldown;
+        }
+
+        private void PlayShotAudioIfNeeded(bool firedAnyBullet)
+        {
+            if (!firedAnyBullet || Time.time < _nextShotAudioTime)
+            {
+                return;
+            }
+
+            AudioCue cue = AudioManager.Instance != null && AudioManager.Instance.HasCue(AudioCue.BossShoot)
+                ? AudioCue.BossShoot
+                : AudioCue.EnemyShoot;
+
+            AudioManager.Instance?.PlayOneShot(cue);
+            _nextShotAudioTime = Time.time + _shotAudioCooldown;
         }
 
         private void ResolveMuzzleFlashParticles()

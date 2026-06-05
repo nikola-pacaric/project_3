@@ -1,5 +1,6 @@
 using UnityEngine;
 using Warblade.Data;
+using Warblade.Managers;
 using Warblade.Systems;
 
 namespace Warblade.Entities
@@ -66,6 +67,7 @@ namespace Warblade.Entities
             transform.position = startPosition;
 
             BeginEntry(entryControlOffset, entryPathPoints, entryPathControlPoints);
+            PlayEnemyAudioCue(_data.SpawnAudioCue);
         }
 
         internal void Tick()
@@ -268,6 +270,7 @@ namespace Warblade.Entities
                     break;
 
                 case EnemyBehaviorMode.BonusSnake:
+                    PlayEnemyAudioCue(_data.DespawnAudioCue);
                     _enemy.Release(killed: false);
                     break;
 
@@ -352,6 +355,13 @@ namespace Warblade.Entities
                 Vector2 liveFormationPosition = ResolveFormationPosition();
                 transform.position = new Vector2(liveFormationPosition.x, _data.RespawnTopY);
                 _entryPath.ClearSegmentedPath();
+
+                if (_enemy.IsFinalDivePressureActive)
+                {
+                    StartDive();
+                    return;
+                }
+
                 BeginEntry(_entryControlOffset, null, null);
             }
             else
@@ -362,11 +372,17 @@ namespace Warblade.Entities
 
         private void StartReturnToSpawnForDespawn()
         {
+            PlayEnemyAudioCue(_data.DespawnAudioCue);
             _formationPosition = _entryPath.Start;
             _isReturningToSpawnForDespawn = true;
             _entryElapsed = 0f;
             _entryDuration = _entryPath.CalculateDuration(ResolveEntrySpeed());
             _state = EnemyState.Returning;
+        }
+
+        private void PlayEnemyAudioCue(AudioCue cue)
+        {
+            AudioManager.Instance?.PlayOneShot(cue);
         }
 
         private void UpdateReturnToSpawnForDespawn()

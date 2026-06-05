@@ -15,9 +15,14 @@ namespace Warblade.Data
         EnemyHit = 31,
         EnemyDeath = 32,
         EnemyMotherDeath = 33,
+        EnemyKamikazeSpawn = 34,
+        EnemyBonusSpecialSpawn = 35,
+        EnemyKamikazeReturn = 36,
+        EnemyBonusSpecialDespawn = 37,
 
         BossIntro = 50,
         BossHit = 51,
+        BossShoot = 52,
         BossDeath = 53,
 
         PickupCash = 70,
@@ -32,6 +37,7 @@ namespace Warblade.Data
         ShopLeave = 104,
         Pause = 105,
         GameOver = 108,
+        SectionWarp = 109,
 
         MusicMenu = 200,
         MusicGameplay = 201,

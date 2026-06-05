@@ -25,6 +25,11 @@ namespace Warblade.Entities
         [SerializeField] private int _poolDefaultCapacity = 10;
         [SerializeField] private int _poolMaxSize = 50;
 
+        [Header("Bullet Colors")]
+        [SerializeField] private Color _doubleShotBulletColor = new Color(0.455f, 1f, 0.173f, 1f);
+        [SerializeField] private Color _tripleShotBulletColor = new Color(0.059f, 0.776f, 1f, 1f);
+        [SerializeField] private Color _quadShotBulletColor = new Color(1f, 0.808f, 0.18f, 1f);
+
         [Header("Debug")]
         [SerializeField] private bool _debugAutofireActive;
         [SerializeField] private bool _debugRapidFireActive;
@@ -165,8 +170,37 @@ namespace Warblade.Entities
         {
             Bullet bullet = _pool.Get();
             _activePlayerBullets.Add(bullet);
+            ApplyBulletPresentationColor(bullet, GetWeaponTier());
             bullet.Spawn(spawnPosition, direction);
             VfxManager.Instance?.Play(VfxCue.PlayerMuzzleFlash, spawnPosition, direction);
+        }
+
+        private void ApplyBulletPresentationColor(Bullet bullet, WeaponTier weaponTier)
+        {
+            if (bullet == null)
+            {
+                return;
+            }
+
+            switch (weaponTier)
+            {
+                case WeaponTier.Double:
+                    bullet.SetPresentationColor(_doubleShotBulletColor);
+                    break;
+
+                case WeaponTier.Triple:
+                    bullet.SetPresentationColor(_tripleShotBulletColor);
+                    break;
+
+                case WeaponTier.Quad:
+                    bullet.SetPresentationColor(_quadShotBulletColor);
+                    break;
+
+                case WeaponTier.Single:
+                default:
+                    bullet.ResetPresentationColors();
+                    break;
+            }
         }
 
         private WeaponTier GetWeaponTier()

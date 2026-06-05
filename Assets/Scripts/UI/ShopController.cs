@@ -119,6 +119,11 @@ namespace Warblade.UI
                 runStats.AddCash(item.Price);
             }
 
+            if (applied)
+            {
+                AudioManager.Instance?.PlayOneShot(AudioCue.ShopBuySuccess);
+            }
+
             RefreshAll();
             CloseShopIfNoPurchasableItems();
             return applied;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -56,6 +57,9 @@ namespace Warblade.Managers
         [SerializeField] private AudioCueConfig[] _cues = Array.Empty<AudioCueConfig>();
 
         private readonly Dictionary<AudioCue, AudioCueConfig> _cueLookup = new Dictionary<AudioCue, AudioCueConfig>();
+        private readonly Dictionary<AudioCue, AudioSource> _loopingSources = new Dictionary<AudioCue, AudioSource>();
+        private readonly Dictionary<AudioCue, AudioSource> _managedOneShotSources = new Dictionary<AudioCue, AudioSource>();
+        private readonly Dictionary<AudioCue, Coroutine> _managedOneShotFadeRoutines = new Dictionary<AudioCue, Coroutine>();
         private readonly List<AudioSource> _sfxSources = new List<AudioSource>();
         private readonly List<AudioSource> _uiSources = new List<AudioSource>();
 
@@ -136,6 +140,113 @@ namespace Warblade.Managers
 
             source.pitch = GetPitch(config);
             source.PlayOneShot(clip, config.Volume);
+        }
+
+        /// <summary>
+        /// Plays a non-music cue on a managed source, then fades it out after the requested delay.
+        /// </summary>
+        public void PlayOneShotWithFadeOut(AudioCue cue, float fadeOutDelay, float fadeOutDuration)
+        {
+            if (!TryGetCue(cue, out AudioCueConfig config))
+            {
+                return;
+            }
+
+            if (config.Bus == AudioBus.Music)
+            {
+                PlayMusic(cue);
+                return;
+            }
+
+            AudioClip clip = SelectClip(config);
+            if (clip == null)
+            {
+                return;
+            }
+
+            AudioSource source = GetOrCreateManagedOneShotSource(cue, config.Bus);
+            if (source == null)
+            {
+                return;
+            }
+
+            StopManagedOneShotFade(cue);
+
+            source.Stop();
+            source.clip = clip;
+            source.volume = config.Volume;
+            source.pitch = GetPitch(config);
+            source.loop = false;
+            source.Play();
+
+            fadeOutDelay = Mathf.Max(0f, fadeOutDelay);
+            fadeOutDuration = Mathf.Max(0f, fadeOutDuration);
+
+            if (fadeOutDuration <= Mathf.Epsilon)
+            {
+                return;
+            }
+
+            _managedOneShotFadeRoutines[cue] = StartCoroutine(RunManagedOneShotFadeOut(
+                cue,
+                source,
+                fadeOutDelay,
+                fadeOutDuration));
+        }
+
+        /// <summary>
+        /// Starts a looping non-music cue through its configured bus.
+        /// </summary>
+        public void PlayLoop(AudioCue cue)
+        {
+            if (!TryGetCue(cue, out AudioCueConfig config))
+            {
+                return;
+            }
+
+            if (config.Bus == AudioBus.Music)
+            {
+                PlayMusic(cue);
+                return;
+            }
+
+            AudioClip clip = SelectClip(config);
+            if (clip == null)
+            {
+                return;
+            }
+
+            AudioSource source = GetOrCreateLoopingSource(cue, config.Bus);
+            if (source == null)
+            {
+                return;
+            }
+
+            if (source.clip == clip && source.isPlaying)
+            {
+                return;
+            }
+
+            source.Stop();
+            source.clip = clip;
+            source.volume = config.Volume;
+            source.pitch = GetPitch(config);
+            source.loop = true;
+            source.Play();
+        }
+
+        /// <summary>
+        /// Stops a looping cue started with <see cref="PlayLoop"/>.
+        /// </summary>
+        public void StopLoop(AudioCue cue)
+        {
+            if (!_loopingSources.TryGetValue(cue, out AudioSource source) || source == null)
+            {
+                return;
+            }
+
+            source.Stop();
+            source.clip = null;
         }
 
         /// <summary>
@@ -256,16 +367,16 @@ namespace Warblade.Managers
             _sfxSources.Clear();
             _uiSources.Clear();
 
-            _musicSource = CreateSource("Music Source", _musicGroup, true);
+            _musicSource = CreateSource("Music Source", ResolveMixerGroup(AudioBus.Music), true);
 
             for (int i = 0; i < _sfxVoiceCount; i++)
             {
-                _sfxSources.Add(CreateSource($"SFX Source {i + 1}", _sfxGroup, false));
+                _sfxSources.Add(CreateSource($"SFX Source {i + 1}", ResolveMixerGroup(AudioBus.Sfx), false));
             }
 
             for (int i = 0; i < _uiVoiceCount; i++)
             {
-                _uiSources.Add(CreateSource($"UI Source {i + 1}", _uiGroup, false));
+                _uiSources.Add(CreateSource($"UI Source {i + 1}", ResolveMixerGroup(AudioBus.Ui), false));
             }
         }
 
@@ -280,6 +391,97 @@ namespace Warblade.Managers
             source.spatialBlend = 0f;
             source.outputAudioMixerGroup = outputGroup;
             return source;
+        }
+
+        private AudioSource GetOrCreateLoopingSource(AudioCue cue, AudioBus bus)
+        {
+            if (_loopingSources.TryGetValue(cue, out AudioSource source) && source != null)
+            {
+                source.outputAudioMixerGroup = ResolveMixerGroup(bus);
+                return source;
+            }
+
+            source = CreateSource($"{cue} Loop Source", ResolveMixerGroup(bus), true);
+            _loopingSources[cue] = source;
+            return source;
+        }
+
+        private AudioSource GetOrCreateManagedOneShotSource(AudioCue cue, AudioBus bus)
+        {
+            if (_managedOneShotSources.TryGetValue(cue, out AudioSource source) && source != null)
+            {
+                source.outputAudioMixerGroup = ResolveMixerGroup(bus);
+                return source;
+            }
+
+            source = CreateSource($"{cue} Managed Source", ResolveMixerGroup(bus), false);
+            _managedOneShotSources[cue] = source;
+            return source;
+        }
+
+        private void StopManagedOneShotFade(AudioCue cue)
+        {
+            if (!_managedOneShotFadeRoutines.TryGetValue(cue, out Coroutine routine) || routine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(routine);
+            _managedOneShotFadeRoutines.Remove(cue);
+        }
+
+        private IEnumerator RunManagedOneShotFadeOut(
+            AudioCue cue,
+            AudioSource source,
+            float fadeOutDelay,
+            float fadeOutDuration)
+        {
+            float delayElapsed = 0f;
+            while (delayElapsed < fadeOutDelay && source != null && source.isPlaying)
+            {
+                delayElapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            if (source == null || !source.isPlaying)
+            {
+                _managedOneShotFadeRoutines.Remove(cue);
+                yield break;
+            }
+
+            float startVolume = source.volume;
+            float fadeElapsed = 0f;
+            while (fadeElapsed < fadeOutDuration && source != null && source.isPlaying)
+            {
+                fadeElapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(fadeElapsed / fadeOutDuration);
+                source.volume = Mathf.Lerp(startVolume, 0f, t);
+                yield return null;
+            }
+
+            if (source != null)
+            {
+                source.Stop();
+                source.clip = null;
+                source.volume = startVolume;
+            }
+
+            _managedOneShotFadeRoutines.Remove(cue);
+        }
+
+        private AudioMixerGroup ResolveMixerGroup(AudioBus bus)
+        {
+            switch (bus)
+            {
+                case AudioBus.Music:
+                    return _musicGroup;
+
+                case AudioBus.Ui:
+                    return _uiGroup;
+
+                default:
+                    return _sfxGroup;
+            }
         }
 
         private bool TryGetCue(AudioCue cue, out AudioCueConfig config)
