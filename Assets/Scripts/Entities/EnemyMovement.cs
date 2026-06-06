@@ -270,7 +270,6 @@ namespace Warblade.Entities
                     break;
 
                 case EnemyBehaviorMode.BonusSnake:
-                    PlayEnemyAudioCue(_data.DespawnAudioCue);
                     _enemy.Release(killed: false);
                     break;
 
@@ -372,7 +371,6 @@ namespace Warblade.Entities
 
         private void StartReturnToSpawnForDespawn()
         {
-            PlayEnemyAudioCue(_data.DespawnAudioCue);
             _formationPosition = _entryPath.Start;
             _isReturningToSpawnForDespawn = true;
             _entryElapsed = 0f;

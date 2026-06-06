@@ -113,6 +113,7 @@ namespace Warblade.Managers
             BuffManager.Instance?.ClearAllBuffs();
             RunStatsManager.Instance?.ResetRun();
             SetState(GameState.GameOver);
+            AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicGameOver);
             AudioManager.Instance?.PlayOneShot(AudioCue.GameOver);
         }
 

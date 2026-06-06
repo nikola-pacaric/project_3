@@ -19479,7 +19479,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 46afcc8bccdad874fb8ce54a8f62050c, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 2fca7d9da29524c439a74c9989e791bc, type: 3}
-  _startingLevel: 4
+  _startingLevel: 25
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
@@ -25787,6 +25787,9 @@ MonoBehaviour:
   _uiVolumeParameter: UiVolume
   _sfxVoiceCount: 8
   _uiVoiceCount: 4
+  _musicFadeDuration: 0.7
+  _musicFadeInDuration: 2
+  _musicFadeInCurvePower: 2.5
   _cues:
   - _cue: 10
     _bus: 0
@@ -25949,6 +25952,48 @@ MonoBehaviour:
     _volume: 0.6
     _pitchJitter: 0
     _loop: 0
+  - _cue: 34
+    _bus: 0
+    _clips:
+    - {fileID: 8300000, guid: 6070c94c25f7d9f41948548075490709, type: 3}
+    _volume: 0.2
+    _pitchJitter: 0
+    _loop: 0
+  - _cue: 35
+    _bus: 0
+    _clips:
+    - {fileID: 8300000, guid: 04e3461a5ea056649aeba333162d1ee5, type: 3}
+    _volume: 0.2
+    _pitchJitter: 0
+    _loop: 0
+  - _cue: 201
+    _bus: 2
+    _clips:
+    - {fileID: 8300000, guid: 6fcb69375c504d1493497963ea65fe7c, type: 3}
+    _volume: 0.1
+    _pitchJitter: 0
+    _loop: 1
+  - _cue: 202
+    _bus: 2
+    _clips:
+    - {fileID: 8300000, guid: a74f1cb0d9e542ff8c2e12b38619df61, type: 3}
+    _volume: 0.1
+    _pitchJitter: 0
+    _loop: 1
+  - _cue: 200
+    _bus: 2
+    _clips:
+    - {fileID: 8300000, guid: c929e6b8eb7e47f19bf6678d8f23e2a6, type: 3}
+    _volume: 0.1
+    _pitchJitter: 0
+    _loop: 1
+  - _cue: 203
+    _bus: 2
+    _clips:
+    - {fileID: 8300000, guid: e18acaf2d57049f585c78d7d0b604c39, type: 3}
+    _volume: 0.1
+    _pitchJitter: 0
+    _loop: 1
 --- !u!4 &1966912710
 Transform:
   m_ObjectHideFlags: 0

@@ -53,6 +53,11 @@ namespace Warblade.Managers
         [SerializeField, Min(1)] private int _sfxVoiceCount = 8;
         [SerializeField, Min(1)] private int _uiVoiceCount = 4;
 
+        [Header("Music")]
+        [SerializeField, Min(0f)] private float _musicFadeDuration = 0.5f;
+        [SerializeField, Min(0f)] private float _musicFadeInDuration = 2f;
+        [SerializeField, Min(1f)] private float _musicFadeInCurvePower = 2.5f;
+
         [Header("Cues")]
         [SerializeField] private AudioCueConfig[] _cues = Array.Empty<AudioCueConfig>();
 
@@ -64,6 +69,7 @@ namespace Warblade.Managers
         private readonly List<AudioSource> _uiSources = new List<AudioSource>();
 
         private AudioSource _musicSource;
+        private Coroutine _musicTransitionRoutine;
         private int _sfxSourceIndex;
         private int _uiSourceIndex;
         private AudioCue _currentMusicCue = AudioCue.None;
@@ -105,6 +111,20 @@ namespace Warblade.Managers
         public bool HasCue(AudioCue cue)
         {
             return cue != AudioCue.None && _cueLookup.ContainsKey(cue);
+        }
+
+        /// <summary>
+        /// Plays a music cue only when it has been configured in this manager.
+        /// </summary>
+        public bool PlayMusicIfConfigured(AudioCue cue)
+        {
+            if (!HasCue(cue))
+            {
+                return false;
+            }
+
+            PlayMusic(cue);
+            return true;
         }
 
         /// <summary>
@@ -259,24 +279,37 @@ namespace Warblade.Managers
                 return;
             }
 
+            if (_currentMusicCue == cue && _musicSource != null && _musicSource.isPlaying)
+            {
+                return;
+            }
+
             AudioClip clip = SelectClip(config);
             if (clip == null || _musicSource == null)
             {
                 return;
             }
 
-            if (_currentMusicCue == cue && _musicSource.clip == clip && _musicSource.isPlaying)
+            if (_musicTransitionRoutine != null)
             {
+                StopCoroutine(_musicTransitionRoutine);
+                _musicTransitionRoutine = null;
+            }
+
+            if (_musicFadeDuration <= Mathf.Epsilon && _musicFadeInDuration <= Mathf.Epsilon)
+            {
+                StartMusic(cue, config, clip, config.Volume);
                 return;
             }
 
-            _currentMusicCue = cue;
-            _musicSource.Stop();
-            _musicSource.clip = clip;
-            _musicSource.volume = config.Volume;
-            _musicSource.pitch = GetPitch(config);
-            _musicSource.loop = config.Loop;
-            _musicSource.Play();
+            if (!_musicSource.isPlaying)
+            {
+                StartMusic(cue, config, clip, 0f);
+                _musicTransitionRoutine = StartCoroutine(RunInitialMusicFadeIn(config.Volume));
+                return;
+            }
+
+            _musicTransitionRoutine = StartCoroutine(RunMusicTransition(cue, config, clip));
         }
 
         /// <summary>
@@ -285,6 +318,12 @@ namespace Warblade.Managers
         public void StopMusic()
         {
             _currentMusicCue = AudioCue.None;
+
+            if (_musicTransitionRoutine != null)
+            {
+                StopCoroutine(_musicTransitionRoutine);
+                _musicTransitionRoutine = null;
+            }
 
             if (_musicSource == null)
             {
@@ -391,6 +430,76 @@ namespace Warblade.Managers
             source.spatialBlend = 0f;
             source.outputAudioMixerGroup = outputGroup;
             return source;
+        }
+
+        private void StartMusic(AudioCue cue, AudioCueConfig config, AudioClip clip, float volume)
+        {
+            _currentMusicCue = cue;
+            _musicSource.Stop();
+            _musicSource.clip = clip;
+            _musicSource.volume = volume;
+            _musicSource.pitch = GetPitch(config);
+            _musicSource.loop = config.Loop;
+            _musicSource.Play();
+        }
+
+        private IEnumerator RunMusicTransition(AudioCue cue, AudioCueConfig config, AudioClip clip)
+        {
+            float startVolume = _musicSource.volume;
+            float fadeElapsed = 0f;
+            while (fadeElapsed < _musicFadeDuration && _musicSource != null)
+            {
+                fadeElapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(fadeElapsed / _musicFadeDuration);
+                _musicSource.volume = Mathf.Lerp(startVolume, 0f, t);
+                yield return null;
+            }
+
+            if (_musicSource == null)
+            {
+                _musicTransitionRoutine = null;
+                yield break;
+            }
+
+            StartMusic(cue, config, clip, 0f);
+
+            yield return RunMusicFadeIn(config.Volume);
+
+            _musicTransitionRoutine = null;
+        }
+
+        private IEnumerator RunInitialMusicFadeIn(float targetVolume)
+        {
+            yield return RunMusicFadeIn(targetVolume);
+            _musicTransitionRoutine = null;
+        }
+
+        private IEnumerator RunMusicFadeIn(float targetVolume)
+        {
+            if (_musicFadeInDuration <= Mathf.Epsilon)
+            {
+                if (_musicSource != null)
+                {
+                    _musicSource.volume = targetVolume;
+                }
+
+                yield break;
+            }
+
+            float fadeElapsed = 0f;
+            while (fadeElapsed < _musicFadeInDuration && _musicSource != null)
+            {
+                fadeElapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(fadeElapsed / _musicFadeInDuration);
+                t = Mathf.Pow(t, _musicFadeInCurvePower);
+                _musicSource.volume = Mathf.Lerp(0f, targetVolume, t);
+                yield return null;
+            }
+
+            if (_musicSource != null)
+            {
+                _musicSource.volume = targetVolume;
+            }
         }
 
         private AudioSource GetOrCreateLoopingSource(AudioCue cue, AudioBus bus)

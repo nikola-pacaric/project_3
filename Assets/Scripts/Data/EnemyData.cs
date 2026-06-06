@@ -28,7 +28,6 @@ namespace Warblade.Data
         [SerializeField, Range(0f, 1f)] private float _passThroughChance = 0.5f;
         [SerializeField] private float _respawnTopY = 6f;
         [SerializeField] private AudioCue _spawnAudioCue = AudioCue.None;
-        [SerializeField] private AudioCue _despawnAudioCue = AudioCue.None;
 
         [Header("Cooldowns")]
         [SerializeField] private float _diveCooldownMin = 2f;
@@ -79,7 +78,6 @@ namespace Warblade.Data
         public float PassThroughChance => _passThroughChance;
         public float RespawnTopY => _respawnTopY;
         public AudioCue SpawnAudioCue => _spawnAudioCue;
-        public AudioCue DespawnAudioCue => _despawnAudioCue;
         public float DiveCooldownMin => _diveCooldownMin;
         public float DiveCooldownMax => _diveCooldownMax;
         public float FireCooldownMin => _fireCooldownMin;

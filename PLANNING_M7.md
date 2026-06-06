@@ -20,19 +20,9 @@ Key decisions:
 Goal:
 - Lock the M7 visual, audio, UI, and tuning rules before production work begins.
 
-Locked direction:
-- Visual style: Neon Arcade.
-- Sprite source: generated bitmap sprite sheets.
-- Audio style: Punchy Arcade.
-- Readability: player, enemies, bullets, pickups, VFX, and UI must remain instantly distinguishable.
-- Tuning: presentation values for color, alpha, intensity, timing, speed, frequency, and volume must be Inspector-tunable through serialized fields or ScriptableObjects.
-
-Deliverable:
-- A short presentation spec used by Phases 1-11. Actual production checklists stay in those working phases.
-
-Acceptance:
-- The look, sound, UI language, and tuning model are decided.
-- No gameplay tuning, economy, level balance, or leaderboard scope is added.
+Done:
+- Chose Neon Arcade visuals, generated bitmap sprite sheets, Punchy Arcade audio, and Inspector-tunable presentation values.
+- Kept gameplay tuning, economy balance, level balance, and leaderboard work out of M7.
 
 ---
 
@@ -44,7 +34,7 @@ Goal:
 Done:
 - Generated background assets, added palette data/controller support, and wired the scene setup manually from Codex steps.
 - Playtest confirmed chapter colors, cycle tint behavior, screen coverage, and gameplay readability.
- 
+
 ---
 
 ## Phase 2 — Sprite Replacement — Done
@@ -53,9 +43,8 @@ Goal:
 - Replace gameplay-critical placeholders with readable final or near-final sprites.
 
 Done:
-- Player, enemy, boss, bullet, pickup, shield, boss bar, and run-stat bar visuals were replaced or upgraded for gameplay readability.
-- Kamikaze and bonus enemies intentionally reuse regular enemy visuals; their behavior is what differentiates them.
-- Remaining visual adjustments, including bullet glow/color, deeper HUD/shop polish, and final boss data hookup, are deferred to later polish/tuning phases.
+- Player, enemy, boss, bullet, pickup, shield, boss bar, and run-stat bar visuals were replaced or upgraded for readability.
+- Kamikaze and bonus enemies intentionally reuse regular enemy visuals; behavior differentiates them.
 
 ---
 
@@ -65,10 +54,8 @@ Goal:
 - Add simple animations where they improve readability and arcade feel.
 
 Done:
-- Enemy sprite loops are already wired for the current enemy sets.
 - Added player thruster particles, pickup spin, and player death/respawn timing with temporary invulnerability.
-- Bosses now enter on a frozen first frame, start their idle animation after reaching position, become vulnerable at that moment, and trigger the boss HUD slide-in.
-- Playtest confirmed the Phase 3 animation timing works. Explosions and impact particles stay in Phase 4.
+- Bosses now enter on a frozen first frame, start idle animation after reaching position, become vulnerable then, and trigger the boss HUD slide-in.
 
 ---
 
@@ -77,34 +64,10 @@ Done:
 Goal:
 - Add readable combat and reward effects without hiding gameplay.
 
-Checklist:
-- [x] Player muzzle flash.
-- [x] Bullet impact sparks.
-- [x] Enemy death explosions.
-- [x] Pickup collect effect.
-- [x] EnemyBulletImpact VFX.
-- [x] Shield hit effect.
-- [x] Player death effect.
-- [x] Boss muzzle flash.
-- [x] Boss hit effect.
-- [x] Boss phase-change effect.
-- [x] Boss warning effect.
-- [x] Boss death effect.
-- [x] Boss defeat effect.
-- [x] Sector warp transition after every 4-level enemy set and boss level.
-
-Decisions:
-- Small enemy muzzle flashes are intentionally skipped so enemy bullets remain clean and readable.
-- Pickup spawn effects are intentionally skipped so drops can appear without adding screen clutter.
-- Boss hit particles were chosen not to implement because player bullet impact sparks already show the contact point, and an extra boss-centered hit pulse made fast multi-shot damage harder to read.
-- Boss warning particles were chosen not to implement because the boss sprite animation already signals the active/combat-ready moment after the slide-in.
-- Boss muzzle flashes are attached under each boss BulletPoint instead of pooled through VfxManager so they stay visually locked to moving bosses.
-- Boss defeat is a sprite/object presentation: the boss stops, shakes, rises slightly, then triggers the BossDeath line-burst VFX.
-
-Acceptance:
-- Combat feels responsive and readable.
-- Effects do not obscure enemy bullets or pickups.
-- All four bosses were playtested with the muzzle flash, phase-change ring, and delayed death presentation working cleanly.
+Done:
+- Added muzzle flashes, bullet impacts, enemy/player/boss death effects, shield hits, pickup collection effects, boss phase/defeat effects, and sector warp transitions.
+- Skipped small enemy muzzle flashes, pickup spawn effects, extra boss hit particles, and boss warning particles because they added clutter or duplicated clearer signals.
+- Boss muzzle flashes are attached under boss BulletPoints so they stay locked to moving bosses.
 
 ---
 
@@ -114,14 +77,9 @@ Goal:
 - Add depth and polish with URP 2D lighting while keeping WebGL performance reasonable.
 
 Done:
-- Added restrained URP 2D lights to player bullets, enemy bullets, boss bullets, pickups, and combat VFX where the glow helps readability.
-- Added a restrained Global Volume with bloom plus subtle color grading: darker exposure, more contrast/saturation, and mild white-balance warmth.
-- Reworked boss-specific health bar fills to preserve the original bright laser texture while matching each boss color, including Boss 3's greener palette.
-- Playtest confirmed boss fights read well with the lighting, VFX, boss bar colors, and bullets.
-- Playtest confirmed level 1 remains readable with the updated effects, colors, and bullets.
-
-Acceptance:
-- The game looks less flat without making bullets or pickups hard to see.
+- Added restrained 2D lights to bullets, pickups, and combat VFX where glow helps readability.
+- Added restrained bloom and subtle color grading.
+- Reworked boss health bar colors and playtested level 1 plus boss fights for readability.
 
 ---
 
@@ -131,14 +89,8 @@ Goal:
 - Re-check the background after sprite, animation, VFX, lighting, and post-processing work are in place.
 
 Done:
-- Playtest confirmed the background contrast stays below gameplay objects after the Phase 5 lighting and color-grading pass.
-- Bullets stand out clearly because of their restrained 2D lights.
-- Chapter/background color changes still read well after the post-processing pass.
-- Boss fights remain readable and visually pleasing with the updated background, bullets, VFX, and boss bars.
-- No background brightness, alpha, density, or drift-speed adjustments were needed.
-
-Acceptance:
-- Background still adds motion and atmosphere without competing with gameplay.
+- Playtest confirmed the background stays behind gameplay objects, bullets remain clear, chapter colors still work, and boss fights remain readable.
+- No background brightness, alpha, density, or drift-speed changes were needed.
 
 ---
 
@@ -148,20 +100,9 @@ Goal:
 - Make hits, deaths, boss moments, and major events feel stronger.
 
 Done:
-- Added a `ScreenFeedbackManager` that listens to ScriptableObject event channels for player death, Mother enemy death, and boss death.
-- Added white screen flashes for those death cues only, with separate Inspector-tunable timing, alpha, and impulse strength per cue.
-- Added restrained Cinemachine impulse feedback for those same death cues.
-- Wired player death and Mother death feedback request channels through `PlayerHealth` and `EnemySpawner`; boss death uses the existing `BossDefeated` event channel.
-- Camera shake was playtested and adjusted so the background remains camera-locked during impulse, preventing the camera clear color from showing at the edges.
-- Death/respawn playtesting found a multi-hit downgrade issue; `PlayerHealth` now guards death resolution so one death only applies one life loss and one weapon-tier downgrade.
-
-Dependency note:
-- Cinemachine is installed and approved for this phase.
-- No hit pause.
-- No player-hit flash or player-hit shake; normal player hits should not steal attention from bullets.
-
-Acceptance:
-- Feedback makes important events obvious while movement and bullet reading remain fair.
+- Added `ScreenFeedbackManager`, white screen flashes, and restrained Cinemachine impulse for player death, Mother death, and boss death.
+- Wired feedback through event channels and fixed multi-hit death resolution so one death only applies one life loss and one weapon-tier downgrade.
+- Skipped hit pause and normal player-hit shake/flash to preserve bullet readability.
 
 ---
 
@@ -170,72 +111,35 @@ Acceptance:
 Goal:
 - Add a stable audio system before assigning many clips.
 
-Status:
-- Added `AudioManager`, `AudioCue`, and `AudioBus` for the global service, cue IDs, one-shot routing, looping music entry point, and normalized mixer volume APIs.
-- Added and wired `GameplayAudioMixer` with Master, Music, SFX, and UI groups plus exposed volume parameters.
-- Scene wiring was playtested with real `PlayerShoot`, `PlayerShieldHit`, `Pause`, and `GameOver` cues.
-
-Checklist:
-- [x] `AudioManager` global service if not already present.
-- [x] Separate Master, Music, SFX, and UI mixer groups.
-- [x] One-shot SFX support.
-- [x] Looping music support.
-- [x] Volume settings for master/SFX/music.
-- [x] No runtime `FindObjectOfType` or `GameObject.Find`.
-
-Acceptance:
-- SFX and music can play through separate channels and be controlled independently.
+Done:
+- Added `AudioManager`, `AudioCue`, and `AudioBus` for global audio service, cue IDs, one-shots, looping music, and mixer volume control.
+- Added and wired `GameplayAudioMixer` with Master, Music, SFX, and UI groups.
+- Playtested the foundation with player shoot, shield hit, pause, and game-over cues.
 
 ---
 
-## Phase 9 — SFX Pass
+## Phase 9 — SFX Pass — Done
 
 Goal:
 - Add first-pass sound feedback for the full v1.0 gameplay loop.
 
-Status:
-- Imported first-pass SFX assets under `Assets/Audio/SFX`.
-- Wired and play-tested initial Phase 8 cues: player shoot, shield hit, pause, and game over.
-- Wired assigned Phase 9 gameplay cues for player death, enemy shoot/hit/death, Mother death, boss intro/hit/death, pickup collection groups, and restart-button UI.
-- Remaining Phase 9 work: assign and wire shop open, buy success, and shop leave cues.
-
-Decisions:
-- Normal player damage uses the player death sound because an unshielded hit always kills the player.
-- Shield hits keep their own sound because they communicate protection rather than death.
-- Boss hit can reuse the enemy hit sound; boss phase changes stay visual-only.
-- Level start and level complete stay visual-only for this pass.
-- Shop buy fail is not needed because unavailable items cannot be selected.
-- Pickup sounds play only when collected by the player, never when spawned.
-- Pickup collection uses five sound groups: cash, weapon, life, sucker, and all other pickup types.
-- Weapon upgrade does not need a separate cue because weapon pickups use the pickup weapon sound.
-
-Checklist:
-- Player: shoot, shield hit, death.
-- Enemy/combat: enemy shoot, hit, regular death, Mother death, boss hit, boss death, boss intro.
-- Pickups/economy: cash, weapon, life, sucker downgrade, all other pickup types.
-- UI/flow: button, pause, game over.
-- Shop: open, buy success, leave.
-
-Acceptance:
-- Every important action/result has sound feedback and repeated sounds are not painful.
+Done:
+- Wired player, enemy, Mother enemy, boss, pickup, shop, UI, pause, game-over, sector-warp, kamikaze spawn, and bonus-special spawn cues.
+- Removed kamikaze return and bonus-special despawn/death cue options because the level mix became too busy.
+- Kept level start/complete visual-only for this pass, and kept pickup sounds collection-only.
 
 ---
 
-## Phase 10 — Music Pass
+## Phase 10 — Music Pass — Done
 
 Goal:
 - Add first-pass music for the current v1.0 game flow.
 
-Checklist:
-- Main menu music.
-- Gameplay music.
-- Boss music.
-- Game over/results sting or short loop.
-- Clean transitions and fades.
-- Handle WebGL audio start after user interaction.
-
-Acceptance:
-- Music works in menu, gameplay, boss, and game-over contexts without duplicate tracks or pops.
+Done:
+- Assigned menu, gameplay, boss, and game-over music clips on the `AudioManager`.
+- Routed gameplay, boss, and game-over music through the current game flow; menu music is ready for the menu flow.
+- Created loop-processed WAV versions so loop seams are cleaner without baking a fade into every repeat.
+- Runtime music fades use `AudioSource` volume with a slower curved fade-in so music starts softly and loop points remain untouched.
 
 ---
 
@@ -244,14 +148,9 @@ Acceptance:
 Goal:
 - Make existing UI readable, consistent, and presentable without adding leaderboard or mini-game UI.
 
-Checklist:
-- HUD polish: score, level, lives, armour, cash, weapon, buffs.
-- Shop polish: layout, icons, selected/disabled/buy states, feedback.
-- Main menu: Start and Settings.
-- Pause menu.
-- Settings: master/SFX/music volume.
-- First-run controls hint.
-- Game over polish with final score and restart.
+Planned:
+- Polish HUD, shop, main menu, pause menu, settings, first-run controls hint, and game-over presentation.
+- Keep UI focused on the current v1.0 loop; leaderboard and mini-game UI remain out of scope.
 
 Acceptance:
 - UI looks intentional, fits 1920x1080, and does not hide active gameplay.
@@ -263,15 +162,12 @@ Acceptance:
 Goal:
 - Confirm visual/audio polish did not break performance, readability, or existing systems.
 
-Checklist:
-- Confirm repeated VFX are pooled or cheap enough.
-- Confirm repeated SFX do not cause object churn.
-- Play early normal level, dense later level, boss levels, shop, pickup-heavy moments, game over, and level 101.
-- Run a WebGL build manually and play in browser.
+Planned:
+- Playtest early normal levels, dense later levels, boss levels, shop, pickup-heavy moments, game over, and level 101.
+- Run a WebGL build manually and confirm SFX/music, VFX, readability, and performance in browser.
 
 Acceptance:
 - Core game is visually and audibly presentable.
-- SFX and music work in WebGL.
 - Dense waves and boss fights remain readable.
 - Tuning remains deferred to M8.
 

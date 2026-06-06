@@ -17,8 +17,6 @@ namespace Warblade.Data
         EnemyMotherDeath = 33,
         EnemyKamikazeSpawn = 34,
         EnemyBonusSpecialSpawn = 35,
-        EnemyKamikazeReturn = 36,
-        EnemyBonusSpecialDespawn = 37,
 
         BossIntro = 50,
         BossHit = 51,

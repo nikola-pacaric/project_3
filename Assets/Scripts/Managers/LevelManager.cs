@@ -190,6 +190,8 @@ namespace Warblade.Managers
                 }
                 else
                 {
+                    AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicGameplay);
+
                     LevelData levelData = ResolveCurrentLevelData();
                     if (levelData == null)
                     {
@@ -490,6 +492,8 @@ namespace Warblade.Managers
 
         private IEnumerator RunCampaignBossEncounterRoutine(Boss bossReference, CycleScalingState cycleScaling)
         {
+            AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicBoss);
+
             bool createdInstance = false;
             Boss boss = PrepareBossInstance(bossReference, out createdInstance);
             if (boss == null)
@@ -519,6 +523,11 @@ namespace Warblade.Managers
             if (createdInstance && boss != null)
             {
                 Destroy(boss.gameObject);
+            }
+
+            if (!_isGameOver)
+            {
+                AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicGameplay);
             }
         }
 

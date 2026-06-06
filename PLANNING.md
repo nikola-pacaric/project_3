@@ -21,7 +21,7 @@ Completed milestones are kept as short summaries. Active and future milestones k
 
 **M7** *(current: Game Feel)*
 
-M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, and Phase 7 screen feedback are complete. The remaining major work is audio, music, UI polish, and integration checks before final tuning.
+M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, Phase 7 screen feedback, Phase 8 audio foundation, Phase 9 SFX pass, and Phase 10 music pass are complete. The remaining major work is UI polish and integration checks before final tuning.
 
 ---
 
@@ -87,13 +87,14 @@ The content model was refactored for safer authoring: reusable formation shape d
 
 **Build — Audio**
 - [x] `AudioManager` singleton, separate SFX/music mixer channels
-- [ ] SFX library: shoot, hit, explosion, pickup, shop, UI, boss roar
-- [ ] Music: menu, gameplay, boss
+- [x] SFX library: shoot, hit, explosion, pickup, shop, UI, boss roar
+- [x] Music: menu, gameplay, boss, game over
 
 Audio status:
 - Phase 8 audio foundation is complete.
-- Phase 9 SFX pass is in progress: player, enemy, Mother enemy, boss, pickup, pause, game-over, and restart-button cues are wired and assigned.
-- Shop SFX and remaining UI polish sounds are still pending.
+- Phase 9 SFX pass is complete: player, enemy, Mother enemy, boss, pickup, shop, pause, game-over, restart-button, sector-warp, kamikaze spawn, and bonus-special spawn cues are wired and assigned.
+- Kamikaze return and bonus-special despawn/death sounds were intentionally removed because the level mix became too busy.
+- Phase 10 music pass is complete: menu, gameplay, boss, and game-over loop tracks are assigned, loop-processed, and routed through the existing `AudioManager` with runtime fades.
 
 **Build — UI / UX**
 - [ ] Main menu (Start, Settings)
