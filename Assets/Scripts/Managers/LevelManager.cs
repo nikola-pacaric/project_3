@@ -174,7 +174,6 @@ namespace Warblade.Managers
                 _enemySpawner.SetCycleScaling(cycleScaling);
                 _onLevelStarted?.Invoke(CurrentLevel);
                 _levelStarted?.Raise(CurrentLevel);
-                RunStatsManager.Instance?.ClearCurrentLevelDebuffs();
 
                 if (IsCampaignBossLevel(CurrentLevel))
                 {

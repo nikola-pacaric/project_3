@@ -18668,7 +18668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   _input: {fileID: 11400000, guid: ef77f6ca453fef740a2e405193c5768b, type: 2}
-  _baseSpeed: 6
+  _baseSpeed: 5
   _speedPerSpeedLevel: 0.75
   _minX: -7.6
   _maxX: 7.6
@@ -19479,7 +19479,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 46afcc8bccdad874fb8ce54a8f62050c, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 2fca7d9da29524c439a74c9989e791bc, type: 3}
-  _startingLevel: 25
+  _startingLevel: 1
   _playOnStart: 1
   _levelTransitionDelay: 2
   _shopInterval: 4
@@ -25914,6 +25914,7 @@ MonoBehaviour:
     _bus: 0
     _clips:
     - {fileID: 8300000, guid: 6511aec168be543479e58a0dbb31f755, type: 3}
+    - {fileID: 8300000, guid: b257e59a5cdc54f4bb6e9d159154e540, type: 3}
     _volume: 0.6
     _pitchJitter: 0
     _loop: 0

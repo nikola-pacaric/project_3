@@ -74,6 +74,14 @@ namespace Warblade.Systems
         }
 
         /// <summary>
+        /// Plays a cue at a world position and applies an optional effect-specific color tint.
+        /// </summary>
+        public void Play(VfxCue cue, Vector3 position, Color tintColor)
+        {
+            Play(cue, position, Quaternion.identity, tintColor);
+        }
+
+        /// <summary>
         /// Plays a cue at a world position, rotated so directional effects can face the action.
         /// </summary>
         public void Play(VfxCue cue, Vector3 position, Vector2 direction)
@@ -98,6 +106,11 @@ namespace Warblade.Systems
         /// </summary>
         public void Play(VfxCue cue, Vector3 position, Quaternion rotation)
         {
+            Play(cue, position, rotation, null);
+        }
+
+        private void Play(VfxCue cue, Vector3 position, Quaternion rotation, Color? tintColor)
+        {
             if (cue == VfxCue.None)
             {
                 return;
@@ -109,7 +122,7 @@ namespace Warblade.Systems
             }
 
             PooledVfx vfx = vfxPool.Pool.Get();
-            vfx.Play(position, rotation);
+            vfx.Play(position, rotation, tintColor);
         }
 
         private void BuildPools()

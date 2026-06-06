@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Warblade.Data;
@@ -12,6 +13,9 @@ namespace Warblade.Entities
     [RequireComponent(typeof(EnemyShooter))]
     public class Enemy : MonoBehaviour, IDamageable
     {
+        private const int MaxSpriteColorSamples = 512;
+        private static readonly Dictionary<int, Color> SpriteVfxColorCache = new();
+
         [Tooltip("Default stats used when this enemy is spawned directly. WaveData can override this per spawn.")]
         [SerializeField] private EnemyData _data;
         [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -218,7 +222,7 @@ namespace Warblade.Entities
 
             ApplyVisualsFromData();
             _health.Spawn(ResolveMaxHealth(), _contactDamage);
-            _shooter.Spawn(_data);
+            _shooter.Spawn(_data, _playerTransform);
             _movement.Spawn(
                 _data,
                 _cycleScaling,
@@ -267,7 +271,7 @@ namespace Warblade.Entities
             }
 
             AudioManager.Instance?.PlayOneShot(ResolveDeathAudioCue());
-            VfxManager.Instance?.Play(VfxCue.EnemyDeath, transform.position);
+            VfxManager.Instance?.Play(VfxCue.EnemyDeath, transform.position, ResolveDeathVfxColor());
             PickupDropPool.Instance?.TryDrop(_data.DropTable, transform.position);
 
             Release(killed: true);
@@ -283,6 +287,26 @@ namespace Warblade.Entities
             return AudioManager.Instance != null && AudioManager.Instance.HasCue(AudioCue.EnemyMotherDeath)
                 ? AudioCue.EnemyMotherDeath
                 : AudioCue.EnemyDeath;
+        }
+
+        private Color ResolveDeathVfxColor()
+        {
+            if (_spriteRenderer == null)
+            {
+                return Color.white;
+            }
+
+            if (!TryResolveSpriteVfxColor(_spriteRenderer.sprite, out Color spriteColor))
+            {
+                return _spriteRenderer.color;
+            }
+
+            Color rendererTint = _spriteRenderer.color;
+            spriteColor.r *= rendererTint.r;
+            spriteColor.g *= rendererTint.g;
+            spriteColor.b *= rendererTint.b;
+            spriteColor.a = 1f;
+            return spriteColor;
         }
 
         internal void Release(bool killed)
@@ -337,6 +361,196 @@ namespace Warblade.Entities
             }
 
             return gameObject.AddComponent<T>();
+        }
+
+        private static bool TryResolveSpriteVfxColor(Sprite sprite, out Color color)
+        {
+            color = Color.white;
+
+            if (sprite == null || sprite.texture == null)
+            {
+                return false;
+            }
+
+            int spriteId = sprite.GetInstanceID();
+            if (SpriteVfxColorCache.TryGetValue(spriteId, out color))
+            {
+                return true;
+            }
+
+            if (!TrySampleSpriteTextureColor(sprite, out color))
+            {
+                return false;
+            }
+
+            SpriteVfxColorCache[spriteId] = color;
+            return true;
+        }
+
+        private static bool TrySampleSpriteTextureColor(Sprite sprite, out Color color)
+        {
+            color = Color.white;
+
+            Texture2D texture = sprite.texture;
+            Rect textureRect = sprite.textureRect;
+            int startX = Mathf.Clamp(Mathf.FloorToInt(textureRect.x), 0, texture.width - 1);
+            int startY = Mathf.Clamp(Mathf.FloorToInt(textureRect.y), 0, texture.height - 1);
+            int width = Mathf.Clamp(Mathf.CeilToInt(textureRect.width), 1, texture.width - startX);
+            int height = Mathf.Clamp(Mathf.CeilToInt(textureRect.height), 1, texture.height - startY);
+            int endX = startX + width;
+            int endY = startY + height;
+            int stride = Mathf.Max(1, Mathf.CeilToInt(Mathf.Sqrt(width * height / (float)MaxSpriteColorSamples)));
+
+            Color SamplePixel(int x, int y)
+            {
+                return texture.GetPixel(x, y);
+            }
+
+            if (!texture.isReadable)
+            {
+                return TrySampleUnreadableSpriteTextureColor(
+                    texture,
+                    startX,
+                    startY,
+                    width,
+                    height,
+                    out color);
+            }
+
+            return TryAverageSpritePixels(
+                startX,
+                startY,
+                endX,
+                endY,
+                stride,
+                SamplePixel,
+                out color);
+        }
+
+        private static bool TrySampleUnreadableSpriteTextureColor(
+            Texture2D texture,
+            int startX,
+            int startY,
+            int width,
+            int height,
+            out Color color)
+        {
+            color = Color.white;
+
+            RenderTexture previousActive = RenderTexture.active;
+            RenderTexture renderTexture = null;
+            Texture2D readableTexture = null;
+
+            try
+            {
+                renderTexture = RenderTexture.GetTemporary(texture.width, texture.height, 0, RenderTextureFormat.ARGB32);
+                Graphics.Blit(texture, renderTexture);
+                RenderTexture.active = renderTexture;
+
+                readableTexture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+                readableTexture.ReadPixels(new Rect(startX, startY, width, height), 0, 0, false);
+                readableTexture.Apply(false, false);
+
+                int stride = Mathf.Max(1, Mathf.CeilToInt(Mathf.Sqrt(width * height / (float)MaxSpriteColorSamples)));
+
+                Color SamplePixel(int x, int y)
+                {
+                    return readableTexture.GetPixel(x, y);
+                }
+
+                return TryAverageSpritePixels(0, 0, width, height, stride, SamplePixel, out color);
+            }
+            catch (UnityException)
+            {
+                return false;
+            }
+            finally
+            {
+                RenderTexture.active = previousActive;
+
+                if (renderTexture != null)
+                {
+                    RenderTexture.ReleaseTemporary(renderTexture);
+                }
+
+                if (readableTexture != null)
+                {
+                    Destroy(readableTexture);
+                }
+            }
+        }
+
+        private static bool TryAverageSpritePixels(
+            int startX,
+            int startY,
+            int endX,
+            int endY,
+            int stride,
+            System.Func<int, int, Color> samplePixel,
+            out Color color)
+        {
+            color = Color.white;
+
+            double weightedRed = 0;
+            double weightedGreen = 0;
+            double weightedBlue = 0;
+            double totalWeight = 0;
+            double fallbackRed = 0;
+            double fallbackGreen = 0;
+            double fallbackBlue = 0;
+            double totalFallbackWeight = 0;
+
+            for (int y = startY; y < endY; y += stride)
+            {
+                for (int x = startX; x < endX; x += stride)
+                {
+                    Color pixel = samplePixel(x, y);
+                    if (pixel.a < 0.1f)
+                    {
+                        continue;
+                    }
+
+                    float maxChannel = Mathf.Max(pixel.r, Mathf.Max(pixel.g, pixel.b));
+                    float minChannel = Mathf.Min(pixel.r, Mathf.Min(pixel.g, pixel.b));
+                    float saturation = maxChannel - minChannel;
+                    double fallbackWeight = pixel.a;
+                    double colorWeight = pixel.a
+                        * Mathf.Clamp01(saturation * 2f)
+                        * Mathf.Clamp01(maxChannel);
+
+                    weightedRed += pixel.r * colorWeight;
+                    weightedGreen += pixel.g * colorWeight;
+                    weightedBlue += pixel.b * colorWeight;
+                    totalWeight += colorWeight;
+
+                    fallbackRed += pixel.r * fallbackWeight;
+                    fallbackGreen += pixel.g * fallbackWeight;
+                    fallbackBlue += pixel.b * fallbackWeight;
+                    totalFallbackWeight += fallbackWeight;
+                }
+            }
+
+            if (totalWeight > 0.001)
+            {
+                color = new Color(
+                    (float)(weightedRed / totalWeight),
+                    (float)(weightedGreen / totalWeight),
+                    (float)(weightedBlue / totalWeight),
+                    1f);
+                return true;
+            }
+
+            if (totalFallbackWeight <= 0.001)
+            {
+                return false;
+            }
+
+            color = new Color(
+                (float)(fallbackRed / totalFallbackWeight),
+                (float)(fallbackGreen / totalFallbackWeight),
+                (float)(fallbackBlue / totalFallbackWeight),
+                1f);
+            return true;
         }
 
         private void OnDrawGizmosSelected()

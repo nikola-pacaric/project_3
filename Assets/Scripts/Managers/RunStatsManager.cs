@@ -6,7 +6,7 @@ namespace Warblade.Managers
 {
     /// <summary>
     /// Owns all mutable stats for the current run, including lives, cash, armour, weapon tier,
-    /// upgrade levels, and temporary current-level sucker penalties.
+    /// and upgrade levels.
     /// </summary>
     public class RunStatsManager : MonoBehaviour
     {
@@ -47,9 +47,6 @@ namespace Warblade.Managers
         private int _speedLevel;
         private int _bulletsLevel;
         private int _timeLevel;
-        private int _temporarySpeedDebuff;
-        private int _temporaryBulletsDebuff;
-        private int _temporaryTimeDebuff;
         private bool _shieldActive;
 
         public int Cash => _cash;
@@ -64,12 +61,9 @@ namespace Warblade.Managers
         public int SpeedLevel => _speedLevel;
         public int BulletsLevel => _bulletsLevel;
         public int TimeLevel => _timeLevel;
-        public int TemporarySpeedDebuff => _temporarySpeedDebuff;
-        public int TemporaryBulletsDebuff => _temporaryBulletsDebuff;
-        public int TemporaryTimeDebuff => _temporaryTimeDebuff;
-        public int EffectiveSpeedLevel => Mathf.Max(0, _speedLevel - _temporarySpeedDebuff);
-        public int EffectiveBulletsLevel => Mathf.Max(0, _bulletsLevel - _temporaryBulletsDebuff);
-        public int EffectiveTimeLevel => Mathf.Max(0, _timeLevel - _temporaryTimeDebuff);
+        public int EffectiveSpeedLevel => _speedLevel;
+        public int EffectiveBulletsLevel => _bulletsLevel;
+        public int EffectiveTimeLevel => _timeLevel;
         public bool IsShieldActive => _shieldActive || _debugShieldActive;
 
         private void Awake()
@@ -272,7 +266,7 @@ namespace Warblade.Managers
         }
 
         /// <summary>
-        /// Applies one random current-level sucker penalty and downgrades the weapon tier.
+        /// Applies one random permanent sucker penalty and downgrades the weapon tier.
         /// </summary>
         public RunStatType ApplySuckerPenalty()
         {
@@ -282,12 +276,12 @@ namespace Warblade.Managers
         }
 
         /// <summary>
-        /// Applies a specific current-level sucker penalty and downgrades the weapon tier.
+        /// Applies a specific permanent sucker penalty and downgrades the weapon tier.
         /// </summary>
         public void ApplySuckerPenalty(RunStatType statType)
         {
             DowngradeWeaponTier();
-            ApplyTemporaryDebuff(statType);
+            DecreaseStatLevel(statType);
         }
 
         /// <summary>
@@ -298,10 +292,7 @@ namespace Warblade.Managers
             _shieldActive = isActive;
         }
 
-        /// <summary>
-        /// Applies one temporary current-level debuff to a specific stat.
-        /// </summary>
-        public void ApplyTemporaryDebuff(RunStatType statType, int amount = 1)
+        private void DecreaseStatLevel(RunStatType statType, int amount = 1)
         {
             if (amount <= 0) return;
 
@@ -309,41 +300,23 @@ namespace Warblade.Managers
             {
                 case RunStatType.Speed:
                     int previousEffectiveSpeedLevel = EffectiveSpeedLevel;
-                    _temporarySpeedDebuff += amount;
+                    _speedLevel = Mathf.Max(0, _speedLevel - amount);
                     RaiseEffectiveSpeedLevelChangedIfNeeded(previousEffectiveSpeedLevel);
                     break;
                 case RunStatType.Bullets:
                     int previousEffectiveBulletsLevel = EffectiveBulletsLevel;
-                    _temporaryBulletsDebuff += amount;
+                    _bulletsLevel = Mathf.Max(0, _bulletsLevel - amount);
                     RaiseEffectiveBulletsLevelChangedIfNeeded(previousEffectiveBulletsLevel);
                     break;
                 case RunStatType.Time:
                     int previousEffectiveTimeLevel = EffectiveTimeLevel;
-                    _temporaryTimeDebuff += amount;
+                    _timeLevel = Mathf.Max(0, _timeLevel - amount);
                     RaiseEffectiveTimeLevelChangedIfNeeded(previousEffectiveTimeLevel);
                     break;
                 default:
                     Debug.LogWarning($"[{nameof(RunStatsManager)}] Unknown run stat type: {statType}.");
                     break;
             }
-        }
-
-        /// <summary>
-        /// Clears sucker penalties that only last for the current level.
-        /// </summary>
-        public void ClearCurrentLevelDebuffs()
-        {
-            int previousEffectiveSpeedLevel = EffectiveSpeedLevel;
-            int previousEffectiveBulletsLevel = EffectiveBulletsLevel;
-            int previousEffectiveTimeLevel = EffectiveTimeLevel;
-
-            _temporarySpeedDebuff = 0;
-            _temporaryBulletsDebuff = 0;
-            _temporaryTimeDebuff = 0;
-
-            RaiseEffectiveSpeedLevelChangedIfNeeded(previousEffectiveSpeedLevel);
-            RaiseEffectiveBulletsLevelChangedIfNeeded(previousEffectiveBulletsLevel);
-            RaiseEffectiveTimeLevelChangedIfNeeded(previousEffectiveTimeLevel);
         }
 
         /// <summary>
@@ -359,7 +332,6 @@ namespace Warblade.Managers
             _bulletsLevel = Mathf.Clamp(_startingBulletsLevel, 0, _maxBulletsLevel);
             _timeLevel = Mathf.Clamp(_startingTimeLevel, 0, _maxTimeLevel);
             _shieldActive = false;
-            ClearCurrentLevelDebuffs();
             RaiseAllChanged();
             _runReset?.Raise();
         }

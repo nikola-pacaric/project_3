@@ -13,6 +13,7 @@ namespace Warblade.Entities
         private int _bulletPoolDefaultCapacity = 5;
         private int _bulletPoolMaxSize = 20;
         private IObjectPool<Bullet> _bulletPool;
+        private Transform _playerTransform;
         private float _nextFireTime;
 
         internal void Initialize(GameObject enemyBulletPrefab, int bulletPoolDefaultCapacity, int bulletPoolMaxSize)
@@ -36,8 +37,9 @@ namespace Warblade.Entities
             }
         }
 
-        internal void Spawn(EnemyData data)
+        internal void Spawn(EnemyData data, Transform playerTransform)
         {
+            _playerTransform = playerTransform;
             ScheduleNextFire(data);
         }
 
@@ -72,7 +74,7 @@ namespace Warblade.Entities
             {
                 Bullet bullet = _bulletPool.Get();
                 float bulletSpeed = Random.Range(data.BulletSpeedMin, data.BulletSpeedMax);
-                bullet.Spawn(transform.position, Vector2.down, bulletSpeed);
+                bullet.Spawn(transform.position, ResolveFireDirection(data), bulletSpeed);
                 AudioManager.Instance?.PlayOneShot(AudioCue.EnemyShoot);
             }
 
@@ -87,6 +89,17 @@ namespace Warblade.Entities
             }
 
             _nextFireTime = Time.time + Random.Range(data.FireCooldownMin, data.FireCooldownMax);
+        }
+
+        private Vector2 ResolveFireDirection(EnemyData data)
+        {
+            if (data == null || data.BehaviorMode != EnemyBehaviorMode.Mother || _playerTransform == null)
+            {
+                return Vector2.down;
+            }
+
+            Vector2 direction = _playerTransform.position - transform.position;
+            return direction.sqrMagnitude > Mathf.Epsilon ? direction.normalized : Vector2.down;
         }
 
         private Bullet CreateBullet()
