@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Warblade.Data;
 using Warblade.Data.Events;
 using Warblade.Managers;
@@ -10,17 +11,31 @@ namespace Warblade.UI
 {
     public class ShopController : MonoBehaviour
     {
+        private enum ShopItemSortMode
+        {
+            Manual,
+            PriceAscending,
+            PriceDescending
+        }
+
         [SerializeField] private GameObject _root;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private Transform _itemContainer;
+        [SerializeField] private ScrollRect _itemScrollRect;
         [SerializeField] private ShopItemView _itemViewPrefab;
         [SerializeField] private ShopItem[] _items;
+        [SerializeField] private ShopItemSortMode _sortMode = ShopItemSortMode.PriceAscending;
         [SerializeField] private TMP_Text _cashText;
         [SerializeField] private InputReader _input;
+        [SerializeField] private UiPanelTransition _transition;
         [SerializeField] private string _cashFormat = "Cash: ${0}";
         [SerializeField] private bool _buildItemViewsOnAwake = true;
         [SerializeField, Range(0.1f, 1f)] private float _navigationThreshold = 0.5f;
         [SerializeField] private bool _wrapSelection = true;
+
+        [Header("Preview")]
+        [SerializeField] private Image _previewImage;
+        [SerializeField] private TMP_Text _descriptionText;
 
         [Header("Event Channels")]
         [SerializeField] private GameStateEventChannel _gameStateChanged;
@@ -38,12 +53,17 @@ namespace Warblade.UI
                 _root = gameObject;
             }
 
+            ResolveCanvasGroup();
+            ResolveTransition();
+            ResolveItemScrollRect();
+
             if (_buildItemViewsOnAwake)
             {
+                SortItems();
                 BuildItemViews();
             }
 
-            SetVisible(false);
+            SetVisible(false, true);
         }
 
         private void Start()
@@ -304,17 +324,66 @@ namespace Warblade.UI
 
         private void SelectFirstAvailableItem()
         {
-            _selectedIndex = FindFirstAvailableIndex();
+            int purchasableIndex = FindFirstPurchasableIndex();
+            _selectedIndex = purchasableIndex >= 0
+                ? purchasableIndex
+                : FindFirstBrowseableIndex();
+
             RefreshSelection();
         }
 
-        private int FindFirstAvailableIndex()
+        private void SortItems()
+        {
+            if (_items == null || _items.Length <= 1 || _sortMode == ShopItemSortMode.Manual)
+            {
+                return;
+            }
+
+            System.Array.Sort(_items, CompareItemsByPrice);
+        }
+
+        private int CompareItemsByPrice(ShopItem left, ShopItem right)
+        {
+            if (left == right) return 0;
+            if (left == null) return 1;
+            if (right == null) return -1;
+
+            int priceComparison = left.Price.CompareTo(right.Price);
+            if (_sortMode == ShopItemSortMode.PriceDescending)
+            {
+                priceComparison *= -1;
+            }
+
+            if (priceComparison != 0)
+            {
+                return priceComparison;
+            }
+
+            return string.Compare(left.DisplayName, right.DisplayName, System.StringComparison.Ordinal);
+        }
+
+        private int FindFirstPurchasableIndex()
         {
             if (_items == null) return 0;
 
             for (int i = 0; i < _items.Length; i++)
             {
                 if (CanSelectItem(i))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private int FindFirstBrowseableIndex()
+        {
+            if (_items == null) return 0;
+
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (CanBrowseItem(i))
                 {
                     return i;
                 }
@@ -355,6 +424,11 @@ namespace Warblade.UI
             return string.IsNullOrEmpty(GetUnavailableReason(_items[index]));
         }
 
+        private bool CanBrowseItem(int index)
+        {
+            return _items != null && index >= 0 && index < _items.Length && _items[index] != null;
+        }
+
         private void RefreshSelection()
         {
             for (int i = 0; i < _itemViews.Count; i++)
@@ -364,6 +438,9 @@ namespace Warblade.UI
                     _itemViews[i].SetSelected(i == _selectedIndex && CanSelectItem(i));
                 }
             }
+
+            RefreshPreview();
+            ScrollSelectedItemIntoView();
         }
 
         private void HandleGameStateChanged(GameState gameState)
@@ -418,8 +495,33 @@ namespace Warblade.UI
             }
         }
 
-        private void SetVisible(bool isVisible)
+        private void SetVisible(bool isVisible, bool immediate = false)
         {
+            if (_transition != null)
+            {
+                if (immediate)
+                {
+                    if (isVisible)
+                    {
+                        _transition.ShowImmediate();
+                    }
+                    else
+                    {
+                        _transition.HideImmediate();
+                    }
+                }
+                else if (isVisible)
+                {
+                    _transition.Show();
+                }
+                else
+                {
+                    _transition.Hide();
+                }
+
+                return;
+            }
+
             if (_root != null && _root != gameObject)
             {
                 _root.SetActive(isVisible);
@@ -430,6 +532,145 @@ namespace Warblade.UI
                 _canvasGroup.alpha = isVisible ? 1f : 0f;
                 _canvasGroup.interactable = isVisible;
                 _canvasGroup.blocksRaycasts = isVisible;
+            }
+        }
+
+        private void ResolveCanvasGroup()
+        {
+            if (_canvasGroup != null) return;
+
+            if (_root != null)
+            {
+                _canvasGroup = _root.GetComponent<CanvasGroup>();
+            }
+
+            if (_canvasGroup == null)
+            {
+                _canvasGroup = GetComponent<CanvasGroup>();
+            }
+        }
+
+        private void ResolveTransition()
+        {
+            if (_transition == null && _root != null)
+            {
+                _transition = _root.GetComponent<UiPanelTransition>();
+            }
+
+            if (_transition == null)
+            {
+                _transition = GetComponentInChildren<UiPanelTransition>(true);
+            }
+
+            if (_transition == null && _root != null)
+            {
+                _transition = _root.AddComponent<UiPanelTransition>();
+            }
+
+            if (_transition == null) return;
+
+            RectTransform panel = _root != null
+                ? _root.transform as RectTransform
+                : transform as RectTransform;
+
+            _transition.Configure(_root, _canvasGroup, panel);
+        }
+
+        private void ResolveItemScrollRect()
+        {
+            if (_itemScrollRect == null && _itemContainer != null)
+            {
+                _itemScrollRect = _itemContainer.GetComponentInParent<ScrollRect>(true);
+            }
+
+            if (_itemScrollRect == null) return;
+
+            if (_itemScrollRect.content == null && _itemContainer is RectTransform content)
+            {
+                _itemScrollRect.content = content;
+            }
+
+            _itemScrollRect.horizontal = false;
+            _itemScrollRect.vertical = true;
+        }
+
+        private void ScrollSelectedItemIntoView()
+        {
+            if (_itemScrollRect == null || _itemScrollRect.content == null || _itemScrollRect.viewport == null)
+            {
+                return;
+            }
+
+            if (_selectedIndex < 0 || _selectedIndex >= _itemViews.Count || _itemViews[_selectedIndex] == null)
+            {
+                return;
+            }
+
+            RectTransform selectedTransform = _itemViews[_selectedIndex].transform as RectTransform;
+            if (selectedTransform == null)
+            {
+                return;
+            }
+
+            Canvas.ForceUpdateCanvases();
+
+            RectTransform viewport = _itemScrollRect.viewport;
+            RectTransform content = _itemScrollRect.content;
+            Bounds selectedBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(viewport, selectedTransform);
+
+            float viewportTop = viewport.rect.yMax;
+            float viewportBottom = viewport.rect.yMin;
+            Vector2 anchoredPosition = content.anchoredPosition;
+
+            if (selectedBounds.max.y > viewportTop)
+            {
+                anchoredPosition.y -= selectedBounds.max.y - viewportTop;
+            }
+            else if (selectedBounds.min.y < viewportBottom)
+            {
+                anchoredPosition.y += viewportBottom - selectedBounds.min.y;
+            }
+            else
+            {
+                return;
+            }
+
+            content.anchoredPosition = anchoredPosition;
+            Canvas.ForceUpdateCanvases();
+        }
+
+        private void RefreshPreview()
+        {
+            ShopItem selectedItem = CanBrowseItem(_selectedIndex)
+                ? _items[_selectedIndex]
+                : null;
+
+            if (selectedItem == null)
+            {
+                SetText(_descriptionText, "");
+                SetPreviewImage(null, Color.clear);
+                return;
+            }
+
+            SetText(_descriptionText, selectedItem.Description);
+            SetPreviewImage(selectedItem.PreviewSprite, selectedItem.PreviewTint);
+        }
+
+        private void SetPreviewImage(Sprite sprite, Color tint)
+        {
+            if (_previewImage == null) return;
+
+            _previewImage.sprite = sprite;
+            _previewImage.color = sprite != null ? tint : Color.clear;
+            _previewImage.enabled = sprite != null;
+            _previewImage.preserveAspect = true;
+        }
+
+        private static void SetText(TMP_Text text, string value)
+        {
+            if (text != null)
+            {
+                text.text = value;
             }
         }
 

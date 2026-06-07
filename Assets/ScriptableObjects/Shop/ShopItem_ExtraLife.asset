@@ -20,3 +20,5 @@ MonoBehaviour:
   _weaponTier: 2
   _buffType: 0
   _icon: {fileID: 0}
+  _previewSprite: {fileID: 9033317595158764154, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _previewTint: {r: 1, g: 1, b: 1, a: 1}

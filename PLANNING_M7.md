@@ -150,7 +150,14 @@ Goal:
 
 Planned:
 - Polish HUD, shop, main menu, pause menu, settings, first-run controls hint, and game-over presentation.
+- Add shop animation and visual polish so the between-level upgrade flow feels intentional instead of placeholder.
 - Keep UI focused on the current v1.0 loop; leaderboard and mini-game UI remain out of scope.
+
+Done so far:
+- Added shop presentation art/data polish and a slide-in panel transition for the between-level shop.
+- Sequenced the shop after the sector warp transition when both happen on the same completed level.
+- Restored the shop gate so it only opens/stays open when at least one item is currently purchasable.
+- Added a `Get ready!` / `Level X` message before enemy or boss spawning starts, using the same presentation path as level-complete messaging.
 
 Acceptance:
 - UI looks intentional, fits 1920x1080, and does not hide active gameplay.

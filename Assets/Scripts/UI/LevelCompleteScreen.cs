@@ -9,10 +9,12 @@ namespace Warblade.UI
     public class LevelCompleteScreen : MonoBehaviour
     {
         [SerializeField] private LevelManager _levelManager;
+        [SerializeField] private IntEventChannel _levelStarted;
         [SerializeField] private IntEventChannel _levelCompleted;
         [SerializeField] private GameObject _root;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private TMP_Text _messageText;
+        [SerializeField] private string _readyMessageFormat = "Get ready!\nLevel {0}";
         [SerializeField] private string _messageFormat = "Level {0} Complete";
         [SerializeField, Min(0f)] private float _visibleDuration = 1.5f;
         [SerializeField, Min(0f)] private float _fadeDuration = 0.5f;
@@ -39,6 +41,15 @@ namespace Warblade.UI
             {
                 _levelManager.OnLevelCompleted.AddListener(HandleLevelCompleted);
             }
+
+            if (_levelStarted != null)
+            {
+                _levelStarted.OnEventRaised += HandleLevelStarted;
+            }
+            else if (_levelManager != null)
+            {
+                _levelManager.OnLevelStarted.AddListener(HandleLevelStarted);
+            }
         }
 
         private void OnDisable()
@@ -51,25 +62,44 @@ namespace Warblade.UI
             {
                 _levelManager.OnLevelCompleted.RemoveListener(HandleLevelCompleted);
             }
+
+            if (_levelStarted != null)
+            {
+                _levelStarted.OnEventRaised -= HandleLevelStarted;
+            }
+            else if (_levelManager != null)
+            {
+                _levelManager.OnLevelStarted.RemoveListener(HandleLevelStarted);
+            }
+        }
+
+        public void HandleLevelStarted(int startedLevel)
+        {
+            ShowMessage(string.Format(_readyMessageFormat, startedLevel));
         }
 
         public void HandleLevelCompleted(int completedLevel)
+        {
+            ShowMessage(string.Format(_messageFormat, completedLevel));
+        }
+
+        private void ShowMessage(string message)
         {
             if (_showRoutine != null)
             {
                 StopCoroutine(_showRoutine);
             }
 
-            _showRoutine = StartCoroutine(ShowRoutine(completedLevel));
+            _showRoutine = StartCoroutine(ShowRoutine(message));
         }
 
-        private IEnumerator ShowRoutine(int completedLevel)
+        private IEnumerator ShowRoutine(string message)
         {
             SetVisible(true);
             SetAlpha(1f);
             if (_messageText != null)
             {
-                _messageText.text = string.Format(_messageFormat, completedLevel);
+                _messageText.text = message;
             }
 
             if (_visibleDuration > 0f)

@@ -38,6 +38,7 @@ namespace Warblade.Managers
         [SerializeField] private CampaignBossRoute[] _campaignBosses = Array.Empty<CampaignBossRoute>();
         [SerializeField, Min(1)] private int _startingLevel = 1;
         [SerializeField] private bool _playOnStart = true;
+        [SerializeField, Min(0f)] private float _levelStartDelay = 2f;
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
         [SerializeField, Min(1)] private int _shopInterval = 4;
         [SerializeField, Min(1)] private int _sectorTransitionInterval = 4;
@@ -174,6 +175,11 @@ namespace Warblade.Managers
                 _enemySpawner.SetCycleScaling(cycleScaling);
                 _onLevelStarted?.Invoke(CurrentLevel);
                 _levelStarted?.Raise(CurrentLevel);
+                if (_levelStartDelay > 0f)
+                {
+                    yield return new WaitForSeconds(_levelStartDelay);
+                    if (_isGameOver) break;
+                }
 
                 if (IsCampaignBossLevel(CurrentLevel))
                 {
@@ -223,15 +229,15 @@ namespace Warblade.Managers
                     yield break;
                 }
 
-                if (ShouldEnterShopAfterLevel(completedLevel))
-                {
-                    yield return EnterShopRoutine();
-                    if (_isGameOver) break;
-                }
-
                 if (ShouldPlaySectorTransitionAfterLevel(completedLevel))
                 {
                     yield return _sectorTransitionController.PlayTransitionRoutine();
+                    if (_isGameOver) break;
+                }
+
+                if (ShouldEnterShopAfterLevel(completedLevel))
+                {
+                    yield return EnterShopRoutine();
                     if (_isGameOver) break;
                 }
 

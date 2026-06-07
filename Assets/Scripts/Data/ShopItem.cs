@@ -14,6 +14,10 @@ namespace Warblade.Data
         [SerializeField] private BuffType _buffType = BuffType.Autofire;
         [SerializeField] private Sprite _icon;
 
+        [Header("Preview")]
+        [SerializeField] private Sprite _previewSprite;
+        [SerializeField] private Color _previewTint = Color.white;
+
         public ShopItemType ItemType => _itemType;
         public string DisplayName => _displayName;
         public string Description => _description;
@@ -22,6 +26,8 @@ namespace Warblade.Data
         public WeaponTier WeaponTier => _weaponTier;
         public BuffType BuffType => _buffType;
         public Sprite Icon => _icon;
+        public Sprite PreviewSprite => _previewSprite != null ? _previewSprite : _icon;
+        public Color PreviewTint => _previewTint;
 
         private void OnValidate()
         {
