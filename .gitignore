@@ -79,6 +79,7 @@ mono_crash.*
 
 # Local export scratch files
 exports/
+VideoEdit/
 
 # Crashlytics generated file
 crashlytics-build.properties
