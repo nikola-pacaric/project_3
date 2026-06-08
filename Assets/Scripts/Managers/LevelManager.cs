@@ -37,7 +37,7 @@ namespace Warblade.Managers
         [SerializeField] private LevelData[] _levels;
         [SerializeField] private CampaignBossRoute[] _campaignBosses = Array.Empty<CampaignBossRoute>();
         [SerializeField, Min(1)] private int _startingLevel = 1;
-        [SerializeField] private bool _playOnStart = true;
+        [SerializeField] private bool _playOnStart;
         [SerializeField, Min(0f)] private float _levelStartDelay = 2f;
         [SerializeField, Min(0f)] private float _levelTransitionDelay = 2f;
         [SerializeField, Min(1)] private int _shopInterval = 4;
@@ -108,7 +108,7 @@ namespace Warblade.Managers
 
         private void Start()
         {
-            if (_playOnStart)
+            if (_playOnStart && (GameManager.Instance == null || GameManager.Instance.IsPlaying))
             {
                 PlayCurrentLevel();
             }
@@ -165,6 +165,24 @@ namespace Warblade.Managers
             }
 
             _levelRoutine = StartCoroutine(LevelLoopRoutine());
+        }
+
+        /// <summary>
+        /// Resets progression to the configured starting level and clears any active level runtime objects.
+        /// </summary>
+        public void ResetToStartingLevel()
+        {
+            CurrentLevel = Mathf.Max(1, _startingLevel);
+            _isGameOver = false;
+
+            if (_levelRoutine != null)
+            {
+                StopCoroutine(_levelRoutine);
+                _levelRoutine = null;
+            }
+
+            _waveRunner?.StopWaves();
+            _enemySpawner?.ClearActiveEnemies();
         }
 
         private IEnumerator LevelLoopRoutine()

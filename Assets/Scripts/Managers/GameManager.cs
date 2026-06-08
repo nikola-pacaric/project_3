@@ -8,18 +8,19 @@ using Warblade.Systems;
 namespace Warblade.Managers
 {
     /// <summary>
-    /// Owns the top-level game state for gameplay, pause, shop, and game-over flow.
+    /// Owns the top-level game state for menu, gameplay, pause, shop, and game-over flow.
     /// </summary>
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
 
         [SerializeField] private InputReader _input;
-        [SerializeField] private GameState _startingState = GameState.Playing;
+        [SerializeField] private GameState _startingState = GameState.MainMenu;
         [Header("Events")]
         [SerializeField] private GameStateEventChannel _gameStateChanged;
 
         public GameState CurrentState { get; private set; }
+        public bool IsMainMenu => CurrentState == GameState.MainMenu;
         public bool IsPlaying => CurrentState == GameState.Playing;
         public bool IsPaused => CurrentState == GameState.Paused;
         public bool IsShopOpen => CurrentState == GameState.Shop;
@@ -37,6 +38,11 @@ namespace Warblade.Managers
 
             Instance = this;
             SetState(_startingState, true);
+        }
+
+        private void Start()
+        {
+            PlayMusicForState(CurrentState);
         }
 
         private void OnEnable()
@@ -72,6 +78,32 @@ namespace Warblade.Managers
         }
 
         /// <summary>
+        /// Resets run-only state and starts level progression from the first configured level.
+        /// </summary>
+        public void StartNewRun()
+        {
+            BuffManager.Instance?.ClearAllBuffs();
+            RunStatsManager.Instance?.ResetRun();
+            ScoreManager.Instance?.ResetScore();
+            LevelManager.Instance?.ResetToStartingLevel();
+
+            SetState(GameState.Playing);
+            AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicGameplay);
+            LevelManager.Instance?.PlayCurrentLevel();
+        }
+
+        /// <summary>
+        /// Returns to the main menu without starting level progression.
+        /// </summary>
+        public void EnterMainMenu()
+        {
+            BuffManager.Instance?.ClearAllBuffs();
+            RunStatsManager.Instance?.ResetRun();
+            ScoreManager.Instance?.ResetScore();
+            SetState(GameState.MainMenu);
+        }
+
+        /// <summary>
         /// Enters pause only from active gameplay.
         /// </summary>
         public void EnterPaused()
@@ -85,6 +117,7 @@ namespace Warblade.Managers
         /// </summary>
         public void EnterShop()
         {
+            if (CurrentState == GameState.MainMenu) return;
             if (CurrentState == GameState.GameOver) return;
             if (CurrentState == GameState.Shop) return;
 
@@ -113,7 +146,6 @@ namespace Warblade.Managers
             BuffManager.Instance?.ClearAllBuffs();
             RunStatsManager.Instance?.ResetRun();
             SetState(GameState.GameOver);
-            AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicGameOver);
             AudioManager.Instance?.PlayOneShot(AudioCue.GameOver);
         }
 
@@ -136,6 +168,11 @@ namespace Warblade.Managers
 
         private void HandlePausePressed()
         {
+            if (CurrentState == GameState.MainMenu)
+            {
+                return;
+            }
+
             if (CurrentState == GameState.Shop)
             {
                 LeaveShop();
@@ -165,6 +202,21 @@ namespace Warblade.Managers
             Time.timeScale = newState == GameState.Playing ? 1f : 0f;
             StateChanged?.Invoke(CurrentState);
             _gameStateChanged?.Raise(CurrentState);
+            PlayMusicForState(CurrentState);
+        }
+
+        private void PlayMusicForState(GameState gameState)
+        {
+            switch (gameState)
+            {
+                case GameState.MainMenu:
+                    AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicMenu);
+                    break;
+
+                case GameState.GameOver:
+                    AudioManager.Instance?.PlayMusicIfConfigured(AudioCue.MusicGameOver);
+                    break;
+            }
         }
     }
 }

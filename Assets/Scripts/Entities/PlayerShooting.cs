@@ -134,12 +134,12 @@ namespace Warblade.Entities
             if (_queuedRapidFireVolleys > 0) return false;
 
             int volleySize = PopulateVolleyOffsets(GetWeaponTier());
-            int burstVolleyCount = CalculateAllowedBurstVolleyCount(volleySize);
-            if (burstVolleyCount <= 0)
+            if (!HasRoomForVolley(volleySize))
             {
                 return false;
             }
 
+            int burstVolleyCount = GetRequestedBurstVolleyCount();
             SpawnCurrentVolley(volleySize);
             QueueRapidFireVolleys(burstVolleyCount - 1);
 
@@ -236,13 +236,9 @@ namespace Warblade.Entities
         private bool IsRapidFireActive => _debugRapidFireActive
             || (BuffManager.Instance != null && BuffManager.Instance.IsRapidFireActive);
 
-        private int CalculateAllowedBurstVolleyCount(int volleySize)
+        private int GetRequestedBurstVolleyCount()
         {
-            int requestedVolleyCount = IsRapidFireActive ? _rapidFireBurstVolleyCount : 1;
-            int availableBulletSlots = GetMaxActiveBullets() - _activePlayerBullets.Count;
-            int availableFullVolleys = availableBulletSlots / Mathf.Max(1, volleySize);
-
-            return Mathf.Min(requestedVolleyCount, availableFullVolleys);
+            return IsRapidFireActive ? _rapidFireBurstVolleyCount : 1;
         }
 
         private void QueueRapidFireVolleys(int volleyCount)
@@ -262,11 +258,12 @@ namespace Warblade.Entities
             }
 
             int volleySize = PopulateVolleyOffsets(GetWeaponTier());
-            if (HasRoomForVolley(volleySize))
+            if (!HasRoomForVolley(volleySize))
             {
-                SpawnCurrentVolley(volleySize);
+                return;
             }
 
+            SpawnCurrentVolley(volleySize);
             _queuedRapidFireVolleys--;
             _nextRapidFireVolleyTime = Time.time + _rapidFireBurstInterval;
         }
