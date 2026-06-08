@@ -6,20 +6,14 @@ using Warblade.Managers;
 namespace Warblade.UI
 {
     [DisallowMultipleComponent]
-    public class MainMenuController : MonoBehaviour
+    public class PauseMenuController : MonoBehaviour
     {
         [SerializeField] private GameObject _root;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private GameObject _settingsPanel;
-        [SerializeField] private GameObject _leaderboardPanel;
         [SerializeField] private GameStateEventChannel _gameStateChanged;
-        [Header("Start Transition")]
-        [SerializeField, Min(0f)] private float _startFadeInDuration = 0.18f;
-        [SerializeField, Min(0f)] private float _startFadeHoldDuration = 0.06f;
-        [SerializeField, Min(0f)] private float _startFadeOutDuration = 0.24f;
 
         private bool _isSubscribedToGameManager;
-        private bool _isStartingGame;
 
         private void Awake()
         {
@@ -29,7 +23,7 @@ namespace Warblade.UI
             }
 
             ResolveCanvasGroup();
-            HideSubPanels();
+            SetSettingsVisible(false);
             SetVisible(false);
         }
 
@@ -60,54 +54,42 @@ namespace Warblade.UI
             UnsubscribeFromGameManager();
         }
 
-        public void StartGame()
+        public void Resume()
         {
-            if (_isStartingGame)
-            {
-                return;
-            }
-
-            _isStartingGame = true;
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
-            HideSubPanels();
-            SetMenuInteraction(false);
+            GameManager.Instance?.EnterPlaying();
+        }
 
-            ScreenFadeController.RuntimeInstance.PlayFadeThroughBlack(
-                _startFadeInDuration,
-                _startFadeHoldDuration,
-                _startFadeOutDuration,
-                StartNewRunAfterFadeIn,
-                HandleStartFadeComplete);
+        public void RestartRun()
+        {
+            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
+            GameManager.Instance?.RestartRun();
         }
 
         public void OpenSettings()
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
-            SetLeaderboardVisible(false);
             SetSettingsVisible(true);
         }
 
-        public void OpenLeaderboard()
+        public void ReturnToMainMenu()
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
-            SetSettingsVisible(false);
-            SetLeaderboardVisible(true);
-        }
-
-        public void CloseLeaderboard()
-        {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
-            SetLeaderboardVisible(false);
+            GameManager.Instance?.RestartToMainMenu();
         }
 
         private void HandleGameStateChanged(GameState gameState)
         {
-            bool isMainMenu = gameState == GameState.MainMenu;
-            SetVisible(isMainMenu);
+            bool isPaused = gameState == GameState.Paused;
+            SetVisible(isPaused);
 
-            if (!isMainMenu)
+            if (isPaused)
             {
-                HideSubPanels();
+                SetSettingsVisible(false);
+            }
+            else
+            {
+                SetSettingsVisible(false);
             }
         }
 
@@ -135,14 +117,6 @@ namespace Warblade.UI
             _canvasGroup.blocksRaycasts = isVisible;
         }
 
-        private void SetMenuInteraction(bool isInteractive)
-        {
-            if (_canvasGroup == null) return;
-
-            _canvasGroup.interactable = isInteractive;
-            _canvasGroup.blocksRaycasts = isInteractive;
-        }
-
         private void SetSettingsVisible(bool isVisible)
         {
             if (_settingsPanel != null)
@@ -153,35 +127,6 @@ namespace Warblade.UI
                 }
 
                 _settingsPanel.SetActive(isVisible);
-            }
-        }
-
-        private void SetLeaderboardVisible(bool isVisible)
-        {
-            if (_leaderboardPanel != null)
-            {
-                _leaderboardPanel.SetActive(isVisible);
-            }
-        }
-
-        private void HideSubPanels()
-        {
-            SetSettingsVisible(false);
-            SetLeaderboardVisible(false);
-        }
-
-        private void StartNewRunAfterFadeIn()
-        {
-            GameManager.Instance?.StartNewRun();
-        }
-
-        private void HandleStartFadeComplete()
-        {
-            _isStartingGame = false;
-
-            if (GameManager.Instance == null || GameManager.Instance.IsMainMenu)
-            {
-                SetMenuInteraction(true);
             }
         }
 

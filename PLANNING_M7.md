@@ -158,6 +158,8 @@ Done so far:
 - Sequenced the shop after the sector warp transition when both happen on the same completed level.
 - Restored the shop gate so it only opens/stays open when at least one item is currently purchasable.
 - Added a `Get ready!` / `Level X` message before enemy or boss spawning starts, using the same presentation path as level-complete messaging.
+- Enlarged the main menu Start, Leaderboard, and Settings buttons in the scene for better readability.
+- Added a small Start-button fade-through-black transition before gameplay begins, using a runtime-created overlay and Inspector-tunable timings on `MainMenuController`.
 
 Acceptance:
 - UI looks intentional, fits 1920x1080, and does not hide active gameplay.

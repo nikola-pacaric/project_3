@@ -93,14 +93,35 @@ namespace Warblade.Managers
         }
 
         /// <summary>
-        /// Returns to the main menu without starting level progression.
+        /// Clears the current run and immediately starts again from the first configured level.
+        /// </summary>
+        public void RestartRun()
+        {
+            StartNewRun();
+        }
+
+        /// <summary>
+        /// Clears the current run and returns to the main menu without starting level progression.
         /// </summary>
         public void EnterMainMenu()
         {
             BuffManager.Instance?.ClearAllBuffs();
             RunStatsManager.Instance?.ResetRun();
             ScoreManager.Instance?.ResetScore();
+            LevelManager.Instance?.ResetToStartingLevel();
             SetState(GameState.MainMenu);
+        }
+
+        /// <summary>
+        /// Clears run state and reloads the active scene back into the configured starting menu state.
+        /// </summary>
+        public void RestartToMainMenu()
+        {
+            BuffManager.Instance?.ClearAllBuffs();
+            RunStatsManager.Instance?.ResetRun();
+            ScoreManager.Instance?.ResetScore();
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         /// <summary>
