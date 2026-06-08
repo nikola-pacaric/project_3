@@ -31,7 +31,6 @@ namespace Warblade.UI
         [SerializeField] private string _cashFormat = "Cash: ${0}";
         [SerializeField] private bool _buildItemViewsOnAwake = true;
         [SerializeField, Range(0.1f, 1f)] private float _navigationThreshold = 0.5f;
-        [SerializeField] private bool _wrapSelection = true;
 
         [Header("Preview")]
         [SerializeField] private Image _previewImage;
@@ -280,7 +279,7 @@ namespace Warblade.UI
                 case ShopItemType.ExtraLife:
                     return runStats.Lives >= runStats.MaxLives ? "Max Lives" : "";
                 case ShopItemType.WeaponTier:
-                    return runStats.WeaponTier >= item.WeaponTier ? "Owned" : "";
+                    return runStats.WeaponTier == item.WeaponTier ? "Active" : "";
                 case ShopItemType.TimedBuff:
                     return BuffManager.Instance == null ? "Needs BuffManager" : "";
                 default:
@@ -366,7 +365,7 @@ namespace Warblade.UI
         {
             if (_items == null) return 0;
 
-            for (int i = 0; i < _items.Length; i++)
+            for (int i = _items.Length - 1; i >= 0; i--)
             {
                 if (CanSelectItem(i))
                 {
@@ -381,7 +380,7 @@ namespace Warblade.UI
         {
             if (_items == null) return 0;
 
-            for (int i = 0; i < _items.Length; i++)
+            for (int i = _items.Length - 1; i >= 0; i--)
             {
                 if (CanBrowseItem(i))
                 {
@@ -400,11 +399,7 @@ namespace Warblade.UI
             for (int step = 1; step <= _items.Length; step++)
             {
                 int candidate = clampedStart + direction * step;
-                if (_wrapSelection)
-                {
-                    candidate = (candidate + _items.Length) % _items.Length;
-                }
-                else if (candidate < 0 || candidate >= _items.Length)
+                if (candidate < 0 || candidate >= _items.Length)
                 {
                     return -1;
                 }
@@ -449,6 +444,7 @@ namespace Warblade.UI
             RefreshAll();
             if (gameState == GameState.Shop)
             {
+                SelectFirstAvailableItem();
                 CloseShopIfNoPurchasableItems();
             }
         }

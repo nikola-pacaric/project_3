@@ -5958,7 +5958,6 @@ MonoBehaviour:
   _cashFormat: 'Cash: ${0}'
   _buildItemViewsOnAwake: 1
   _navigationThreshold: 0.5
-  _wrapSelection: 1
   _previewImage: {fileID: 1650420493}
   _descriptionText: {fileID: 1874168367}
   _gameStateChanged: {fileID: 11400000, guid: 86b229937497d2f46a1acef70fc8c849, type: 2}
@@ -25618,8 +25617,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 455.8103, y: -19.3754}
-  m_SizeDelta: {x: 476.3763, y: 663.8893}
+  m_AnchoredPosition: {x: 455.5, y: -20}
+  m_SizeDelta: {x: 477, y: 640}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1846888490
 MonoBehaviour:
@@ -25636,7 +25635,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.09803922}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 10, z: 0, w: 10}
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -26763,7 +26762,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 5
+  m_Spacing: 2
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1

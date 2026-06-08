@@ -97,6 +97,7 @@ namespace Warblade.Entities
             }
 
             _isResolvingDeath = true;
+            BuffManager.Instance?.ClearAllBuffs();
             runStats.DowngradeWeaponTier();
             bool outOfLives = runStats.LoseLife();
             AudioManager.Instance?.PlayOneShot(AudioCue.PlayerDeath);

@@ -42,6 +42,14 @@ namespace Warblade.Entities
         {
             if (_enemy == null || _enemy.HasDespawned) return;
 
+            if (other.GetComponentInParent<PlayerHealth>() is PlayerHealth playerHealth)
+            {
+                Vector3 hitPoint = other.ClosestPoint(transform.position);
+                playerHealth.TakeDamage(_contactDamage, hitPoint);
+                _enemy.Die();
+                return;
+            }
+
             if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
                 damageable.TakeDamage(_contactDamage);
