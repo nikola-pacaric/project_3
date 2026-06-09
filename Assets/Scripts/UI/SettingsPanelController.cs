@@ -21,6 +21,7 @@ namespace Warblade.UI
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetVisible(false);
+            UiSelectionHelper.RestorePreviousSelectionNextFrame(this);
         }
 
         private void SetVisible(bool isVisible)

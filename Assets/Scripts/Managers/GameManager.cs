@@ -158,14 +158,13 @@ namespace Warblade.Managers
         }
 
         /// <summary>
-        /// Enters game over and resets run-only stats.
+        /// Enters game over while preserving final run stats for the game-over presentation.
         /// </summary>
         public void EnterGameOver()
         {
             if (CurrentState == GameState.GameOver) return;
 
             BuffManager.Instance?.ClearAllBuffs();
-            RunStatsManager.Instance?.ResetRun();
             SetState(GameState.GameOver);
             AudioManager.Instance?.PlayOneShot(AudioCue.GameOver);
         }

@@ -13,6 +13,10 @@ namespace Warblade.UI
         [SerializeField] private GameObject _settingsPanel;
         [SerializeField] private GameObject _leaderboardPanel;
         [SerializeField] private GameStateEventChannel _gameStateChanged;
+        [Header("Selection")]
+        [SerializeField] private GameObject _defaultSelected;
+        [SerializeField] private GameObject _settingsDefaultSelected;
+        [SerializeField] private GameObject _leaderboardDefaultSelected;
         [Header("Start Transition")]
         [SerializeField, Min(0f)] private float _startFadeInDuration = 0.18f;
         [SerializeField, Min(0f)] private float _startFadeHoldDuration = 0.06f;
@@ -71,6 +75,7 @@ namespace Warblade.UI
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             HideSubPanels();
             SetMenuInteraction(false);
+            UiSelectionHelper.ClearSelectionStack();
 
             ScreenFadeController.RuntimeInstance.PlayFadeThroughBlack(
                 _startFadeInDuration,
@@ -85,6 +90,7 @@ namespace Warblade.UI
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetLeaderboardVisible(false);
             SetSettingsVisible(true);
+            UiSelectionHelper.PushSelectionAndSelectNextFrame(this, _settingsDefaultSelected, _defaultSelected);
         }
 
         public void OpenLeaderboard()
@@ -92,12 +98,14 @@ namespace Warblade.UI
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetSettingsVisible(false);
             SetLeaderboardVisible(true);
+            UiSelectionHelper.PushSelectionAndSelectNextFrame(this, _leaderboardDefaultSelected, _defaultSelected);
         }
 
         public void CloseLeaderboard()
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetLeaderboardVisible(false);
+            UiSelectionHelper.RestorePreviousSelectionNextFrame(this, _defaultSelected);
         }
 
         private void HandleGameStateChanged(GameState gameState)
@@ -108,7 +116,12 @@ namespace Warblade.UI
             if (!isMainMenu)
             {
                 HideSubPanels();
+                UiSelectionHelper.ClearSelectionStack();
+                return;
             }
+
+            UiSelectionHelper.ClearSelectionStack();
+            UiSelectionHelper.SelectNextFrame(this, _defaultSelected);
         }
 
         private void RefreshVisibilityFromGameState()
@@ -126,6 +139,11 @@ namespace Warblade.UI
             if (canToggleRootObject)
             {
                 _root.SetActive(isVisible);
+            }
+
+            if (isVisible)
+            {
+                UiSelectionHelper.ApplyPanelNavigation(_root);
             }
 
             if (_canvasGroup == null) return;
@@ -153,6 +171,11 @@ namespace Warblade.UI
                 }
 
                 _settingsPanel.SetActive(isVisible);
+
+                if (isVisible)
+                {
+                    UiSelectionHelper.ApplyPanelNavigation(_settingsPanel);
+                }
             }
         }
 
@@ -160,7 +183,17 @@ namespace Warblade.UI
         {
             if (_leaderboardPanel != null)
             {
+                if (isVisible)
+                {
+                    _leaderboardPanel.transform.SetAsLastSibling();
+                }
+
                 _leaderboardPanel.SetActive(isVisible);
+
+                if (isVisible)
+                {
+                    UiSelectionHelper.ApplyPanelNavigation(_leaderboardPanel);
+                }
             }
         }
 

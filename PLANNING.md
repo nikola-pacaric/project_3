@@ -21,7 +21,7 @@ Completed milestones are kept as short summaries. Active and future milestones k
 
 **M7** *(current: Game Feel)*
 
-M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, Phase 7 screen feedback, Phase 8 audio foundation, Phase 9 SFX pass, and Phase 10 music pass are complete. UI polish is underway, with the shop presentation and level start/complete messaging updated. The remaining major work is broader UI polish and integration checks before final tuning.
+M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, Phase 7 screen feedback, Phase 8 audio foundation, Phase 9 SFX pass, and Phase 10 music pass are complete. UI polish is underway, with shop presentation, level start/complete messaging, main menu navigation, pause menu navigation, settings panel navigation, game-over score presentation, restart/menu flow cleanup, and HUD rail art updated. The remaining major work is the first-run controls hint, final UI pass, and integration checks before tuning.
 
 ---
 
@@ -96,13 +96,15 @@ Audio status:
 - Kamikaze return and bonus-special despawn/death sounds were intentionally removed because the level mix became too busy.
 - Phase 10 music pass is complete: menu, gameplay, boss, and game-over loop tracks are assigned, loop-processed, and routed through the existing `AudioManager` with runtime fades.
 
-**Build — UI / UX**
-- [ ] Main menu (Start, Settings)
-- [ ] Settings (master / SFX / music volume)
+**Build - UI / UX**
+- [x] Main menu (Start, Settings)
+- [x] Settings (master / SFX / music volume)
 - [ ] First-run controls hint overlay
 - [x] Shop animation and visual polish
 - [x] Level start and complete presentation messages
-- [ ] Pause menu, animated screen transitions
+- [x] Pause menu
+- [x] Animated start transition
+- [ ] Final menu transition polish
 
 **Refactor**
 - [ ] Final under-the-hood cleanup pass before tuning
@@ -186,4 +188,5 @@ Audio status:
 
 ## Change Log
 
+- *2026-06-09* - M7 UI polish pass updated menu/settings/pause/game-over selection flow, preserved final run stats for game-over display, added transparent HUD rail art, and refreshed current-state docs.
 - *YYYY-MM-DD* — Plan created.

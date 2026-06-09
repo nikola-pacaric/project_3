@@ -12,6 +12,9 @@ namespace Warblade.UI
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private GameObject _settingsPanel;
         [SerializeField] private GameStateEventChannel _gameStateChanged;
+        [Header("Selection")]
+        [SerializeField] private GameObject _defaultSelected;
+        [SerializeField] private GameObject _settingsDefaultSelected;
 
         private bool _isSubscribedToGameManager;
 
@@ -58,24 +61,28 @@ namespace Warblade.UI
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             GameManager.Instance?.EnterPlaying();
+            UiSelectionHelper.ClearSelectionStack();
         }
 
         public void RestartRun()
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             GameManager.Instance?.RestartRun();
+            UiSelectionHelper.ClearSelectionStack();
         }
 
         public void OpenSettings()
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetSettingsVisible(true);
+            UiSelectionHelper.PushSelectionAndSelectNextFrame(this, _settingsDefaultSelected, _defaultSelected);
         }
 
         public void ReturnToMainMenu()
         {
             AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             GameManager.Instance?.RestartToMainMenu();
+            UiSelectionHelper.ClearSelectionStack();
         }
 
         private void HandleGameStateChanged(GameState gameState)
@@ -86,10 +93,13 @@ namespace Warblade.UI
             if (isPaused)
             {
                 SetSettingsVisible(false);
+                UiSelectionHelper.ClearSelectionStack();
+                UiSelectionHelper.SelectNextFrame(this, _defaultSelected);
             }
             else
             {
                 SetSettingsVisible(false);
+                UiSelectionHelper.ClearSelectionStack();
             }
         }
 
@@ -110,6 +120,11 @@ namespace Warblade.UI
                 _root.SetActive(isVisible);
             }
 
+            if (isVisible)
+            {
+                UiSelectionHelper.ApplyPanelNavigation(_root);
+            }
+
             if (_canvasGroup == null) return;
 
             _canvasGroup.alpha = isVisible ? 1f : 0f;
@@ -127,6 +142,11 @@ namespace Warblade.UI
                 }
 
                 _settingsPanel.SetActive(isVisible);
+
+                if (isVisible)
+                {
+                    UiSelectionHelper.ApplyPanelNavigation(_settingsPanel);
+                }
             }
         }
 

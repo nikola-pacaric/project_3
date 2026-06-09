@@ -649,7 +649,6 @@ namespace Warblade.Managers
         private void HandleGameOver()
         {
             _isGameOver = true;
-            CurrentLevel = Mathf.Max(1, _startingLevel);
 
             if (_levelRoutine != null)
             {
@@ -663,11 +662,6 @@ namespace Warblade.Managers
             }
 
             _enemySpawner?.ClearActiveEnemies();
-
-            if (ScoreManager.Instance != null)
-            {
-                ScoreManager.Instance.ResetScore();
-            }
         }
     }
 }

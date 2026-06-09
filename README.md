@@ -8,7 +8,7 @@ This is a solo portfolio project focused on clean Unity architecture, responsive
 
 ## Current State
 
-The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, and completed M6 content-fill foundation in place:
+The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, completed M6 content-fill foundation, and most M7 presentation work in place:
 
 - Player movement and shooting
 - Enemy waves, formations, and level progression
@@ -20,6 +20,8 @@ The project currently has the core shooter loop, M4 reward loop, M5 boss archite
 - First-pass 100-level campaign route: 96 normal levels plus boss routes at 25, 50, 75, and 100
 - M6 wave-authoring safeguards and content validation tools
 - Cycle scaling code for levels 101+ using repeated campaign content, runtime health/speed multipliers, and placeholder tinting
+- M7 visual/audio polish: generated gameplay sprites, parallax/chapter backgrounds, combat VFX, 2D lighting, screen feedback, first-pass SFX, and menu/gameplay/boss/game-over music
+- M7 UI polish in progress: shop presentation, level start/complete messaging, main/pause/game-over menu flow, keyboard/controller selection handling, final score display, and HUD rail art
 
 The current milestone is **M7: Game Feel**. M6 Content Fill is complete, and the current polish plan lives in `PLANNING_M7.md`.
 
@@ -43,7 +45,7 @@ The current milestone is **M7: Game Feel**. M6 Content Fill is complete, and the
 
 The game is being built as a set of playable milestones. Each milestone should end with a working build and a small, visible improvement to the game loop.
 
-Placeholder art and simple effects are intentional for now. Visual polish, audio polish, and final balance come later, after the systems are stable.
+Final tuning is still deferred, but the game is now past the placeholder-only phase. M7 is focused on making the current loop feel presentable before M8 balance, optimization, and release packaging.
 
 ## Roadmap
 

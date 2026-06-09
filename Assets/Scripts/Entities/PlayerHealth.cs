@@ -36,6 +36,7 @@ namespace Warblade.Entities
         private bool _isDead;
         private bool _isResolvingDeath;
         private bool _isInvulnerable;
+        private bool _isSubscribedToGameManager;
         private Coroutine _deathRoutine;
         private Coroutine _respawnProtectionRoutine;
 
@@ -44,6 +45,21 @@ namespace Warblade.Entities
         private void Awake()
         {
             ResolveReferences();
+        }
+
+        private void Start()
+        {
+            TrySubscribeToGameManager();
+        }
+
+        private void OnEnable()
+        {
+            TrySubscribeToGameManager();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeFromGameManager();
         }
 
         private void OnValidate()
@@ -152,6 +168,36 @@ namespace Warblade.Entities
             GameManager.Instance?.EnterGameOver();
             GameOverRaised?.Invoke();
             _onGameOver?.Invoke();
+        }
+
+        private void HandleGameStateChanged(GameState gameState)
+        {
+            if (gameState == GameState.Playing && _isDead)
+            {
+                ResetForNewRun();
+            }
+        }
+
+        private void ResetForNewRun()
+        {
+            if (_deathRoutine != null)
+            {
+                StopCoroutine(_deathRoutine);
+                _deathRoutine = null;
+            }
+
+            if (_respawnProtectionRoutine != null)
+            {
+                StopCoroutine(_respawnProtectionRoutine);
+                _respawnProtectionRoutine = null;
+            }
+
+            _isDead = false;
+            _isResolvingDeath = false;
+            _isInvulnerable = false;
+            SetPlayerActive(true);
+            StartRespawnProtection();
+            _onRespawned?.Invoke();
         }
 
         private void Respawn()
@@ -271,6 +317,29 @@ namespace Warblade.Entities
             {
                 _thrusterParticles = GetComponentsInChildren<ParticleSystem>(true);
             }
+        }
+
+        private void TrySubscribeToGameManager()
+        {
+            if (_isSubscribedToGameManager || GameManager.Instance == null)
+            {
+                return;
+            }
+
+            GameManager.Instance.StateChanged += HandleGameStateChanged;
+            _isSubscribedToGameManager = true;
+        }
+
+        private void UnsubscribeFromGameManager()
+        {
+            if (!_isSubscribedToGameManager || GameManager.Instance == null)
+            {
+                _isSubscribedToGameManager = false;
+                return;
+            }
+
+            GameManager.Instance.StateChanged -= HandleGameStateChanged;
+            _isSubscribedToGameManager = false;
         }
     }
 }

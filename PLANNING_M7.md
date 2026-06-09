@@ -160,6 +160,11 @@ Done so far:
 - Added a `Get ready!` / `Level X` message before enemy or boss spawning starts, using the same presentation path as level-complete messaging.
 - Enlarged the main menu Start, Leaderboard, and Settings buttons in the scene for better readability.
 - Added a small Start-button fade-through-black transition before gameplay begins, using a runtime-created overlay and Inspector-tunable timings on `MainMenuController`.
+- Added default UI selection targets and explicit vertical navigation for main menu, settings, leaderboard, pause, and game-over panels so keyboard/controller menu use is predictable.
+- Added a small focus treatment for sliders, since Unity's default selected state is difficult to read on horizontal controls.
+- Updated game-over flow to preserve final score until the game-over screen can display it, then reset score/run state only when restarting or returning to the main menu.
+- Added final score text and separate Restart Run / Main Menu actions to the game-over screen.
+- Added transparent HUD rail art for framing the playfield without a baked checkerboard background.
 
 Acceptance:
 - UI looks intentional, fits 1920x1080, and does not hide active gameplay.
