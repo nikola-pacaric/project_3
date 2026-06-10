@@ -33,6 +33,8 @@ namespace Warblade.UI
                 return;
             }
 
+            ApplySelectableAudioFeedback(root);
+
             List<Selectable> selectables = GetSelectableNavigationOrder(root);
             for (int i = 0; i < selectables.Count; i++)
             {
@@ -59,6 +61,50 @@ namespace Warblade.UI
 
                     focusVisual.Configure(selectable);
                 }
+            }
+        }
+
+        public static void ApplySelectableAudioFeedback(GameObject root)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            Button[] buttons = root.GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                Button button = buttons[i];
+                if (button == null)
+                {
+                    continue;
+                }
+
+                UiButtonClickSound clickSound = button.GetComponent<UiButtonClickSound>();
+                if (clickSound == null)
+                {
+                    clickSound = button.gameObject.AddComponent<UiButtonClickSound>();
+                }
+
+                clickSound.Configure(button);
+            }
+
+            Selectable[] selectables = root.GetComponentsInChildren<Selectable>(true);
+            for (int i = 0; i < selectables.Length; i++)
+            {
+                Selectable selectable = selectables[i];
+                if (selectable == null)
+                {
+                    continue;
+                }
+
+                UiSelectableAudioFeedback audioFeedback = selectable.GetComponent<UiSelectableAudioFeedback>();
+                if (audioFeedback == null)
+                {
+                    audioFeedback = selectable.gameObject.AddComponent<UiSelectableAudioFeedback>();
+                }
+
+                audioFeedback.Configure(selectable);
             }
         }
 

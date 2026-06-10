@@ -59,28 +59,24 @@ namespace Warblade.UI
 
         public void Resume()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             GameManager.Instance?.EnterPlaying();
             UiSelectionHelper.ClearSelectionStack();
         }
 
         public void RestartRun()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             GameManager.Instance?.RestartRun();
             UiSelectionHelper.ClearSelectionStack();
         }
 
         public void OpenSettings()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetSettingsVisible(true);
             UiSelectionHelper.PushSelectionAndSelectNextFrame(this, _settingsDefaultSelected, _defaultSelected);
         }
 
         public void ReturnToMainMenu()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             GameManager.Instance?.RestartToMainMenu();
             UiSelectionHelper.ClearSelectionStack();
         }
@@ -145,6 +141,7 @@ namespace Warblade.UI
 
                 if (isVisible)
                 {
+                    UiSelectionHelper.ApplySelectableAudioFeedback(_settingsPanel);
                     UiSelectionHelper.ApplyPanelNavigation(_settingsPanel);
                 }
             }

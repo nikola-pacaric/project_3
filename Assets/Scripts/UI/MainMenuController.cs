@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using Warblade.Data;
 using Warblade.Data.Events;
 using Warblade.Managers;
@@ -8,6 +9,8 @@ namespace Warblade.UI
     [DisallowMultipleComponent]
     public class MainMenuController : MonoBehaviour
     {
+        private const string ControlsHintSeenPreferenceKey = "UI.FirstRunControlsHintSeen";
+
         [SerializeField] private GameObject _root;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private GameObject _settingsPanel;
@@ -21,6 +24,8 @@ namespace Warblade.UI
         [SerializeField, Min(0f)] private float _startFadeInDuration = 0.18f;
         [SerializeField, Min(0f)] private float _startFadeHoldDuration = 0.06f;
         [SerializeField, Min(0f)] private float _startFadeOutDuration = 0.24f;
+        [Header("First Run Hint")]
+        [SerializeField] private bool _showFirstRunControlsHint = true;
 
         private bool _isSubscribedToGameManager;
         private bool _isStartingGame;
@@ -72,11 +77,39 @@ namespace Warblade.UI
             }
 
             _isStartingGame = true;
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             HideSubPanels();
             SetMenuInteraction(false);
             UiSelectionHelper.ClearSelectionStack();
 
+            if (ShouldShowControlsHint())
+            {
+                FirstRunControlsHintOverlay.Show(ResolveMenuFontAsset(), ConfirmControlsHintAndStart);
+                return;
+            }
+
+            BeginStartTransition();
+        }
+
+        [ContextMenu("Reset First Run Controls Hint")]
+        private void ResetFirstRunControlsHint()
+        {
+            PlayerPrefs.DeleteKey(ControlsHintSeenPreferenceKey);
+        }
+
+        private void ConfirmControlsHintAndStart()
+        {
+            PlayerPrefs.SetInt(ControlsHintSeenPreferenceKey, 1);
+            BeginStartTransition();
+        }
+
+        private bool ShouldShowControlsHint()
+        {
+            return _showFirstRunControlsHint
+                && PlayerPrefs.GetInt(ControlsHintSeenPreferenceKey, 0) == 0;
+        }
+
+        private void BeginStartTransition()
+        {
             ScreenFadeController.RuntimeInstance.PlayFadeThroughBlack(
                 _startFadeInDuration,
                 _startFadeHoldDuration,
@@ -85,9 +118,17 @@ namespace Warblade.UI
                 HandleStartFadeComplete);
         }
 
+        private TMP_FontAsset ResolveMenuFontAsset()
+        {
+            TMP_Text menuText = _root != null
+                ? _root.GetComponentInChildren<TMP_Text>(true)
+                : GetComponentInChildren<TMP_Text>(true);
+
+            return menuText != null ? menuText.font : null;
+        }
+
         public void OpenSettings()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetLeaderboardVisible(false);
             SetSettingsVisible(true);
             UiSelectionHelper.PushSelectionAndSelectNextFrame(this, _settingsDefaultSelected, _defaultSelected);
@@ -95,7 +136,6 @@ namespace Warblade.UI
 
         public void OpenLeaderboard()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetSettingsVisible(false);
             SetLeaderboardVisible(true);
             UiSelectionHelper.PushSelectionAndSelectNextFrame(this, _leaderboardDefaultSelected, _defaultSelected);
@@ -103,7 +143,6 @@ namespace Warblade.UI
 
         public void CloseLeaderboard()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetLeaderboardVisible(false);
             UiSelectionHelper.RestorePreviousSelectionNextFrame(this, _defaultSelected);
         }
@@ -174,6 +213,7 @@ namespace Warblade.UI
 
                 if (isVisible)
                 {
+                    UiSelectionHelper.ApplySelectableAudioFeedback(_settingsPanel);
                     UiSelectionHelper.ApplyPanelNavigation(_settingsPanel);
                 }
             }
@@ -192,6 +232,7 @@ namespace Warblade.UI
 
                 if (isVisible)
                 {
+                    UiSelectionHelper.ApplySelectableAudioFeedback(_leaderboardPanel);
                     UiSelectionHelper.ApplyPanelNavigation(_leaderboardPanel);
                 }
             }

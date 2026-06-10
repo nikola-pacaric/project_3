@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Warblade.Data;
 using Warblade.Managers;
 
 namespace Warblade.UI
@@ -38,7 +37,6 @@ namespace Warblade.UI
 
         public void RestartRun()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             UiSelectionHelper.ClearSelectionStack();
             Hide();
 
@@ -59,7 +57,6 @@ namespace Warblade.UI
 
         public void ReturnToMainMenu()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             UiSelectionHelper.ClearSelectionStack();
             Hide();
 

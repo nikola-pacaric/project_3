@@ -1,6 +1,4 @@
 using UnityEngine;
-using Warblade.Data;
-using Warblade.Managers;
 
 namespace Warblade.UI
 {
@@ -15,11 +13,12 @@ namespace Warblade.UI
             {
                 _root = gameObject;
             }
+
+            UiSelectionHelper.ApplySelectableAudioFeedback(_root);
         }
 
         public void Close()
         {
-            AudioManager.Instance?.PlayOneShot(AudioCue.UiButton);
             SetVisible(false);
             UiSelectionHelper.RestorePreviousSelectionNextFrame(this);
         }
@@ -29,6 +28,7 @@ namespace Warblade.UI
             if (_root != null)
             {
                 _root.SetActive(isVisible);
+                UiSelectionHelper.ApplySelectableAudioFeedback(_root);
             }
         }
     }

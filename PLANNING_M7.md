@@ -143,7 +143,7 @@ Done:
 
 ---
 
-## Phase 11 — UI and UX Polish
+## Phase 11 — UI and UX Polish — Done
 
 Goal:
 - Make existing UI readable, consistent, and presentable without adding leaderboard or mini-game UI.
@@ -165,9 +165,14 @@ Done so far:
 - Updated game-over flow to preserve final score until the game-over screen can display it, then reset score/run state only when restarting or returning to the main menu.
 - Added final score text and separate Restart Run / Main Menu actions to the game-over screen.
 - Added transparent HUD rail art for framing the playfield without a baked checkerboard background.
+- Added a first-run controls hint overlay before the first Start run, with keyboard-selectable confirmation and PlayerPrefs persistence.
+- Added UI highlight and click SFX cues for menu selection and button confirmation.
+- Replaced remaining LiberationSans UI references with project fonts; Oxanium is the default UI face, with Rajdhani retained only where intentionally used for descriptive body copy.
+- Added/assigned the shop panel transition component so shop entry has an explicit slide/scale/fade presentation.
 
 Acceptance:
 - UI looks intentional, fits 1920x1080, and does not hide active gameplay.
+- User playtest confirmed Phase 11 feels and looks good.
 
 ---
 

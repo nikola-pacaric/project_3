@@ -103,6 +103,8 @@ namespace Warblade.UI
         {
             switch (_stat)
             {
+                case RunStatDisplay.Cash:
+                    return runStats.MaxCash;
                 case RunStatDisplay.Lives:
                     return runStats.MaxLives;
                 case RunStatDisplay.Armour:

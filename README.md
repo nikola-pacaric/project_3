@@ -8,7 +8,7 @@ This is a solo portfolio project focused on clean Unity architecture, responsive
 
 ## Current State
 
-The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, completed M6 content-fill foundation, and most M7 presentation work in place:
+The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, completed M6 content-fill foundation, and M7 presentation work through Phase 11 in place:
 
 - Player movement and shooting
 - Enemy waves, formations, and level progression
@@ -21,9 +21,9 @@ The project currently has the core shooter loop, M4 reward loop, M5 boss archite
 - M6 wave-authoring safeguards and content validation tools
 - Cycle scaling code for levels 101+ using repeated campaign content, runtime health/speed multipliers, and placeholder tinting
 - M7 visual/audio polish: generated gameplay sprites, parallax/chapter backgrounds, combat VFX, 2D lighting, screen feedback, first-pass SFX, and menu/gameplay/boss/game-over music
-- M7 UI polish in progress: shop presentation, level start/complete messaging, main/pause/game-over menu flow, keyboard/controller selection handling, final score display, and HUD rail art
+- M7 UI polish: shop presentation and transition, level start/complete messaging, main/pause/game-over menu flow, keyboard/controller selection handling, final score display, first-run controls hint, UI highlight/click SFX, font cleanup, and HUD rail art
 
-The current milestone is **M7: Game Feel**. M6 Content Fill is complete, and the current polish plan lives in `PLANNING_M7.md`.
+The current milestone is **M7: Game Feel**. M6 Content Fill and M7 Phase 11 UI/UX polish are complete, and the remaining M7 work is Phase 12 integration and WebGL validation.
 
 ## Target Platform
 

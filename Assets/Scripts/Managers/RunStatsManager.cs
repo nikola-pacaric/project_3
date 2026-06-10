@@ -22,6 +22,7 @@ namespace Warblade.Managers
         [SerializeField, Min(0)] private int _startingTimeLevel;
 
         [Header("Caps")]
+        [SerializeField, Min(0)] private int _maxCash = 100000;
         [SerializeField, Min(1)] private int _maxLives = 4;
         [SerializeField, Min(0)] private int _maxArmour = 2;
         [SerializeField, Min(0)] private int _maxSpeedLevel = 10;
@@ -50,6 +51,7 @@ namespace Warblade.Managers
         private bool _shieldActive;
 
         public int Cash => _cash;
+        public int MaxCash => _maxCash;
         public int Lives => _lives;
         public int MaxLives => _maxLives;
         public int Armour => _armour;
@@ -88,6 +90,8 @@ namespace Warblade.Managers
 
         private void OnValidate()
         {
+            _maxCash = Mathf.Max(0, _maxCash);
+            _startingCash = Mathf.Clamp(_startingCash, 0, _maxCash);
             _maxLives = Mathf.Max(1, _maxLives);
             _startingLives = Mathf.Clamp(_startingLives, 1, _maxLives);
             _maxArmour = Mathf.Max(0, _maxArmour);
@@ -103,7 +107,10 @@ namespace Warblade.Managers
         public void AddCash(int amount)
         {
             if (amount <= 0) return;
-            _cash += amount;
+            int newCash = (int)System.Math.Min(_maxCash, (long)_cash + amount);
+            if (_cash == newCash) return;
+
+            _cash = newCash;
             RaiseCashChanged();
         }
 
@@ -324,7 +331,7 @@ namespace Warblade.Managers
         /// </summary>
         public void ResetRun()
         {
-            _cash = Mathf.Max(0, _startingCash);
+            _cash = Mathf.Clamp(_startingCash, 0, _maxCash);
             _lives = Mathf.Clamp(_startingLives, 1, _maxLives);
             _armour = Mathf.Clamp(_startingArmour, 0, _maxArmour);
             _weaponTier = ClampWeaponTier(_startingWeaponTier);

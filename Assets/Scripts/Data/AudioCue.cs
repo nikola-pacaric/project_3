@@ -34,6 +34,8 @@ namespace Warblade.Data
         ShopBuySuccess = 102,
         ShopLeave = 104,
         Pause = 105,
+        UiHighlight = 106,
+        UiClick = 107,
         GameOver = 108,
         SectionWarp = 109,
 

@@ -32,6 +32,10 @@ namespace Warblade.UI
         [SerializeField] private bool _buildItemViewsOnAwake = true;
         [SerializeField, Range(0.1f, 1f)] private float _navigationThreshold = 0.5f;
 
+        [Header("Audio")]
+        [SerializeField] private AudioCue _selectionChangedCue = AudioCue.UiHighlight;
+        [SerializeField] private AudioCue _selectionFallbackCue = AudioCue.UiButton;
+
         [Header("Preview")]
         [SerializeField] private Image _previewImage;
         [SerializeField] private TMP_Text _descriptionText;
@@ -316,9 +320,11 @@ namespace Warblade.UI
 
             int nextIndex = FindNextAvailableIndex(_selectedIndex, direction);
             if (nextIndex < 0) return;
+            if (nextIndex == _selectedIndex) return;
 
             _selectedIndex = nextIndex;
             RefreshSelection();
+            PlayOneShotIfConfigured(_selectionChangedCue, _selectionFallbackCue);
         }
 
         private void SelectFirstAvailableItem()
@@ -436,6 +442,26 @@ namespace Warblade.UI
 
             RefreshPreview();
             ScrollSelectedItemIntoView();
+        }
+
+        private void PlayOneShotIfConfigured(AudioCue cue, AudioCue fallbackCue)
+        {
+            AudioManager audioManager = AudioManager.Instance;
+            if (audioManager == null)
+            {
+                return;
+            }
+
+            if (audioManager.HasCue(cue))
+            {
+                audioManager.PlayOneShot(cue);
+                return;
+            }
+
+            if (fallbackCue != cue && audioManager.HasCue(fallbackCue))
+            {
+                audioManager.PlayOneShot(fallbackCue);
+            }
         }
 
         private void HandleGameStateChanged(GameState gameState)

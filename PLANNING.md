@@ -21,7 +21,7 @@ Completed milestones are kept as short summaries. Active and future milestones k
 
 **M7** *(current: Game Feel)*
 
-M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, Phase 7 screen feedback, Phase 8 audio foundation, Phase 9 SFX pass, and Phase 10 music pass are complete. UI polish is underway, with shop presentation, level start/complete messaging, main menu navigation, pause menu navigation, settings panel navigation, game-over score presentation, restart/menu flow cleanup, and HUD rail art updated. The remaining major work is the first-run controls hint, final UI pass, and integration checks before tuning.
+M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, Phase 7 screen feedback, Phase 8 audio foundation, Phase 9 SFX pass, Phase 10 music pass, and Phase 11 UI/UX polish are complete. The remaining major work is Phase 12 integration and WebGL validation before M8 tuning.
 
 ---
 
@@ -99,12 +99,12 @@ Audio status:
 **Build - UI / UX**
 - [x] Main menu (Start, Settings)
 - [x] Settings (master / SFX / music volume)
-- [ ] First-run controls hint overlay
+- [x] First-run controls hint overlay
 - [x] Shop animation and visual polish
 - [x] Level start and complete presentation messages
 - [x] Pause menu
 - [x] Animated start transition
-- [ ] Final menu transition polish
+- [x] Final menu transition polish
 
 **Refactor**
 - [ ] Final under-the-hood cleanup pass before tuning
