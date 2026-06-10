@@ -19,9 +19,9 @@ Completed milestones are kept as short summaries. Active and future milestones k
 
 ## Current Milestone
 
-**M7** *(current: Game Feel)*
+**M8** *(current: Tune and Ship Core)*
 
-M6 Content Fill is complete. M7 Game Feel is active: sprites, background presentation, animation polish, the Phase 4 VFX pass, Phase 5 lighting/post-processing, the Phase 6 background integration check, Phase 7 screen feedback, Phase 8 audio foundation, Phase 9 SFX pass, Phase 10 music pass, and Phase 11 UI/UX polish are complete. The remaining major work is Phase 12 integration and WebGL validation before M8 tuning.
+M7 Game Feel is complete. A 10-level integration playtest confirmed the current polished loop feels stable and presentable for this stage. M8 now focuses on difficulty tuning, drop and shop economy balance, WebGL optimization, cross-browser checks, and release packaging.
 
 ---
 
@@ -73,45 +73,9 @@ The content model was refactored for safer authoring: reusable formation shape d
 
 ## M7 — Game Feel
 
-**Goal:** juice. Stops looking like a prototype.
+M7 turned the completed 100-level placeholder campaign into a presentable arcade game. It added generated gameplay sprites, chapter/parallax backgrounds, combat VFX, URP 2D lighting, restrained screen feedback, an audio foundation, first-pass SFX, menu/gameplay/boss/game-over music, polished HUD/shop/menu/game-over UI, keyboard/controller UI selection, first-run controls hinting, and final score display.
 
-**Build — Visual**
-- [x] Parallax starfield (Particle System)
-- [x] Player thruster particles
-- [x] Explosion and impact variants (player, enemies, bullets, bosses)
-- [x] URP 2D lights on bullets and explosions
-- [x] Screen flash for player death, Mother death, and boss death
-- [x] Restrained Cinemachine Impulse feedback for major death cues
-- [x] Bloom + color grading in Global Volume
-- [x] Replace placeholder sprites with generated sprite sheets
-
-**Build — Audio**
-- [x] `AudioManager` singleton, separate SFX/music mixer channels
-- [x] SFX library: shoot, hit, explosion, pickup, shop, UI, boss roar
-- [x] Music: menu, gameplay, boss, game over
-
-Audio status:
-- Phase 8 audio foundation is complete.
-- Phase 9 SFX pass is complete: player, enemy, Mother enemy, boss, pickup, shop, pause, game-over, restart-button, sector-warp, kamikaze spawn, and bonus-special spawn cues are wired and assigned.
-- Kamikaze return and bonus-special despawn/death sounds were intentionally removed because the level mix became too busy.
-- Phase 10 music pass is complete: menu, gameplay, boss, and game-over loop tracks are assigned, loop-processed, and routed through the existing `AudioManager` with runtime fades.
-
-**Build - UI / UX**
-- [x] Main menu (Start, Settings)
-- [x] Settings (master / SFX / music volume)
-- [x] First-run controls hint overlay
-- [x] Shop animation and visual polish
-- [x] Level start and complete presentation messages
-- [x] Pause menu
-- [x] Animated start transition
-- [x] Final menu transition polish
-
-**Refactor**
-- [ ] Final under-the-hood cleanup pass before tuning
-
-**Cut / Defer:** difficulty tuning (M8), leaderboard integration (M9), mini-game audio/music (v1.1), localization, control rebinding.
-
-**Acceptance:** show a friend without telling them you made it. They should not assume it's a prototype.
+The milestone closed after a successful 10-level integration playtest confirmed the current loop feels stable and presentable for this stage. Difficulty tuning, balance, release optimization, broader browser validation, leaderboard integration, mini-games, localization, and control rebinding remain deferred to later milestones.
 
 ---
 
@@ -188,5 +152,6 @@ Audio status:
 
 ## Change Log
 
+- *2026-06-10* - M7 Game Feel marked complete after a successful 10-level integration playtest; M8 Tune and Ship Core is now the current milestone.
 - *2026-06-09* - M7 UI polish pass updated menu/settings/pause/game-over selection flow, preserved final run stats for game-over display, added transparent HUD rail art, and refreshed current-state docs.
 - *YYYY-MM-DD* — Plan created.

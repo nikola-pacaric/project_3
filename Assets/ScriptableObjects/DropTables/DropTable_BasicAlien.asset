@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c30ae2881fd24da4b693efcbde14af81, type: 3}
   m_Name: DropTable_BasicAlien
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.DropTable
-  _dropChance: 0.7
+  _dropChance: 0.18
   _weightedPickups:
   - _pickupData: {fileID: 11400000, guid: ee1bda829505c4a4b9171b2843a56ee9, type: 2}
     _weight: 30
@@ -29,26 +29,26 @@ MonoBehaviour:
   - _pickupData: {fileID: 11400000, guid: 8a8f01b810aca15438997a6345aa6033, type: 2}
     _weight: 3
   - _pickupData: {fileID: 11400000, guid: 72e03dd9910558043a59b76efde1f73b, type: 2}
-    _weight: 3
+    _weight: 2
   - _pickupData: {fileID: 11400000, guid: f150df3538e83944ba6fbd3e8a30a594, type: 2}
-    _weight: 9
+    _weight: 8
   - _pickupData: {fileID: 11400000, guid: 4ae6942963c779248a90cd9500a337f3, type: 2}
-    _weight: 9
+    _weight: 8
   - _pickupData: {fileID: 11400000, guid: 0fe74704657cbb34bb9b91e19bf2ae96, type: 2}
-    _weight: 9
+    _weight: 6
   - _pickupData: {fileID: 11400000, guid: e0bc6121c1dde5d418915a0bb4987ffa, type: 2}
-    _weight: 10
+    _weight: 6
   - _pickupData: {fileID: 11400000, guid: 75492b147b750794d94b033abfb8eb42, type: 2}
-    _weight: 10
+    _weight: 6
   - _pickupData: {fileID: 11400000, guid: 6bb011ddd3a7b5c47b35bf9e5532c1b0, type: 2}
-    _weight: 7
+    _weight: 6
   - _pickupData: {fileID: 11400000, guid: af7857d09490dbe4c81abcc63ca11c3e, type: 2}
     _weight: 2
   - _pickupData: {fileID: 11400000, guid: 62720e2081799084a8a8b68df99d6664, type: 2}
     _weight: 1
   - _pickupData: {fileID: 11400000, guid: e678c90dead7fee40ab4ec054f01ff94, type: 2}
-    _weight: 5
+    _weight: 4
   - _pickupData: {fileID: 11400000, guid: cd7db9b8f1b556d4884be63a5d4760f2, type: 2}
-    _weight: 5
+    _weight: 4
   - _pickupData: {fileID: 11400000, guid: cb6e969811f07ef4c902cbadda4e51c3, type: 2}
-    _weight: 5
+    _weight: 4

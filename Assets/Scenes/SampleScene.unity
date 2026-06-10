@@ -11680,6 +11680,7 @@ MonoBehaviour:
   _startFadeInDuration: 0.18
   _startFadeHoldDuration: 0.24
   _startFadeOutDuration: 0.48
+  _showFirstRunControlsHint: 1
 --- !u!1 &1104538867
 GameObject:
   m_ObjectHideFlags: 0
@@ -24617,7 +24618,7 @@ MonoBehaviour:
     _boss: {fileID: 9030766919468926362, guid: 46afcc8bccdad874fb8ce54a8f62050c, type: 3}
   - _levelNumber: 100
     _boss: {fileID: 9030766919468926362, guid: 2fca7d9da29524c439a74c9989e791bc, type: 3}
-  _startingLevel: 3
+  _startingLevel: 1
   _playOnStart: 0
   _levelStartDelay: 2
   _levelTransitionDelay: 2

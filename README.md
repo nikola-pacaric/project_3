@@ -8,7 +8,7 @@ This is a solo portfolio project focused on clean Unity architecture, responsive
 
 ## Current State
 
-The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, completed M6 content-fill foundation, and M7 presentation work through Phase 11 in place:
+The project currently has the core shooter loop, M4 reward loop, M5 boss architecture, completed M6 content-fill foundation, and completed M7 presentation polish in place:
 
 - Player movement and shooting
 - Enemy waves, formations, and level progression
@@ -22,8 +22,9 @@ The project currently has the core shooter loop, M4 reward loop, M5 boss archite
 - Cycle scaling code for levels 101+ using repeated campaign content, runtime health/speed multipliers, and placeholder tinting
 - M7 visual/audio polish: generated gameplay sprites, parallax/chapter backgrounds, combat VFX, 2D lighting, screen feedback, first-pass SFX, and menu/gameplay/boss/game-over music
 - M7 UI polish: shop presentation and transition, level start/complete messaging, main/pause/game-over menu flow, keyboard/controller selection handling, final score display, first-run controls hint, UI highlight/click SFX, font cleanup, and HUD rail art
+- M7 integration validation: a 10-level playtest confirmed the current polished loop feels stable and presentable for this stage
 
-The current milestone is **M7: Game Feel**. M6 Content Fill and M7 Phase 11 UI/UX polish are complete, and the remaining M7 work is Phase 12 integration and WebGL validation.
+The current milestone is **M8: Tune and Ship Core**. M7 Game Feel is complete, so the next work is balance, optimization, release packaging, and broader WebGL/browser validation.
 
 ## Target Platform
 
@@ -45,7 +46,7 @@ The current milestone is **M7: Game Feel**. M6 Content Fill and M7 Phase 11 UI/U
 
 The game is being built as a set of playable milestones. Each milestone should end with a working build and a small, visible improvement to the game loop.
 
-Final tuning is still deferred, but the game is now past the placeholder-only phase. M7 is focused on making the current loop feel presentable before M8 balance, optimization, and release packaging.
+The game is now past the placeholder-only and first presentation-pass phase. M8 is focused on making the full 100-level core fair, stable, performant, and release-ready.
 
 ## Roadmap
 
@@ -53,8 +54,8 @@ Final tuning is still deferred, but the game is now past the placeholder-only ph
 - **M4:** Pickups, buffs, cash, and shop loop - complete
 - **M5:** Boss fights - complete
 - **M6:** Content fill - complete
-- **M7:** Game feel, art, audio, and UI polish
-- **M8:** Tune and ship core
+- **M7:** Game feel, art, audio, and UI polish - complete
+- **M8:** Tune and ship core - current
 - **M9:** Online leaderboard
 - **v1.1:** Mini-games
 
