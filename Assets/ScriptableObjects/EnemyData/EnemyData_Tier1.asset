@@ -15,7 +15,7 @@ MonoBehaviour:
   _maxHealth: 1
   _scoreValue: 100
   _entrySpeed: 3
-  _diveSpeed: 5.5
+  _diveSpeed: 5
   _diveBottomY: -6
   _behaviorMode: 0
   _diesAtDiveBottom: 0
@@ -23,10 +23,11 @@ MonoBehaviour:
   _limitConcurrentDivesAboveFinalThreshold: 1
   _passThroughChance: 1
   _respawnTopY: 6
+  _spawnAudioCue: 0
   _diveCooldownMin: 8
   _diveCooldownMax: 14
-  _fireCooldownMin: 2
-  _fireCooldownMax: 6
+  _fireCooldownMin: 4
+  _fireCooldownMax: 8
   _lingerDurationMin: 0.5
   _lingerDurationMax: 1.5
   _bulletSpeedMin: 3

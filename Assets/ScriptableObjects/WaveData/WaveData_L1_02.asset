@@ -14,34 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
   - LocalPosition: {x: 1, y: 1}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 2.5, y: 1}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 4, y: 1}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 5.5, y: 1}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 7, y: 1}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+  - LocalPosition: {x: 6.5, y: 1.5}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 1, y: 2.5}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 2.5, y: 2.5}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 4, y: 2.5}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: 5.5, y: 2.5}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: 7, y: 3}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+  - LocalPosition: {x: 6.5, y: 3}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   _enemyPrefab: {fileID: 6595619327578328252, guid: ace71e81a6b7c70419466b6018779fae, type: 3}
   _slotPositionMode: 1

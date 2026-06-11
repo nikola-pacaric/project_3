@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 2896402331339976403}
   - component: {fileID: 929243961530249405}
   - component: {fileID: 1446197769623559698}
+  - component: {fileID: 3431013495545404400}
+  - component: {fileID: 448345071679564201}
+  - component: {fileID: 200815852190403524}
   m_Layer: 7
   m_Name: Enemy3
   m_TagString: Enemy
@@ -128,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d7e4c638284e148a03f1af68a6e325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.Enemy
-  _data: {fileID: 11400000, guid: 8af7180c027ae80459b9f3bba54daf52, type: 2}
+  _data: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
   _spriteRenderer: {fileID: 5546979563399452041}
   _contactDamage: 1
   _formationPosition: {x: 0, y: 0}
@@ -183,3 +186,39 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.42627916, y: 0.5922293}
   m_EdgeRadius: 0
+--- !u!114 &3431013495545404400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6595619327578328252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8bb5f05968e4fd9b4dccb3dbd5d6f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.EnemyHealth
+--- !u!114 &448345071679564201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6595619327578328252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a5ec9f593b4b139eb0bdb9e99d2ef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.EnemyMovement
+--- !u!114 &200815852190403524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6595619327578328252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e374763b30524d0fba490282fa7b095d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warblade.Entities.EnemyShooter

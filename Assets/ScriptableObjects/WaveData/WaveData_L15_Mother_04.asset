@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
   - LocalPosition: {x: -1.71, y: 1.6}
-    EnemyData: {fileID: 11400000, guid: 8ccfc651a8a94df9827911c0140349dc, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 3.76, y: -1}
   _enemyPrefab: {fileID: 8812367059781503115, guid: 810a607ccfb8ea24dbe63e05badc6833, type: 3}
   _slotPositionMode: 1

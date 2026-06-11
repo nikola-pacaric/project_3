@@ -14,46 +14,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.WaveData
   _slots:
   - LocalPosition: {x: -0.5, y: 2}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -1.5, y: 2}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -2.5, y: 2}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -3.5, y: 2}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -4.5, y: 2}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -5.5, y: 2}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -6.5, y: 2}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -1, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -2, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -3, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -4, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   - LocalPosition: {x: -5, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
-    EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: -6, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
-    EntryControlOffset: {x: 0, y: 0}
-  - LocalPosition: {x: -7, y: 0}
-    EnemyData: {fileID: 11400000, guid: c1494103cf06ec740909f4b7125a8555, type: 2}
+    EnemyData: {fileID: 0}
     EntryControlOffset: {x: 0, y: 0}
   _enemyPrefab: {fileID: 6595619327578328252, guid: 7476fadb23450274888bf2b45a660fa9, type: 3}
   _slotPositionMode: 1

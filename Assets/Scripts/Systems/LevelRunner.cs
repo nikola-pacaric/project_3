@@ -13,12 +13,20 @@ namespace Warblade.Systems
     public class LevelRunner : MonoBehaviour
     {
         [SerializeField] private LevelData _levelData;
+        [SerializeField, Min(0)] private int _previewEnemyCount;
         [SerializeField] private bool _drawGizmos = true;
         [SerializeField] private bool _drawLabels = true;
         [SerializeField, Min(4)] private int _gizmoCurveSamples = 24;
 
+        private void OnValidate()
+        {
+            RefreshPreviewEnemyCount();
+        }
+
         private void OnDrawGizmos()
         {
+            RefreshPreviewEnemyCount();
+
             if (!_drawGizmos || _levelData == null || _levelData.Waves == null)
             {
                 return;
@@ -34,6 +42,33 @@ namespace Warblade.Systems
 
                 DrawWaveGizmos(wave, waveIndex);
             }
+        }
+
+        private void RefreshPreviewEnemyCount()
+        {
+            _previewEnemyCount = CountEnemiesInLevelData(_levelData);
+        }
+
+        private static int CountEnemiesInLevelData(LevelData levelData)
+        {
+            if (levelData == null || levelData.Waves == null)
+            {
+                return 0;
+            }
+
+            int enemyCount = 0;
+            for (int i = 0; i < levelData.Waves.Count; i++)
+            {
+                WaveData wave = levelData.Waves[i];
+                if (wave == null)
+                {
+                    continue;
+                }
+
+                enemyCount += wave.SlotCount;
+            }
+
+            return enemyCount;
         }
 
         private void DrawWaveGizmos(WaveData wave, int waveIndex)
