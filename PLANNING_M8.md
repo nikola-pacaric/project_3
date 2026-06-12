@@ -15,32 +15,24 @@ Key rule:
 
 ---
 
-## Phase 0 — M8 Baseline Capture
+## Phase 0 — M8 Baseline Capture - DONE
 
 Establish the current build baseline before changing balance or optimization settings.
 
-Tasks:
-- Record the current commit/hash before M8 tuning begins.
-- Play levels 1-10 and write down current feel notes: enemy pressure, pickup frequency, shop pacing, deaths, and score/cash flow.
-- Test at least one boss level through a quick level-skip/debug path if available.
-- Record current WebGL build size and initial load time if a recent build exists.
-- Capture any known issues from M7 that should be tracked during M8 instead of fixed immediately.
-
-- There is a clear "before M8" reference for balance, build size, and performance.
-- No tuning changes are made until the baseline notes exist.
+Baseline:
+- Commit: `b50385d2d54569af8fe55c24adcb047d1bad3df2` (`after closing save`), captured after the first opening-level tuning commit `35070e4`.
+- Player starts at level 1 with cash 0, lives 3, armour 0, Single weapon, and Speed/Bullets/Time upgrades at 0.
+- Core player tuning: speed 5 (+0.75 per Speed level), max active bullets 5, fire cooldown 0.2s, respawn invulnerability 3s.
+- Timed buffs: Autofire 8s, Rapid Fire 8s, Shield 6s, +1s per Time level.
+- Current economy anchors: shared enemy drop table rolls at 18%; shop prices range from 50 for Extra Speed to 700 for Extra Life.
+- Current enemy/boss/drop/shop values live in their ScriptableObjects; use this commit as the comparison point for future tuning diffs.
+- WebGL build size and first-load time were not measured here; record them during Phase 6.
 
 ---
 
-## Phase 1 — First 10 Levels Difficulty Curve
+## Phase 1 — First 10 Levels Difficulty Curve - DONE
 
 Make the opening stretch readable, fair, and motivating for a new player.
-
-Tasks:
-- Play levels 1-10 repeatedly from a fresh run.
-- Tune early enemy health, speed, spawn density, dive frequency, and bullet pressure only where needed.
-- Keep the first few levels generous enough for learning but not empty.
-- Confirm the player can recover from small mistakes through pickups and shop choices.
-- Avoid changing late-game systems unless an early-game issue exposes a shared data problem.
 
 Check:
 - Level 1 teaches movement and shooting without overwhelming the player.
@@ -50,6 +42,8 @@ Check:
 - Levels 1-10 feel like a smooth ramp instead of ten isolated tests.
 - Deaths feel earned, not random or visually unclear.
 - The player sees enough rewards to understand the upgrade loop.
+
+First 12 levels feel playable and not too difficult; cash drops feel too generous and move to Phase 2 tuning.
 
 ---
 

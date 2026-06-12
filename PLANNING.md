@@ -84,7 +84,7 @@ The milestone closed after a successful 10-level integration playtest confirmed 
 **Goal:** make the 100-level core game playable, stable, and worth scoring before online services are connected.
 
 **Tuning**
-- [ ] First 10 levels difficulty curve (most important for retention)
+- [x] First 10 levels difficulty curve (most important for retention)
 - [ ] Drop rate balancing
 - [ ] Buff duration tuning
 - [ ] Shop pricing economy
@@ -152,6 +152,8 @@ The milestone closed after a successful 10-level integration playtest confirmed 
 
 ## Change Log
 
+- *2026-06-12* - M8 Phase 1 marked done after the first 12 levels felt playable; cash drops remain too generous and move into Phase 2 tuning.
+- *2026-06-12* - M8 Phase 0 baseline captured from current build commit `b50385d`, with the key player, buff, drop, and economy anchors recorded before continuing tuning.
 - *2026-06-10* - M7 Game Feel marked complete after a successful 10-level integration playtest; M8 Tune and Ship Core is now the current milestone.
 - *2026-06-09* - M7 UI polish pass updated menu/settings/pause/game-over selection flow, preserved final run stats for game-over display, added transparent HUD rail art, and refreshed current-state docs.
 - *YYYY-MM-DD* — Plan created.
