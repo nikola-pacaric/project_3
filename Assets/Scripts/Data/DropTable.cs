@@ -34,6 +34,18 @@ namespace Warblade.Data
                 return false;
             }
 
+            return TryPick(out pickupData);
+        }
+
+        public bool TryPick(out PickupData pickupData)
+        {
+            pickupData = null;
+
+            if (_weightedPickups == null || _weightedPickups.Length == 0)
+            {
+                return false;
+            }
+
             float totalWeight = 0f;
             for (int i = 0; i < _weightedPickups.Length; i++)
             {

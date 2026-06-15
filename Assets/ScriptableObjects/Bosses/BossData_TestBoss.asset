@@ -94,6 +94,9 @@ MonoBehaviour:
     _attackPatterns:
     - {fileID: 11400000, guid: 797a9cbe480e41478dcab2ec3acdc04a, type: 2}
     - {fileID: 11400000, guid: 53b9bd2b773c4654b2d469c56758f8b3, type: 2}
-  _rewardDropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}
+  _rewardDropTable: {fileID: 11400000, guid: 6475794e0c6644789737b760ab348ae6, type: 2}
+  _rewardDropCountMin: 6
+  _rewardDropCountMax: 10
+  _rewardDropSpreadRadius: 1.25
   _healthBarFrameSprite: {fileID: 6249406360922059461, guid: 00776aa4a0ca4c5f8ebf0d0966c41c83, type: 3}
   _healthBarFillSprite: {fileID: 3872119013593314454, guid: 3c08c1d583924cc5a0e1cd2d96d9ba2e, type: 3}

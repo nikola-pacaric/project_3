@@ -66,6 +66,37 @@ namespace Warblade.Systems
             return true;
         }
 
+        /// <summary>
+        /// Drops a guaranteed burst of weighted pickups around a center point.
+        /// </summary>
+        public int DropMany(DropTable dropTable, Vector2 centerPosition, int count, float spreadRadius)
+        {
+            if (dropTable == null || count <= 0)
+            {
+                return 0;
+            }
+
+            int droppedCount = 0;
+            float clampedSpreadRadius = Mathf.Max(0f, spreadRadius);
+            for (int i = 0; i < count; i++)
+            {
+                if (!dropTable.TryPick(out PickupData pickupData))
+                {
+                    break;
+                }
+
+                Vector2 offset = clampedSpreadRadius <= Mathf.Epsilon
+                    ? Vector2.zero
+                    : Random.insideUnitCircle * clampedSpreadRadius;
+                if (Drop(pickupData, centerPosition + offset) != null)
+                {
+                    droppedCount++;
+                }
+            }
+
+            return droppedCount;
+        }
+
         private Pickup Drop(PickupData data, Vector2 position)
         {
             if (data == null)

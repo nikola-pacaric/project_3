@@ -272,9 +272,30 @@ namespace Warblade.Entities
 
             AudioManager.Instance?.PlayOneShot(ResolveDeathAudioCue());
             VfxManager.Instance?.Play(VfxCue.EnemyDeath, transform.position, ResolveDeathVfxColor());
-            PickupDropPool.Instance?.TryDrop(_data.DropTable, transform.position);
+            DropRewards();
 
             Release(killed: true);
+        }
+
+        private void DropRewards()
+        {
+            if (PickupDropPool.Instance == null || _data == null)
+            {
+                return;
+            }
+
+            if (!_data.UseGuaranteedDropCount)
+            {
+                PickupDropPool.Instance.TryDrop(_data.DropTable, transform.position);
+                return;
+            }
+
+            int dropCount = Random.Range(_data.DropCountMin, _data.DropCountMax + 1);
+            PickupDropPool.Instance.DropMany(
+                _data.DropTable,
+                transform.position,
+                dropCount,
+                _data.DropSpreadRadius);
         }
 
         private AudioCue ResolveDeathAudioCue()

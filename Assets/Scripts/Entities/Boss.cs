@@ -415,7 +415,19 @@ namespace Warblade.Entities
                 ScoreManager.Instance.AddScore(_data.ScoreValue);
             }
 
-            PickupDropPool.Instance?.TryDrop(_data.RewardDropTable, transform.position);
+            if (PickupDropPool.Instance == null)
+            {
+                return;
+            }
+
+            int rewardDropCount = Random.Range(
+                _data.RewardDropCountMin,
+                _data.RewardDropCountMax + 1);
+            PickupDropPool.Instance.DropMany(
+                _data.RewardDropTable,
+                transform.position,
+                rewardDropCount,
+                _data.RewardDropSpreadRadius);
         }
 
         private int ResolveMaxHealth()

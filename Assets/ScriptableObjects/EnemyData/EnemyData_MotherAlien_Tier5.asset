@@ -43,3 +43,7 @@ MonoBehaviour:
   _motherRoamRetargetIntervalMax: 9
   _spriteColor: {r: 1, g: 1, b: 1, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}
+  _useGuaranteedDropCount: 1
+  _dropCountMin: 2
+  _dropCountMax: 4
+  _dropSpreadRadius: 0.75

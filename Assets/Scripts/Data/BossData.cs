@@ -22,6 +22,9 @@ namespace Warblade.Data
 
         [Header("Rewards")]
         [SerializeField] private DropTable _rewardDropTable;
+        [SerializeField, Min(0)] private int _rewardDropCountMin = 6;
+        [SerializeField, Min(0)] private int _rewardDropCountMax = 10;
+        [SerializeField, Min(0f)] private float _rewardDropSpreadRadius = 1.25f;
 
         [Header("HUD")]
         [SerializeField] private Sprite _healthBarFrameSprite;
@@ -36,6 +39,9 @@ namespace Warblade.Data
         public int ContactDamage => _contactDamage;
         public IReadOnlyList<BossPhaseData> Phases => _phases;
         public DropTable RewardDropTable => _rewardDropTable;
+        public int RewardDropCountMin => _rewardDropCountMin;
+        public int RewardDropCountMax => _rewardDropCountMax;
+        public float RewardDropSpreadRadius => _rewardDropSpreadRadius;
         public Sprite HealthBarFrameSprite => _healthBarFrameSprite;
         public Sprite HealthBarFillSprite => _healthBarFillSprite;
 
@@ -50,6 +56,9 @@ namespace Warblade.Data
             _scoreValue = Mathf.Max(0, _scoreValue);
             _entrySpeed = Mathf.Max(0f, _entrySpeed);
             _contactDamage = Mathf.Max(0, _contactDamage);
+            _rewardDropCountMin = Mathf.Max(0, _rewardDropCountMin);
+            _rewardDropCountMax = Mathf.Max(_rewardDropCountMin, _rewardDropCountMax);
+            _rewardDropSpreadRadius = Mathf.Max(0f, _rewardDropSpreadRadius);
 
             if (_phases == null)
             {

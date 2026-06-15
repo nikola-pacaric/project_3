@@ -62,6 +62,10 @@ namespace Warblade.Data
 
         [Header("Drops")]
         [SerializeField] private DropTable _dropTable;
+        [SerializeField] private bool _useGuaranteedDropCount;
+        [SerializeField, Min(0)] private int _dropCountMin = 1;
+        [SerializeField, Min(0)] private int _dropCountMax = 1;
+        [SerializeField, Min(0f)] private float _dropSpreadRadius = 0.75f;
 
         public int MaxHealth => _maxHealth;
         public int ScoreValue => _scoreValue;
@@ -100,6 +104,10 @@ namespace Warblade.Data
         public float MotherRoamRetargetIntervalMax => _motherRoamRetargetIntervalMax;
         public Color SpriteColor => _spriteColor;
         public DropTable DropTable => _dropTable;
+        public bool UseGuaranteedDropCount => _useGuaranteedDropCount;
+        public int DropCountMin => _dropCountMin;
+        public int DropCountMax => _dropCountMax;
+        public float DropSpreadRadius => _dropSpreadRadius;
 
         private void OnValidate()
         {
@@ -121,6 +129,9 @@ namespace Warblade.Data
             _motherRoamBoundsMax = Vector2.Max(_motherRoamBoundsMin, _motherRoamBoundsMax);
             _motherRoamRetargetIntervalMin = Mathf.Max(0f, _motherRoamRetargetIntervalMin);
             _motherRoamRetargetIntervalMax = Mathf.Max(_motherRoamRetargetIntervalMin, _motherRoamRetargetIntervalMax);
+            _dropCountMin = Mathf.Max(0, _dropCountMin);
+            _dropCountMax = Mathf.Max(_dropCountMin, _dropCountMax);
+            _dropSpreadRadius = Mathf.Max(0f, _dropSpreadRadius);
         }
     }
 }
