@@ -10,7 +10,6 @@ namespace Warblade.Entities
         [SerializeField] private InputReader _input;
         [FormerlySerializedAs("_speed")]
         [SerializeField, Min(0f)] private float _baseSpeed = 8f;
-        [SerializeField, Min(0f)] private float _speedPerSpeedLevel = 0.75f;
         [SerializeField] private float _minX = -8.5f;
         [SerializeField] private float _maxX = 8.5f;
 
@@ -18,7 +17,6 @@ namespace Warblade.Entities
         [SerializeField] private float _currentMovementSpeed;
 
         public float BaseSpeed => _baseSpeed;
-        public float SpeedPerSpeedLevel => _speedPerSpeedLevel;
 
         private void Update()
         {
@@ -38,7 +36,11 @@ namespace Warblade.Entities
                 ? RunStatsManager.Instance.EffectiveSpeedLevel
                 : 0;
 
-            return _baseSpeed + speedLevel * _speedPerSpeedLevel;
+            float speedPerLevel = BuffManager.Instance != null
+                ? BuffManager.Instance.SpeedPerSpeedLevel
+                : 0f;
+
+            return _baseSpeed + speedLevel * speedPerLevel;
         }
     }
 }

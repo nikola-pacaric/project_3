@@ -8479,7 +8479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Managers.RunStatsManager
   _startingCash: 0
-  _startingLives: 3
+  _startingLives: 2
   _startingArmour: 0
   _startingWeaponTier: 1
   _startingSpeedLevel: 0
@@ -21853,10 +21853,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c6fb99731f4d72b1f2e5d64f14d20e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Managers.BuffManager
-  _autofireBaseDurationSeconds: 8
-  _rapidFireBaseDurationSeconds: 8
-  _shieldBaseDurationSeconds: 6
-  _secondsPerTimeLevel: 1
+  _autofireBaseDurationSeconds: 6
+  _rapidFireBaseDurationSeconds: 6
+  _shieldBaseDurationSeconds: 5
+  _secondsPerTimeLevel: 0.5
+  _speedPerSpeedLevel: 0.75
+  _numberOfBulletsPerBulletLevel: 1
 --- !u!1 &1212245406
 GameObject:
   m_ObjectHideFlags: 0
@@ -23639,7 +23641,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   _input: {fileID: 11400000, guid: ef77f6ca453fef740a2e405193c5768b, type: 2}
   _baseSpeed: 5
-  _speedPerSpeedLevel: 0.75
   _minX: -7.6
   _maxX: 7.6
   _currentMovementSpeed: 0
@@ -23662,12 +23663,12 @@ MonoBehaviour:
   _baseFireCooldown: 0.2
   _rapidFireBurstVolleyCount: 3
   _rapidFireBurstInterval: 0.2
-  _doubleShotOffset: {x: 0.18, y: 0}
-  _tripleShotSideOffset: {x: 0.24, y: 0}
-  _tripleShotSideAngle: 15
+  _doubleShotOffset: {x: 0.15, y: 0}
+  _tripleShotSideOffset: {x: 0.22, y: 0}
+  _tripleShotSideAngle: 9
   _quadShotInnerOffset: {x: 0.16, y: 0}
   _quadShotOuterOffset: {x: 0.34, y: 0}
-  _quadShotOuterAngle: 5
+  _quadShotOuterAngle: 3
   _poolDefaultCapacity: 10
   _poolMaxSize: 50
   _doubleShotBulletColor: {r: 0.455, g: 1, b: 0.173, a: 1}

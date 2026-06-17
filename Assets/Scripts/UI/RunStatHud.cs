@@ -179,22 +179,27 @@ namespace Warblade.UI
             }
 
             int baseMaxActiveBullets = _playerShooting.BaseMaxActiveBullets;
-            totalValue = baseMaxActiveBullets + value;
-            totalMaxValue = baseMaxActiveBullets + maxValue;
+            BuffManager buffManager = BuffManager.Instance;
+            int bulletsPerLevel = buffManager != null
+                ? buffManager.NumberOfBulletsPerBulletLevel
+                : 0;
+            totalValue = baseMaxActiveBullets + value * bulletsPerLevel;
+            totalMaxValue = baseMaxActiveBullets + maxValue * bulletsPerLevel;
         }
 
         private void GetSpeedFillValues(int value, int maxValue, out float totalValue, out float totalMaxValue)
         {
             PlayerMovement playerMovement = ResolvePlayerMovement();
-            if (playerMovement == null)
+            BuffManager buffManager = BuffManager.Instance;
+            if (playerMovement == null || buffManager == null)
             {
                 totalValue = value;
                 totalMaxValue = maxValue;
                 return;
             }
 
-            totalValue = playerMovement.BaseSpeed + value * playerMovement.SpeedPerSpeedLevel;
-            totalMaxValue = playerMovement.BaseSpeed + maxValue * playerMovement.SpeedPerSpeedLevel;
+            totalValue = playerMovement.BaseSpeed + value * buffManager.SpeedPerSpeedLevel;
+            totalMaxValue = playerMovement.BaseSpeed + maxValue * buffManager.SpeedPerSpeedLevel;
         }
 
         private void GetTimeFillValues(int value, int maxValue, out float totalValue, out float totalMaxValue)

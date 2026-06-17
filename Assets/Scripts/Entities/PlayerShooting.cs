@@ -212,11 +212,15 @@ namespace Warblade.Entities
 
         private int GetMaxActiveBullets()
         {
-            int bonusBullets = RunStatsManager.Instance != null
+            int bulletsLevel = RunStatsManager.Instance != null
                 ? RunStatsManager.Instance.EffectiveBulletsLevel
                 : 0;
 
-            return Mathf.Max(1, _baseMaxActiveBullets + bonusBullets);
+            int bulletsPerLevel = BuffManager.Instance != null
+                ? BuffManager.Instance.NumberOfBulletsPerBulletLevel
+                : 0;
+
+            return Mathf.Max(1, _baseMaxActiveBullets + bulletsLevel * bulletsPerLevel);
         }
 
         private float GetFireCooldown()

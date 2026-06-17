@@ -5,7 +5,7 @@ using Warblade.Data;
 namespace Warblade.Managers
 {
     /// <summary>
-    /// Owns active timed buffs for the current run.
+    /// Owns active timed buffs and per-pickup stat scaling values.
     /// </summary>
     public class BuffManager : MonoBehaviour
     {
@@ -15,7 +15,11 @@ namespace Warblade.Managers
         [SerializeField, Min(0f)] private float _autofireBaseDurationSeconds = 8f;
         [SerializeField, Min(0f)] private float _rapidFireBaseDurationSeconds = 8f;
         [SerializeField, Min(0f)] private float _shieldBaseDurationSeconds = 6f;
+
+        [Header("Stat Scaling")]
         [SerializeField, Min(0f)] private float _secondsPerTimeLevel = 2f;
+        [SerializeField, Min(0f)] private float _speedPerSpeedLevel = 0.75f;
+        [SerializeField, Min(0)] private int _numberOfBulletsPerBulletLevel = 1;
 
         private readonly float[] _remainingSeconds = new float[Enum.GetValues(typeof(BuffType)).Length];
         private readonly float[] _durationSeconds = new float[Enum.GetValues(typeof(BuffType)).Length];
@@ -24,6 +28,8 @@ namespace Warblade.Managers
         public bool IsRapidFireActive => IsActive(BuffType.RapidFire);
         public bool IsShieldActive => IsActive(BuffType.Shield);
         public float SecondsPerTimeLevel => _secondsPerTimeLevel;
+        public float SpeedPerSpeedLevel => _speedPerSpeedLevel;
+        public int NumberOfBulletsPerBulletLevel => _numberOfBulletsPerBulletLevel;
 
         private void Awake()
         {
@@ -68,6 +74,8 @@ namespace Warblade.Managers
             _rapidFireBaseDurationSeconds = Mathf.Max(0f, _rapidFireBaseDurationSeconds);
             _shieldBaseDurationSeconds = Mathf.Max(0f, _shieldBaseDurationSeconds);
             _secondsPerTimeLevel = Mathf.Max(0f, _secondsPerTimeLevel);
+            _speedPerSpeedLevel = Mathf.Max(0f, _speedPerSpeedLevel);
+            _numberOfBulletsPerBulletLevel = Mathf.Max(0, _numberOfBulletsPerBulletLevel);
         }
 
         /// <summary>

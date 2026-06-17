@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c30ae2881fd24da4b693efcbde14af81, type: 3}
   m_Name: DropTable_BasicAlien
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.DropTable
-  _dropChance: 0.18
+  _dropChance: 0.13
   _weightedPickups:
   - _pickupData: {fileID: 11400000, guid: ee1bda829505c4a4b9171b2843a56ee9, type: 2}
-    _weight: 30
+    _weight: 22
   - _pickupData: {fileID: 11400000, guid: 14d71363295d5104bb1a5e726d91ed22, type: 2}
-    _weight: 18
+    _weight: 9
   - _pickupData: {fileID: 11400000, guid: 702ba575924328f48865f61fc94db6f1, type: 2}
-    _weight: 7
+    _weight: 4
   - _pickupData: {fileID: 11400000, guid: 14ef2b6438768144d88e231a3c42cbcd, type: 2}
-    _weight: 2
+    _weight: 1
   - _pickupData: {fileID: 11400000, guid: 9d786711e6b73364883772e5dd37e94d, type: 2}
     _weight: 5
   - _pickupData: {fileID: 11400000, guid: b6f9dc7161bac9a41a581bb4707ce2cb, type: 2}
@@ -31,21 +31,21 @@ MonoBehaviour:
   - _pickupData: {fileID: 11400000, guid: 72e03dd9910558043a59b76efde1f73b, type: 2}
     _weight: 2
   - _pickupData: {fileID: 11400000, guid: f150df3538e83944ba6fbd3e8a30a594, type: 2}
-    _weight: 8
+    _weight: 6
   - _pickupData: {fileID: 11400000, guid: 4ae6942963c779248a90cd9500a337f3, type: 2}
-    _weight: 8
+    _weight: 6
   - _pickupData: {fileID: 11400000, guid: 0fe74704657cbb34bb9b91e19bf2ae96, type: 2}
-    _weight: 6
+    _weight: 5
   - _pickupData: {fileID: 11400000, guid: e0bc6121c1dde5d418915a0bb4987ffa, type: 2}
-    _weight: 6
+    _weight: 5
   - _pickupData: {fileID: 11400000, guid: 75492b147b750794d94b033abfb8eb42, type: 2}
-    _weight: 6
+    _weight: 5
   - _pickupData: {fileID: 11400000, guid: 6bb011ddd3a7b5c47b35bf9e5532c1b0, type: 2}
-    _weight: 6
+    _weight: 5
   - _pickupData: {fileID: 11400000, guid: af7857d09490dbe4c81abcc63ca11c3e, type: 2}
     _weight: 2
   - _pickupData: {fileID: 11400000, guid: 62720e2081799084a8a8b68df99d6664, type: 2}
-    _weight: 1
+    _weight: 0.5
   - _pickupData: {fileID: 11400000, guid: e678c90dead7fee40ab4ec054f01ff94, type: 2}
     _weight: 4
   - _pickupData: {fileID: 11400000, guid: cd7db9b8f1b556d4884be63a5d4760f2, type: 2}
