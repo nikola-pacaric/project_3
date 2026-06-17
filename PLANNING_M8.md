@@ -68,7 +68,7 @@ Check:
 - Timed buffs feel useful but not permanent.
 - Bad drops create tension without feeling unfair.
 
-Phase 2 completed after reward economy tuning reduced early cash generosity, centralized stat scaling values in BuffManager, confirmed pickup readability/clutter, and added the fixed 10000-point perfect-clear score bonus for kamikaze and bonus-snake levels.
+Phase 2 completed after reward/drop/buff tuning, pickup readability checks, and the fixed 10000-point special-level clear bonus.
 
 ---
 
