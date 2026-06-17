@@ -16,7 +16,7 @@ namespace Warblade.Systems
         [SerializeField] private Transform _playerTransform;
         [SerializeField] private int _defaultCapacity = 10;
         [SerializeField] private int _maxSize = 50;
-        [SerializeField, Min(1f)] private float _specialPerfectClearScoreMultiplier = 2f;
+        [SerializeField, Min(0)] private int _specialPerfectClearBonusScore = 10000;
         [Header("Dive Pacing")]
         [SerializeField, Range(0f, 1f)] private float _concurrentDiveLimitRemainingRatio = 0.1f;
         [SerializeField, Min(0f)] private float _limitedDiveCooldownMin = 1.25f;
@@ -31,7 +31,6 @@ namespace Warblade.Systems
         private int _spawnedEnemyCount;
         private bool _finalDiveTriggered;
         private int _specialEnemyCount;
-        private int _specialKilledScore;
         private bool _specialEnemyEscaped;
         private bool _specialPerfectClearBonusConsumed;
         private Enemy _limitedDiveEnemy;
@@ -276,7 +275,6 @@ namespace Warblade.Systems
             _spawnedEnemyCount = 0;
             _finalDiveTriggered = false;
             _specialEnemyCount = 0;
-            _specialKilledScore = 0;
             _specialEnemyEscaped = false;
             _specialPerfectClearBonusConsumed = false;
             _limitedDiveEnemy = null;
@@ -324,7 +322,7 @@ namespace Warblade.Systems
             }
 
             _specialPerfectClearBonusConsumed = true;
-            return Mathf.RoundToInt(_specialKilledScore * (_specialPerfectClearScoreMultiplier - 1f));
+            return _specialPerfectClearBonusScore;
         }
 
         public void ForceFinalEnemiesToDive(float remainingRatioThreshold)
@@ -402,7 +400,7 @@ namespace Warblade.Systems
         {
             _defaultCapacity = Mathf.Max(1, _defaultCapacity);
             _maxSize = Mathf.Max(_defaultCapacity, _maxSize);
-            _specialPerfectClearScoreMultiplier = Mathf.Max(1f, _specialPerfectClearScoreMultiplier);
+            _specialPerfectClearBonusScore = Mathf.Max(0, _specialPerfectClearBonusScore);
             _limitedDiveCooldownMin = Mathf.Max(0f, _limitedDiveCooldownMin);
             _limitedDiveCooldownMax = Mathf.Max(_limitedDiveCooldownMin, _limitedDiveCooldownMax);
         }
@@ -433,12 +431,10 @@ namespace Warblade.Systems
 
             if (killed)
             {
-                _specialKilledScore += enemy.Data.ScoreValue;
+                return;
             }
-            else
-            {
-                _specialEnemyEscaped = true;
-            }
+
+            _specialEnemyEscaped = true;
         }
     }
 }

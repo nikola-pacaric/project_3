@@ -16,6 +16,7 @@ namespace Warblade.UI
         [SerializeField] private TMP_Text _messageText;
         [SerializeField] private string _readyMessageFormat = "Get ready!\nLevel {0}";
         [SerializeField] private string _messageFormat = "Level {0} Complete";
+        [SerializeField] private string _bonusScoreMessageFormat = "Congratulations!\n{0} Bonus Points!";
         [SerializeField, Min(0f)] private float _visibleDuration = 1.5f;
         [SerializeField, Min(0f)] private float _fadeDuration = 0.5f;
 
@@ -80,6 +81,16 @@ namespace Warblade.UI
 
         public void HandleLevelCompleted(int completedLevel)
         {
+            int bonusScore = _levelManager != null
+                ? _levelManager.LastLevelCompletionBonusScore
+                : 0;
+
+            if (bonusScore > 0)
+            {
+                ShowMessage(string.Format(_bonusScoreMessageFormat, bonusScore));
+                return;
+            }
+
             ShowMessage(string.Format(_messageFormat, completedLevel));
         }
 

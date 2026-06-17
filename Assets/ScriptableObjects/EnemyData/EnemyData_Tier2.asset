@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: EnemyData_Tier2
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.EnemyData
   _maxHealth: 2
-  _scoreValue: 100
-  _entrySpeed: 3
+  _scoreValue: 150
+  _entrySpeed: 4
   _diveSpeed: 5.5
   _diveBottomY: -6
   _behaviorMode: 0
@@ -23,18 +23,30 @@ MonoBehaviour:
   _limitConcurrentDivesAboveFinalThreshold: 1
   _passThroughChance: 1
   _respawnTopY: 6
+  _spawnAudioCue: 0
   _diveCooldownMin: 8
-  _diveCooldownMax: 14
-  _fireCooldownMin: 2
-  _fireCooldownMax: 6
+  _diveCooldownMax: 13
+  _fireCooldownMin: 3.5
+  _fireCooldownMax: 7
   _lingerDurationMin: 0.5
   _lingerDurationMax: 1.5
-  _diveCurveUpMin: 0.35
-  _diveCurveUpMax: 1.2
-  _diveCurveSideMin: 0.75
-  _diveCurveSideMax: 2.25
+  _bulletSpeedMin: 3.5
+  _bulletSpeedMax: 7.5
+  _diveCurveUpMin: 0.4
+  _diveCurveUpMax: 1.4
+  _diveCurveSideMin: 0.8
+  _diveCurveSideMax: 2.4
   _diveAimOffsetXMin: -0.75
   _diveAimOffsetXMax: 0.75
-  _diveTrackingPortion: 0.6
+  _diveTrackingPortion: 0.625
+  _motherRoamSpeed: 2.5
+  _motherRoamBoundsMin: {x: -10.75, y: 1.25}
+  _motherRoamBoundsMax: {x: 10.75, y: 4.75}
+  _motherRoamRetargetIntervalMin: 1.25
+  _motherRoamRetargetIntervalMax: 3
   _spriteColor: {r: 1, g: 1, b: 1, a: 1}
   _dropTable: {fileID: 11400000, guid: 6d4c33787fb64f49a9621476504f6b3d, type: 2}
+  _useGuaranteedDropCount: 0
+  _dropCountMin: 1
+  _dropCountMax: 1
+  _dropSpreadRadius: 0.75

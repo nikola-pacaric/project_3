@@ -85,8 +85,8 @@ The milestone closed after a successful 10-level integration playtest confirmed 
 
 **Tuning**
 - [x] First 10 levels difficulty curve (most important for retention)
-- [ ] Drop rate balancing
-- [ ] Buff duration tuning
+- [x] Drop rate balancing
+- [x] Buff duration tuning
 - [ ] Shop pricing economy
 - [ ] 5+ external playtesters, iterate
 
@@ -152,6 +152,7 @@ The milestone closed after a successful 10-level integration playtest confirmed 
 
 ## Change Log
 
+- *2026-06-17* - M8 Phase 2 marked done after reward/drop/buff tuning, early cash economy adjustment, centralized stat scaling, and the fixed 10000-point perfect-clear score bonus for kamikaze and bonus-snake levels.
 - *2026-06-12* - M8 Phase 1 marked done after the first 12 levels felt playable; cash drops remain too generous and move into Phase 2 tuning.
 - *2026-06-12* - M8 Phase 0 baseline captured from current build commit `b50385d`, with the key player, buff, drop, and economy anchors recorded before continuing tuning.
 - *2026-06-10* - M7 Game Feel marked complete after a successful 10-level integration playtest; M8 Tune and Ship Core is now the current milestone.

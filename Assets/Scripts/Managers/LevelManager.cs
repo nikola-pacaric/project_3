@@ -51,6 +51,7 @@ namespace Warblade.Managers
 
         private Coroutine _levelRoutine;
         private bool _isGameOver;
+        private int _lastLevelCompletionBonusScore;
 
         /// <summary>
         /// Current active level number.
@@ -70,6 +71,7 @@ namespace Warblade.Managers
         public LevelChangedEvent OnLevelStarted => _onLevelStarted;
         public LevelChangedEvent OnLevelCompleted => _onLevelCompleted;
         public Transform PlayerTransform => _playerShooting == null ? null : _playerShooting.transform;
+        public int LastLevelCompletionBonusScore => _lastLevelCompletionBonusScore;
 
         private void Awake()
         {
@@ -618,6 +620,8 @@ namespace Warblade.Managers
 
         private void AwardSpecialPerfectClearBonus()
         {
+            _lastLevelCompletionBonusScore = 0;
+
             if (_enemySpawner == null || ScoreManager.Instance == null)
             {
                 return;
@@ -627,6 +631,7 @@ namespace Warblade.Managers
             if (bonusScore > 0)
             {
                 ScoreManager.Instance.AddScore(bonusScore);
+                _lastLevelCompletionBonusScore = bonusScore;
             }
         }
 
