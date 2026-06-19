@@ -26,6 +26,7 @@ namespace Warblade.Entities
         private Color[] _defaultLightColors;
         private Quaternion _defaultRootRotation;
         private Quaternion _defaultSpriteLocalRotation;
+        private int _defaultDamage;
         private bool _spinSprite;
         private bool _isActive;
 
@@ -40,6 +41,16 @@ namespace Warblade.Entities
         public void SetPool(IObjectPool<Bullet> pool)
         {
             _pool = pool;
+        }
+
+        public void SetDamage(int damage)
+        {
+            _damage = Mathf.Max(1, damage);
+        }
+
+        public void ResetDamage()
+        {
+            _damage = _defaultDamage;
         }
 
         public void SetSpriteSpin(bool shouldSpin)
@@ -147,6 +158,8 @@ namespace Warblade.Entities
 
         private void Awake()
         {
+            _defaultDamage = Mathf.Max(1, _damage);
+            _damage = _defaultDamage;
             _defaultRootRotation = transform.rotation;
             ResolveSpriteRenderer();
             ResolvePresentationRenderers();

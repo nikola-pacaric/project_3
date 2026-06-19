@@ -7343,6 +7343,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9f3ce2362ba7471186ae7f1da5756c03, type: 2}
   - {fileID: 11400000, guid: 9f1588f9aa4149b0be7ed99e460cce47, type: 2}
   - {fileID: 11400000, guid: d2ab0bfdf6304a8d97eb9b46c9e9364e, type: 2}
+  - {fileID: 11400000, guid: 3baa99f6f0c4482292a7b35ec822b316, type: 2}
+  - {fileID: 11400000, guid: ab18a6bba2824516a752917a6da6fb72, type: 2}
+  - {fileID: 11400000, guid: 2af0d697391e4f3786ef1a62e0bd6613, type: 2}
   _sortMode: 2
   _cashText: {fileID: 1701473880}
   _input: {fileID: 11400000, guid: ef77f6ca453fef740a2e405193c5768b, type: 2}
@@ -23668,12 +23671,22 @@ MonoBehaviour:
   _tripleShotSideAngle: 9
   _quadShotInnerOffset: {x: 0.16, y: 0}
   _quadShotOuterOffset: {x: 0.34, y: 0}
-  _quadShotOuterAngle: 3
+  _quadShotOuterAngle: 2
+  _superShotSideOffset: {x: 0.22, y: 0}
+  _superShotSideAngle: 15
+  _fireballBulletPrefab: {fileID: 3780105504131057989, guid: d48883c697c0d31418eb3f2fe8eca904, type: 3}
+  _fireballBulletDamage: 5
+  _fireballActiveBulletCost: 4
   _poolDefaultCapacity: 10
   _poolMaxSize: 50
   _doubleShotBulletColor: {r: 0.455, g: 1, b: 0.173, a: 1}
   _tripleShotBulletColor: {r: 0.059, g: 0.776, b: 1, a: 1}
   _quadShotBulletColor: {r: 1, g: 0.808, b: 0.18, a: 1}
+  _superShotBulletColor: {r: 1, g: 0.2, b: 0.9, a: 1}
+  _doubleShotBulletDamage: 1
+  _tripleShotBulletDamage: 2
+  _quadShotBulletDamage: 2
+  _superShotBulletDamage: 4
   _debugAutofireActive: 0
   _debugRapidFireActive: 0
 --- !u!50 &1517309663
@@ -30864,6 +30877,9 @@ MonoBehaviour:
 
     Level {0}'
   _messageFormat: Level {0} Complete
+  _bonusScoreMessageFormat: 'Congratulations!
+
+    {0} Bonus Points!'
   _visibleDuration: 1.5
   _fadeDuration: 0.5
 --- !u!1 &1759524115
@@ -33425,7 +33441,7 @@ MonoBehaviour:
   _playerTransform: {fileID: 1517309659}
   _defaultCapacity: 10
   _maxSize: 50
-  _specialPerfectClearScoreMultiplier: 2
+  _specialPerfectClearBonusScore: 10000
   _concurrentDiveLimitRemainingRatio: 0.1
   _limitedDiveCooldownMin: 2
   _limitedDiveCooldownMax: 4

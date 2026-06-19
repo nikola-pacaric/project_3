@@ -8,6 +8,8 @@ namespace Warblade.Data
         Armour,
         ExtraLife,
         WeaponTier,
-        TimedBuff
+        TimedBuff,
+        AutofireUntilDeath,
+        SpeedDown
     }
 }

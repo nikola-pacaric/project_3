@@ -262,6 +262,12 @@ namespace Warblade.UI
                 case ShopItemType.TimedBuff:
                     BuffManager.Instance?.ActivateBuff(item.BuffType);
                     return BuffManager.Instance != null;
+                case ShopItemType.AutofireUntilDeath:
+                    runStats.EnableShopAutofire();
+                    return true;
+                case ShopItemType.SpeedDown:
+                    runStats.DecreaseSpeed(item.Amount);
+                    return true;
                 default:
                     Debug.LogWarning($"[{nameof(ShopController)}] Unsupported shop item type: {item.ItemType}.");
                     return false;
@@ -286,6 +292,10 @@ namespace Warblade.UI
                     return runStats.WeaponTier == item.WeaponTier ? "Active" : "";
                 case ShopItemType.TimedBuff:
                     return BuffManager.Instance == null ? "Needs BuffManager" : "";
+                case ShopItemType.AutofireUntilDeath:
+                    return runStats.IsShopAutofireActive ? "Active" : "";
+                case ShopItemType.SpeedDown:
+                    return runStats.SpeedLevel <= 0 ? "Base Speed" : "";
                 default:
                     return "Unavailable";
             }

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ef9126484ad4874b6a3b70fd9d0242d, type: 3}
-  m_Name: ShopItem_ExtraLife
+  m_Name: ShopItem_SpeedDown
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.ShopItem
-  _itemType: 4
-  _displayName: Extra Life
-  _description: Add one life for this run.
-  _price: 1000
-  _amount: 1
+  _itemType: 8
+  _displayName: Speed Down
+  _description: Reduce Speed by 2 levels, never below the ship's base movement speed.
+  _price: 200
+  _amount: 2
   _weaponTier: 2
   _buffType: 0
   _icon: {fileID: 0}
-  _previewSprite: {fileID: 9033317595158764154, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _previewSprite: {fileID: 4088661473394792140, guid: f29562f13a139a54d93fd3fdb5d0be37, type: 3}
   _previewTint: {r: 1, g: 1, b: 1, a: 1}

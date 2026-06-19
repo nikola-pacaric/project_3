@@ -49,6 +49,7 @@ namespace Warblade.Managers
         private int _bulletsLevel;
         private int _timeLevel;
         private bool _shieldActive;
+        private bool _shopAutofireActive;
 
         public int Cash => _cash;
         public int MaxCash => _maxCash;
@@ -67,6 +68,7 @@ namespace Warblade.Managers
         public int EffectiveBulletsLevel => _bulletsLevel;
         public int EffectiveTimeLevel => _timeLevel;
         public bool IsShieldActive => _shieldActive || _debugShieldActive;
+        public bool IsShopAutofireActive => _shopAutofireActive;
 
         private void Awake()
         {
@@ -204,7 +206,7 @@ namespace Warblade.Managers
         /// </summary>
         public void EquipWeaponTierFromPickup(WeaponTier weaponTier)
         {
-            WeaponTier clampedTier = ClampWeaponTier(weaponTier);
+            WeaponTier clampedTier = ClampPickupWeaponTier(weaponTier);
             if (_weaponTier == clampedTier)
             {
                 IncreaseBullets();
@@ -215,10 +217,15 @@ namespace Warblade.Managers
         }
 
         /// <summary>
-        /// Upgrades the weapon by one tier, up to Quad.
+        /// Upgrades the weapon by one pickup tier, up to Quad. Shop-exclusive tiers are not granted here.
         /// </summary>
         public void UpgradeWeaponTier()
         {
+            if (_weaponTier >= WeaponTier.Quad)
+            {
+                return;
+            }
+
             SetWeaponTier((WeaponTier)((int)_weaponTier + 1));
         }
 
@@ -241,6 +248,18 @@ namespace Warblade.Managers
             if (_speedLevel == newLevel) return;
 
             _speedLevel = newLevel;
+            RaiseEffectiveSpeedLevelChangedIfNeeded(previousEffectiveLevel);
+        }
+
+        /// <summary>
+        /// Reduces the Speed upgrade level without allowing movement below the player's base speed.
+        /// </summary>
+        public void DecreaseSpeed(int amount = 1)
+        {
+            if (amount <= 0) return;
+
+            int previousEffectiveLevel = EffectiveSpeedLevel;
+            _speedLevel = Mathf.Max(0, _speedLevel - amount);
             RaiseEffectiveSpeedLevelChangedIfNeeded(previousEffectiveLevel);
         }
 
@@ -299,6 +318,22 @@ namespace Warblade.Managers
             _shieldActive = isActive;
         }
 
+        /// <summary>
+        /// Enables shop-purchased autofire for the player's current life.
+        /// </summary>
+        public void EnableShopAutofire()
+        {
+            _shopAutofireActive = true;
+        }
+
+        /// <summary>
+        /// Removes shop-purchased autofire when the player dies.
+        /// </summary>
+        public void ClearShopAutofire()
+        {
+            _shopAutofireActive = false;
+        }
+
         private void DecreaseStatLevel(RunStatType statType, int amount = 1)
         {
             if (amount <= 0) return;
@@ -339,11 +374,18 @@ namespace Warblade.Managers
             _bulletsLevel = Mathf.Clamp(_startingBulletsLevel, 0, _maxBulletsLevel);
             _timeLevel = Mathf.Clamp(_startingTimeLevel, 0, _maxTimeLevel);
             _shieldActive = false;
+            _shopAutofireActive = false;
             RaiseAllChanged();
             _runReset?.Raise();
         }
 
         private WeaponTier ClampWeaponTier(WeaponTier weaponTier)
+        {
+            int tier = Mathf.Clamp((int)weaponTier, (int)WeaponTier.Single, (int)WeaponTier.FireBall);
+            return (WeaponTier)tier;
+        }
+
+        private WeaponTier ClampPickupWeaponTier(WeaponTier weaponTier)
         {
             int tier = Mathf.Clamp((int)weaponTier, (int)WeaponTier.Single, (int)WeaponTier.Quad);
             return (WeaponTier)tier;

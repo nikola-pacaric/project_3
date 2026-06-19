@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ef9126484ad4874b6a3b70fd9d0242d, type: 3}
-  m_Name: ShopItem_TimedAutofireUnit
+  m_Name: ShopItem_AutofireUnit
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.ShopItem
-  _itemType: 6
-  _displayName: Timed Autofire Unit
-  _description: Start or refresh the timed autofire buff.
-  _price: 160
+  _itemType: 7
+  _displayName: Autofire Unit
+  _description: Hold Fire for continuous shots until the player dies.
+  _price: 500
   _amount: 1
   _weaponTier: 2
   _buffType: 0

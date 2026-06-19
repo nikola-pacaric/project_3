@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ef9126484ad4874b6a3b70fd9d0242d, type: 3}
-  m_Name: ShopItem_ExtraLife
+  m_Name: ShopItem_FireBall
   m_EditorClassIdentifier: Assembly-CSharp::Warblade.Data.ShopItem
-  _itemType: 4
-  _displayName: Extra Life
-  _description: Add one life for this run.
-  _price: 1000
+  _itemType: 5
+  _displayName: FireBall
+  _description: Equip the shop-exclusive animated FireBall weapon.
+  _price: 900
   _amount: 1
-  _weaponTier: 2
+  _weaponTier: 6
   _buffType: 0
-  _icon: {fileID: 0}
-  _previewSprite: {fileID: 9033317595158764154, guid: 4b8829a666191154db1660908bc36a2a, type: 3}
+  _icon: {fileID: 5353841184698615464, guid: 94605a1cac70a2a4cb28e38795a9e925, type: 3}
+  _previewSprite: {fileID: 5011458938357818091, guid: 058f8e3420021614c90f71e8bef97eb2, type: 3}
   _previewTint: {r: 1, g: 1, b: 1, a: 1}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _itemType: 3
   _displayName: Armour
   _description: Add one armour point, up to the armour cap.
-  _price: 600
+  _price: 800
   _amount: 1
   _weaponTier: 2
   _buffType: 0

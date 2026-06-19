@@ -81,6 +81,9 @@ mono_crash.*
 exports/
 VideoEdit/
 
+# Codex generated-image scratch files
+/tmp/
+
 # Crashlytics generated file
 crashlytics-build.properties
 
