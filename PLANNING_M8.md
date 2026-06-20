@@ -51,13 +51,6 @@ First 12 levels feel playable and not too difficult; cash drops feel too generou
 
 Make pickups exciting without making survival or progression depend on luck.
 
-Tasks:
-- Review drop tables for common enemies, special enemies, bosses, and shop-related rewards.
-- Tune cash, weapon-tier, armour, extra life, timed buff, and sucker downgrade frequencies.
-- Tune timed buff durations for autofire, rapid fire, shield, and any active temporary effects.
-- Confirm pickups are readable against all chapter backgrounds.
-- Check pickup-heavy moments for audio clutter and visual clutter.
-
 Check:
 - Upgrades are frequent enough to feel rewarding.
 - Strong drops stay rare enough to feel exciting.
@@ -72,17 +65,9 @@ Phase 2 completed after reward/drop/buff tuning, pickup readability checks, and 
 
 ---
 
-## Phase 3 — Shop Economy and Upgrade Value
+## Phase 3 — Shop Economy and Upgrade Value - DONE
 
 Make the shop loop feel strategic and affordable without trivializing combat.
-
-Tasks:
-- Track average cash earned before each early shop visit.
-- Tune shop prices for stat upgrades, armour, lives, and weapon-related options.
-- Confirm every item has a clear reason to exist.
-- Check that the shop does not appear empty too often.
-- Confirm the shop only opens when at least one item is purchasable, matching the M7 gate behavior.
-- Test the feel of buying nothing, buying one item, and saving for later.
 
 Check:
 - Players can usually buy something after a few levels of decent play.
@@ -92,6 +77,8 @@ Check:
 - Shop visits feel like decisions, not automatic clicks.
 - Prices support gradual growth across the campaign.
 - The player can recover after poor play, but not erase every mistake instantly.
+
+Phase 3 completed after playtesting and adjusting shop prices, affordability, item value, and saving-versus-spending choices.
 
 ---
 

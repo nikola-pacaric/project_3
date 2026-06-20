@@ -87,7 +87,7 @@ The milestone closed after a successful 10-level integration playtest confirmed 
 - [x] First 10 levels difficulty curve (most important for retention)
 - [x] Drop rate balancing
 - [x] Buff duration tuning
-- [ ] Shop pricing economy
+- [x] Shop pricing economy
 - [ ] 5+ external playtesters, iterate
 
 **Build Optimization**

@@ -24,7 +24,7 @@ The project currently has the core shooter loop, M4 reward loop, M5 boss archite
 - M7 UI polish: shop presentation and transition, level start/complete messaging, main/pause/game-over menu flow, keyboard/controller selection handling, final score display, first-run controls hint, UI highlight/click SFX, font cleanup, and HUD rail art
 - M7 integration validation: a 10-level playtest confirmed the current polished loop feels stable and presentable for this stage
 
-The current milestone is **M8: Tune and Ship Core**. M8 reward/drop/buff tuning is complete, so the next work is shop economy balance, optimization, release packaging, and broader WebGL/browser validation.
+The current milestone is **M8: Tune and Ship Core**. Opening difficulty, reward/drop/buff tuning, and shop economy balance are complete. The next work is the midgame, boss, and full-campaign balance pass, followed by optimization, release packaging, and broader WebGL/browser validation.
 
 ## Target Platform
 
